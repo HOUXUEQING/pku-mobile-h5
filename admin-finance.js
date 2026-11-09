@@ -44,6 +44,32 @@
     { id: "BP005", name: "方园中心", type: "园区客户", contact: "赵老师", phone: "135****9012", projects: ["五好生活"], period: "2026-09-01 — 2027-08-31", settle: "季结", status: "合作中" }
   ];
 
+  const businessContracts = [
+    { id: "企康合约-2026-0001", name: "中石油华北分公司", legal: "中国石油天然气股份有限公司华北分公司", amount: 1250000, projects: "体检、购药、直付医疗", people: "员工本人 + 家属", period: "2026-01-01 — 2026-12-31", fee: "3.5%", balance: "退回企业", status: "生效" },
+    { id: "企康合约-2026-0002", name: "金融街控股", legal: "金融街控股股份有限公司", amount: 860000, projects: "体检、健管服务", people: "员工本人", period: "2026-01-01 — 2026-12-31", fee: "4.0%", balance: "滚存至下期", status: "生效" },
+    { id: "企康合约-2026-0003", name: "望京科技园", legal: "北京望京科技园有限公司", amount: 300000, projects: "体检、购药", people: "员工本人", period: "2026-01-01 — 2026-12-31", fee: "3.8%", balance: "按 7:3 分配", status: "待审核" },
+    { id: "企康合约-2026-0004", name: "方园中心", legal: "北京方园中心有限公司", amount: 800000, projects: "体检、购药、直付医疗", people: "员工本人 + 家属", period: "2026-01-01 — 2026-12-31", fee: "4.2%", balance: "退回企业", status: "生效" },
+    { id: "企康合约-2026-0005", name: "北京北大医疗康复医院", legal: "北京北大医疗康复医院有限公司", amount: 200000, projects: "体检、健管服务", people: "员工本人", period: "2026-03-01 — 2026-11-30", fee: "3.0%", balance: "滚存至下期", status: "冻结" },
+    { id: "企康合约-2026-0006", name: "中化能源", legal: "中化能源股份有限公司", amount: 680000, projects: "体检、购药、健管服务", people: "员工本人", period: "2026-01-01 — 2026-12-31", fee: "3.6%", balance: "按 7:3 分配", status: "生效" },
+    { id: "企康合约-2026-0007", name: "中国建投", legal: "中国建银投资有限责任公司", amount: 920000, projects: "体检、直付医疗", people: "员工本人 + 家属", period: "2026-01-01 — 2026-12-31", fee: "4.5%", balance: "退回企业", status: "生效" },
+    { id: "企康合约-2026-0008", name: "京东方集团", legal: "京东方科技集团股份有限公司", amount: 1500000, projects: "体检、购药、直付医疗、健管服务", people: "员工本人 + 家属", period: "2026-01-01 — 2026-12-31", fee: "3.2%", balance: "滚存至下期", status: "生效" },
+    { id: "企康合约-2026-0009", name: "北汽集团", legal: "北京汽车集团有限公司", amount: 1100000, projects: "体检、购药、健管服务", people: "员工本人", period: "2026-01-01 — 2026-12-31", fee: "3.9%", balance: "按 7:3 分配", status: "生效" },
+    { id: "企康合约-2026-0010", name: "同仁堂集团", legal: "中国北京同仁堂（集团）有限责任公司", amount: 760000, projects: "体检、购药", people: "员工本人", period: "2026-01-01 — 2026-12-31", fee: "4.1%", balance: "退回企业", status: "生效" }
+  ];
+
+  const providerContracts = [
+    { id: "机构合约-2026-0001", name: "北大医疗健康管理中心", type: "健管机构", cycle: "月结", term: "T+3", fee: "3.0%", account: "招商银行北京分行 · 6225****1200", scope: "体检、报告解读", status: "生效" },
+    { id: "机构合约-2026-0002", name: "华大医学检验实验室", type: "检验机构", cycle: "周结", term: "T+3", fee: "2.5%", account: "中国银行北京分行 · 6225****1237", scope: "医学检验、专项筛查", status: "生效" },
+    { id: "机构合约-2026-0003", name: "云诊互联网医院", type: "互联网医院", cycle: "季结", term: "T+7", fee: "4.0%", account: "工商银行北京分行 · 6225****1274", scope: "线上问诊、复诊", status: "生效" },
+    { id: "机构合约-2026-0004", name: "远健运动康复中心", type: "康复机构", cycle: "月结", term: "T+3", fee: "3.2%", account: "建设银行北京分行 · 6225****1311", scope: "运动康复、体测", status: "生效" },
+    { id: "机构合约-2026-0005", name: "北京协和体检中心", type: "体检机构", cycle: "周结", term: "T+3", fee: "2.8%", account: "招商银行北京分行 · 6225****1348", scope: "年度体检、深度筛查", status: "生效" },
+    { id: "机构合约-2026-0006", name: "同仁堂大药房", type: "药房", cycle: "季结", term: "T+7", fee: "3.5%", account: "北京银行 · 6225****1385", scope: "药品、营养补剂", status: "生效" },
+    { id: "机构合约-2026-0007", name: "美年大健康望京分院", type: "体检机构", cycle: "月结", term: "T+7", fee: "3.0%", account: "中信银行北京分行 · 6225****1422", scope: "体检、报告解读", status: "待审核" },
+    { id: "机构合约-2026-0008", name: "北大国际医院", type: "医院", cycle: "周结", term: "T+3", fee: "2.0%", account: "中国银行北京分行 · 6225****1459", scope: "直付医疗、住院", status: "生效" },
+    { id: "机构合约-2026-0009", name: "安心营养科技", type: "营养机构", cycle: "季结", term: "T+15", fee: "3.8%", account: "招商银行北京分行 · 6225****1496", scope: "营养咨询、食谱", status: "生效" },
+    { id: "机构合约-2026-0010", name: "康复医院健康管理部", type: "健管机构", cycle: "月结", term: "T+15", fee: "2.6%", account: "建设银行北京分行 · 6225****1533", scope: "健管服务、随访", status: "冻结" }
+  ];
+
   const providers = [
     { id: "SP001", name: "北大医疗健康管理中心", category: "健康管理", contact: "赵医生", phone: "138****1102", license: "医疗机构执业许可证", cycle: "月结", upstream: "按项目协议价", downstream: "按服务人次", status: "合作中" },
     { id: "SP002", name: "华大医学检验实验室", category: "医学检验", contact: "李经理", phone: "139****2218", license: "医学检验实验室资质", cycle: "月结", upstream: "检验项目成本价", downstream: "项目打包价", status: "合作中" },
@@ -126,15 +152,41 @@
   ];
 
   let settlementModule = "企业资金";
+  let businessTab = "业务方档案";
+  let providerTab = "服务商档案";
 
   function renderBusiness() {
-    const html = `${pageHead("业务方管理", "BUSINESS PARTNERS", `<button class="btn primary" data-party-new="1">${icon("plus")}新增业务方</button>`)}
-      <div class="filter-bar"><span class="tag blue">业务方 ${businessParties.length}</span><span class="tag green">合作中 ${businessParties.filter(p => p.status === "合作中").length}</span></div>
-      <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>业务方</th><th>类型</th><th>联系人</th><th>合作项目</th><th>合同周期</th><th>结算方式</th><th>状态</th><th></th></tr></thead><tbody>${businessParties.map(p => `<tr><td><span class="cell-main">${esc(p.name)}</span><span class="cell-sub">${esc(p.id)}</span></td><td>${tag(p.type, "blue")}</td><td>${esc(p.contact)}<span class="cell-sub">${esc(p.phone)}</span></td><td>${p.projects.map(x => tag(x, "green")).join(" ")}</td><td>${esc(p.period)}</td><td>${esc(p.settle)}</td><td>${tag(p.status, p.status === "合作中" ? "green" : "gold")}</td><td><button class="panel-link" data-party-edit="${p.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const archive = businessTab === "业务方档案";
+    const action = archive ? `<button class="btn primary" data-party-new="1">${icon("plus")}新增业务方</button>` : `<button class="btn primary" data-contract-new="business">${icon("plus")}新增企业合约</button>`;
+    const archiveTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>业务方</th><th>类型</th><th>联系人</th><th>合作项目</th><th>合同周期</th><th>结算方式</th><th>状态</th><th></th></tr></thead><tbody>${businessParties.map(p => `<tr><td><span class="cell-main">${esc(p.name)}</span><span class="cell-sub">${esc(p.id)}</span></td><td>${tag(p.type, "blue")}</td><td>${esc(p.contact)}<span class="cell-sub">${esc(p.phone)}</span></td><td>${p.projects.map(x => tag(x, "green")).join(" ")}</td><td>${esc(p.period)}</td><td>${esc(p.settle)}</td><td>${tag(p.status, p.status === "合作中" ? "green" : "gold")}</td><td><button class="panel-link" data-party-edit="${p.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const contractTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>合约编号</th><th>企业 / 法人主体</th><th>合约总额</th><th>保障项目</th><th>保障人群</th><th>有效期</th><th>费率</th><th>结余规则</th><th>状态</th><th></th></tr></thead><tbody>${businessContracts.map(c => `<tr><td><b class="cell-main">${esc(c.id)}</b></td><td><b class="cell-main">${esc(c.name)}</b><span class="cell-sub">${esc(c.legal)}</span></td><td>${money(c.amount)}</td><td>${esc(c.projects)}</td><td>${esc(c.people)}</td><td>${esc(c.period)}</td><td>${esc(c.fee)}</td><td>${esc(c.balance)}</td><td>${tag(c.status, c.status === "生效" ? "green" : c.status === "冻结" ? "slate" : "gold")}</td><td><button class="panel-link" data-contract-view="business" data-id="${c.id}">查看 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const html = `${pageHead("业务方管理", "BUSINESS PARTNERS", action)}
+      <div class="filter-bar"><span class="tag blue">业务方 ${businessParties.length}</span><span class="tag green">企业合约 ${businessContracts.length}</span><span class="tag gold">待审核 1</span></div>
+      <div class="checkin-tabs"><button class="${archive ? "active" : ""}" data-business-tab="业务方档案">业务方档案<b>${businessParties.length}</b></button><button class="${!archive ? "active" : ""}" data-business-tab="企业合约">企业合约<b>${businessContracts.length}</b></button></div>
+      ${archive ? archiveTable : contractTable}`;
     $("#viewRoot").innerHTML = html;
     setTop("业务方管理", "合作方管理 / 业务方管理", "business-parties");
+    $$("[data-business-tab]").forEach(b => b.addEventListener("click", () => { businessTab = b.dataset.businessTab; renderBusiness(); }));
     $$("[data-party-edit]").forEach(b => b.addEventListener("click", () => openPartyEditor(b.dataset.partyEdit)));
     $$("[data-party-new]").forEach(b => b.addEventListener("click", () => openPartyEditor("")));
+    $$("[data-contract-view]").forEach(b => b.addEventListener("click", () => openContractView(b.dataset.contractView, b.dataset.id)));
+    $$("[data-contract-new]").forEach(b => b.addEventListener("click", () => openContractEditor(b.dataset.contractNew)));
+  }
+
+  function openContractView(kind, id) {
+    const c = (kind === "business" ? businessContracts : providerContracts).find(x => x.id === id); if (!c) return;
+    const isBusiness = kind === "business";
+    openDrawer(`<p class="page-eyebrow">${isBusiness ? "ENTERPRISE CONTRACT" : "INSTITUTION CONTRACT"}</p><h2>${esc(c.name)}</h2><p class="drawer-sub">${esc(c.id)} · ${esc(c.status)}</p>
+      <div class="drawer-section"><div class="info-list">${isBusiness ? `<div class="info-item"><small>法人主体</small><b>${esc(c.legal)}</b></div><div class="info-item"><small>合约总额</small><b>${money(c.amount)}</b></div><div class="info-item"><small>保障项目</small><b>${esc(c.projects)}</b></div><div class="info-item"><small>保障人群</small><b>${esc(c.people)}</b></div><div class="info-item"><small>有效期</small><b>${esc(c.period)}</b></div><div class="info-item"><small>费率 / 结余</small><b>${esc(c.fee)} · ${esc(c.balance)}</b></div>` : `<div class="info-item"><small>机构类型</small><b>${esc(c.type)}</b></div><div class="info-item"><small>结算周期 / 账期</small><b>${esc(c.cycle)} · ${esc(c.term)}</b></div><div class="info-item"><small>费率</small><b>${esc(c.fee)}</b></div><div class="info-item"><small>收款账户</small><b>${esc(c.account)}</b></div><div class="info-item"><small>服务范围</small><b>${esc(c.scope)}</b></div>`}</div></div>
+      <div class="drawer-section"><h3>合约审计</h3><div class="info-list"><div class="info-item"><small>创建人</small><b>李明</b></div><div class="info-item"><small>更新时间</small><b>2026-11-09 14:30</b></div></div></div>
+      <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><button class="btn primary" data-toast="合约已进入编辑状态">编辑合约</button></div>`);
+  }
+
+  function openContractEditor(kind) {
+    const isBusiness = kind === "business";
+    openDrawer(`<p class="page-eyebrow">${isBusiness ? "ENTERPRISE CONTRACT" : "INSTITUTION CONTRACT"}</p><h2>新增${isBusiness ? "企业合约" : "机构合约"}</h2><p class="drawer-sub">${isBusiness ? "保障范围、资金方案与结余规则" : "结算周期、账期与收款账户"}</p>
+      <div class="drawer-section"><div class="publish-form"><label class="field"><span>${isBusiness ? "企业名称" : "机构名称"}</span><input /></label><label class="field"><span>${isBusiness ? "法人主体" : "机构类型"}</span><input /></label><label class="field"><span>${isBusiness ? "合约总额" : "结算周期"}</span><input /></label><label class="field"><span>${isBusiness ? "费率" : "账期"}</span><input /></label><label class="field full"><span>${isBusiness ? "保障项目" : "服务范围"}</span><input /></label></div></div>
+      <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn primary" data-toast="合约已保存">保存</button></div>`);
   }
 
   function openPartyEditor(id) {
@@ -149,13 +201,21 @@
   }
 
   function renderProviders() {
-    const html = `${pageHead("服务商管理", "SERVICE PROVIDERS", `<button class="btn primary" data-provider-new="1">${icon("plus")}新增服务商</button>`)}
-      <div class="filter-bar"><span class="tag blue">服务商 ${providers.length}</span><span class="tag green">合作中 ${providers.filter(p => p.status === "合作中").length}</span><span class="tag gold">资质审核</span></div>
-      <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>服务商</th><th>服务类别</th><th>联系人</th><th>资质</th><th>结算周期</th><th>上游结算</th><th>下游结算</th><th>状态</th><th></th></tr></thead><tbody>${providers.map(p => `<tr><td><span class="cell-main">${esc(p.name)}</span><span class="cell-sub">${esc(p.id)}</span></td><td>${tag(p.category, "blue")}</td><td>${esc(p.contact)}<span class="cell-sub">${esc(p.phone)}</span></td><td>${tag(p.license, "green")}</td><td>${esc(p.cycle)}</td><td>${esc(p.upstream)}</td><td>${esc(p.downstream)}</td><td>${tag(p.status, p.status === "合作中" ? "green" : "gold")}</td><td><button class="panel-link" data-provider-edit="${p.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const archive = providerTab === "服务商档案";
+    const action = archive ? `<button class="btn primary" data-provider-new="1">${icon("plus")}新增服务商</button>` : `<button class="btn primary" data-contract-new="provider">${icon("plus")}新增机构合约</button>`;
+    const archiveTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>服务商</th><th>服务类别</th><th>联系人</th><th>资质</th><th>结算周期</th><th>上游结算</th><th>下游结算</th><th>状态</th><th></th></tr></thead><tbody>${providers.map(p => `<tr><td><span class="cell-main">${esc(p.name)}</span><span class="cell-sub">${esc(p.id)}</span></td><td>${tag(p.category, "blue")}</td><td>${esc(p.contact)}<span class="cell-sub">${esc(p.phone)}</span></td><td>${tag(p.license, "green")}</td><td>${esc(p.cycle)}</td><td>${esc(p.upstream)}</td><td>${esc(p.downstream)}</td><td>${tag(p.status, p.status === "合作中" ? "green" : "gold")}</td><td><button class="panel-link" data-provider-edit="${p.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const contractTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>机构合约</th><th>机构名称</th><th>类型</th><th>结算周期</th><th>账期</th><th>费率</th><th>收款账户</th><th>服务范围</th><th>状态</th><th></th></tr></thead><tbody>${providerContracts.map(c => `<tr><td><b class="cell-main">${esc(c.id)}</b></td><td><b class="cell-main">${esc(c.name)}</b></td><td>${tag(c.type, "blue")}</td><td>${esc(c.cycle)}</td><td>${tag(c.term, c.term === "T+3" ? "red" : "blue")}</td><td>${esc(c.fee)}</td><td>${esc(c.account)}</td><td>${esc(c.scope)}</td><td>${tag(c.status, c.status === "生效" ? "green" : c.status === "冻结" ? "slate" : "gold")}</td><td><button class="panel-link" data-contract-view="provider" data-id="${c.id}">查看 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const html = `${pageHead("服务商管理", "SERVICE PROVIDERS", action)}
+      <div class="filter-bar"><span class="tag blue">服务商 ${providers.length}</span><span class="tag green">机构合约 ${providerContracts.length}</span><span class="tag gold">T+3 机构 4 家</span></div>
+      <div class="checkin-tabs"><button class="${archive ? "active" : ""}" data-provider-tab="服务商档案">服务商档案<b>${providers.length}</b></button><button class="${!archive ? "active" : ""}" data-provider-tab="机构合约">机构合约<b>${providerContracts.length}</b></button></div>
+      ${archive ? archiveTable : contractTable}`;
     $("#viewRoot").innerHTML = html;
     setTop("服务商管理", "合作方管理 / 服务商管理", "providers");
+    $$("[data-provider-tab]").forEach(b => b.addEventListener("click", () => { providerTab = b.dataset.providerTab; renderProviders(); }));
     $$("[data-provider-edit]").forEach(b => b.addEventListener("click", () => openProviderEditor(b.dataset.providerEdit)));
     $$("[data-provider-new]").forEach(b => b.addEventListener("click", () => openProviderEditor("")));
+    $$("[data-contract-view]").forEach(b => b.addEventListener("click", () => openContractView(b.dataset.contractView, b.dataset.id)));
+    $$("[data-contract-new]").forEach(b => b.addEventListener("click", () => openContractEditor(b.dataset.contractNew)));
   }
 
   function openProviderEditor(id) {

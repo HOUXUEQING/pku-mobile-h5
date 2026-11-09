@@ -138,6 +138,29 @@
     const navMap = { project: "projects", student: "students", member: "members", department: "departments", institution: "institutions" };
     const nav = navMap[active] || active || "dashboard";
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.nav === nav));
+    collapseNavGroups();
+  }
+
+  function collapseNavGroups() {
+    const groups = $$(".nav-group");
+    groups.forEach(g => {
+      const active = !!g.querySelector(".nav-item.active");
+      g.classList.toggle("collapsed", !active);
+    });
+  }
+
+  function setupNavAccordion() {
+    $$(".nav-group").forEach(group => {
+      const head = group.querySelector("p");
+      if (!head) return;
+      head.dataset.accInit = "1";
+      head.addEventListener("click", () => {
+        const willOpen = group.classList.contains("collapsed");
+        $$(".nav-group").forEach(g => g.classList.add("collapsed"));
+        if (willOpen) group.classList.remove("collapsed");
+      });
+    });
+    collapseNavGroups();
   }
 
   function showToast(text) {
@@ -1202,6 +1225,7 @@
     $("#topTitle").textContent = "企康结算 · " + page;
     $("#breadcrumb").textContent = "财务结算 / " + page;
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === page));
+    collapseNavGroups();
     $("#viewRoot").innerHTML = `<iframe class="settlement-frame" title="企康结算 · ${escape(page)}" src="./settlement.html?embed=1#/${encodeURIComponent(page)}"></iframe>`;
   }
 
@@ -1324,8 +1348,10 @@
     $("#topTitle").textContent = "企康结算 · " + page;
     $("#breadcrumb").textContent = "财务结算 / " + page;
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === page));
+    collapseNavGroups();
     try { history.replaceState(null, "", "#财务结算/" + page); } catch (e) {}
   });
+  setupNavAccordion();
   window.addEventListener("hashchange", renderRoute);
   renderRoute();
 })();

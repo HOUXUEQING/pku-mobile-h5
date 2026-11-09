@@ -2134,3 +2134,10 @@ body {
 .settlement-menu-group .nav-item { height: 23px; min-height: 23px; padding: 0 5px; gap: 4px; font-size: 8px; }
 .settlement-menu-group .nav-item .ic { width: 11px; height: 11px; }
 .settlement-frame { display: block; width: 100%; height: calc(100vh - 91px); min-height: 720px; background: #f4f8fe; border: 0; border-radius: 10px; }
+
+/* Collapsible navigation */
+.nav-group > p { cursor: pointer; user-select: none; }
+.nav-group > p::after { content: "⌄"; margin-left: auto; color: #a5b3c4; font-size: 9px; line-height: 1; transition: transform .16s; }
+.nav-group.collapsed > p::after { transform: rotate(-90deg); }
+.nav-group.collapsed > a { display: none !important; }
+.nav-group > p:hover { color: #5b7696; }
