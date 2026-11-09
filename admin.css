@@ -2122,3 +2122,9 @@ body {
 .order-table td .cell-sub { margin-top: 3px; }
 
 .role-settlement-panel { margin-top: 14px; }
+
+.nav-item { min-height: 22px; height: 22px; font-size: 9px; }
+.nav-group > p { margin-top: 4px; margin-bottom: 1px; }
+.nav-group { margin-bottom: 2px; }
+
+.nav-item { min-height: 21px; height: 21px; }
