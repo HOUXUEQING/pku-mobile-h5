@@ -235,3 +235,26 @@ Object.assign(window.ADMIN_DATA, {
     { id: "RT009", name: "我的加餐", meal: "加餐", kcal: 165, protein: 7, carbs: 22, fat: 4, dishes: ["香蕉酸奶杯"], tags: ["我的搭配"], owner: "我的", status: "草稿" }
   ]
 });
+
+Object.assign(window.ADMIN_DATA, {
+  supplements: [
+    { id: "SUP001", name: "乳清蛋白粉 750g", category: "蛋白补充", suitable: "力量训练 / 蛋白摄入不足", taboo: "乳糖不耐 / 肾功能不全", price: 328, settle: 260, stock: 120, sold: 428, mount: "餐次", active: true },
+    { id: "SUP002", name: "复合维生素（30 天）", category: "基础营养", suitable: "饮食不规律", taboo: "无", price: 168, settle: 132, stock: 240, sold: 1260, mount: "餐次", active: true },
+    { id: "SUP003", name: "深海鱼油 90 粒", category: "心血管", suitable: "血脂偏高 / 久坐", taboo: "服用抗凝药", price: 268, settle: 210, stock: 86, sold: 742, mount: "餐次", active: true },
+    { id: "SUP004", name: "益生菌 30 条", category: "肠道", suitable: "腹胀 / 抗生素后", taboo: "无", price: 228, settle: 180, stock: 0, sold: 316, mount: "餐次", active: false },
+    { id: "SUP005", name: "钙 + 维生素 D3", category: "骨骼", suitable: "45 岁以上 / 少晒太阳", taboo: "高钙血症", price: 158, settle: 126, stock: 310, sold: 590, mount: "餐次", active: true },
+    { id: "SUP006", name: "膳食纤维粉", category: "肠道", suitable: "蔬果摄入不足", taboo: "无", price: 138, settle: 110, stock: 180, sold: 880, mount: "餐次", active: true },
+    { id: "SUP007", name: "维生素 C 泡腾片", category: "基础营养", suitable: "蔬果摄入不足", taboo: "无", price: 98, settle: 76, stock: 121, sold: 687, mount: "全天食谱", active: true },
+    { id: "SUP008", name: "铁 + 叶酸", category: "女性营养", suitable: "备孕 / 孕期 / 经期量大", taboo: "血色病", price: 138, settle: 110, stock: 218, sold: 613, mount: "餐次 / 搭配器", active: true },
+    { id: "SUP009", name: "辅酶 Q10", category: "心血管", suitable: "40 岁以上 / 服用他汀", taboo: "服用抗凝药", price: 268, settle: 214, stock: 186, sold: 425, mount: "餐次 / 搭配器", active: true },
+    { id: "SUP010", name: "褪黑素 3mg", category: "睡眠", suitable: "倒时差 / 入睡困难", taboo: "孕期 / 青少年", price: 118, settle: 88, stock: 130, sold: 115, mount: "全天食谱", active: true },
+    { id: "SUP011", name: "蛋白棒 6 支", category: "蛋白补充", suitable: "运动后加餐", taboo: "乳制品过敏", price: 129, settle: 96, stock: 90, sold: 208, mount: "加餐", active: true },
+    { id: "SUP012", name: "多种矿物质片", category: "基础营养", suitable: "饮食单一", taboo: "无", price: 148, settle: 118, stock: 76, sold: 134, mount: "餐次", active: true },
+    { id: "SUP013", name: "维生素 B 族", category: "基础营养", suitable: "熬夜 / 应酬", taboo: "无", price: 108, settle: 82, stock: 145, sold: 392, mount: "餐次", active: true },
+    { id: "SUP014", name: "叶黄素软胶囊", category: "眼部营养", suitable: "长期用眼", taboo: "无", price: 158, settle: 122, stock: 102, sold: 264, mount: "全天食谱", active: true },
+    { id: "SUP015", name: "锌硒片", category: "免疫营养", suitable: "免疫力偏低", taboo: "无", price: 118, settle: 90, stock: 168, sold: 318, mount: "餐次", active: true },
+    { id: "SUP016", name: "益生元粉", category: "肠道", suitable: "膳食纤维不足", taboo: "无", price: 128, settle: 98, stock: 88, sold: 156, mount: "餐次", active: true },
+    { id: "SUP017", name: "胶原蛋白肽", category: "女性营养", suitable: "皮肤弹性下降", taboo: "无", price: 298, settle: 238, stock: 54, sold: 142, mount: "全天食谱", active: true },
+    { id: "SUP018", name: "电解质泡腾片", category: "运动营养", suitable: "大量出汗 / 运动后", taboo: "无", price: 88, settle: 66, stock: 210, sold: 370, mount: "运动 / 餐次", active: true }
+  ]
+});
