@@ -1674,3 +1674,95 @@ a, a:hover, a:focus, a:active,
 .board-breakdown-row > div { height: 5px; overflow: hidden; background: #edf3ff; border-radius: 99px; }
 .board-breakdown-row i { display: block; height: 100%; border-radius: inherit; }
 .board-breakdown-row b { color: #405772; font-size: 8px; font-weight: 500; text-align: right; }
+
+/* =========================================================
+   Color richness pass · 参考运营中台的多彩层级
+   ========================================================= */
+body {
+  background:
+    radial-gradient(circle at 4% -8%, rgba(47,107,255,.16), transparent 27rem),
+    radial-gradient(circle at 96% 0%, rgba(139,92,246,.10), transparent 24rem),
+    radial-gradient(circle at 78% 96%, rgba(22,163,148,.08), transparent 25rem),
+    #f3f8ff;
+}
+.sidebar { background: linear-gradient(180deg,#ffffff,#f8fbff 72%,#f3f8ff); }
+.nav-group > p { display: flex; align-items: center; gap: 5px; }
+.nav-group > p::before { content: ""; width: 4px; height: 4px; background: #2f6bff; border-radius: 50%; }
+.nav-group:nth-of-type(2) > p::before { background: #16a394; }
+.nav-group:nth-of-type(3) > p::before { background: #8b5cf6; }
+.nav-group:nth-of-type(4) > p::before { background: #f0a23a; }
+.nav-group:nth-of-type(5) > p::before { background: #e15b64; }
+.nav-group:nth-of-type(6) > p::before { background: #22b8cf; }
+.page-eyebrow { color: #2f6bff; }
+
+.kpi-card {
+  background: linear-gradient(135deg, var(--kpi-soft), #fff 68%);
+  border-color: color-mix(in srgb, var(--kpi) 20%, #e7eef9);
+  box-shadow: 0 7px 22px color-mix(in srgb, var(--kpi) 7%, transparent);
+}
+.kpi-card::after { background: radial-gradient(circle, color-mix(in srgb, var(--kpi) 20%, transparent), transparent 68%); }
+.kpi-card .kpi-icon { color: var(--kpi); background: color-mix(in srgb, var(--kpi) 12%, #fff); }
+.kpi-card:not(:first-child) .kpi-num { color: var(--kpi); }
+.kpi-card:not(:first-child) .kpi-sub { color: #8d9bb0; }
+.kpi-card:first-child { background: radial-gradient(circle at 100% 0%, rgba(130,210,255,.5), transparent 52%), linear-gradient(135deg,#4a8dff,#245be7); }
+.kpi-card:hover { transform: translateY(-1px); box-shadow: 0 11px 24px color-mix(in srgb, var(--kpi) 12%, transparent); }
+
+.overview-card {
+  background: linear-gradient(135deg,#edf4ff,#fff 66%);
+  border-color: #dce9ff;
+}
+.overview-card.five { background: linear-gradient(135deg,#e9fbf6,#fff 66%); border-color: #d4f0e8; }
+.overview-card-head b { font-size: 12px; }
+.overview-card-stats b { color: #2f6bff; }
+.overview-card.five .overview-card-stats b { color: #168b7c; }
+
+.service-card { background: linear-gradient(135deg,#f1f6ff,#fff 74%); border-color: #e0eaff; }
+.service-card.gold { background: linear-gradient(135deg,#fff8e8,#fff 74%); border-color: #f5e7c8; }
+.service-card.green { background: linear-gradient(135deg,#eefbf6,#fff 74%); border-color: #d8f0e7; }
+.service-card.indigo { background: linear-gradient(135deg,#f3f0ff,#fff 74%); border-color: #e7e0ff; }
+.service-card.purple { background: linear-gradient(135deg,#fbf0ff,#fff 74%); border-color: #f0d9f8; }
+
+.article-board { border-top: 2px solid #2f6bff; }
+.board-panel { border-top: 2px solid #16a394; }
+.article-kpis div:nth-child(1) { background: #eef4ff; border-color: #dce8ff; }
+.article-kpis div:nth-child(2) { background: #eefbf6; border-color: #d8f0e7; }
+.article-kpis div:nth-child(3) { background: #fff8e8; border-color: #f5e7c8; }
+.article-kpis div:nth-child(1) b { color: #2f6bff; }
+.article-kpis div:nth-child(2) b { color: #168b7c; }
+.article-kpis div:nth-child(3) b { color: #d48723; }
+.article-row:nth-child(1) .article-rank { color: #2f6bff; font-weight: 700; }
+.article-row:nth-child(2) .article-rank { color: #16a394; font-weight: 700; }
+.article-row:nth-child(3) .article-rank { color: #e8a13c; font-weight: 700; }
+
+.meal-count { background: linear-gradient(135deg,#f2f7ff,#fff 78%); border-color: #dfeaff; }
+.meal-count:nth-child(2) { background: linear-gradient(135deg,#eefbf6,#fff 78%); border-color: #d8f0e7; }
+.meal-count:nth-child(3) { background: linear-gradient(135deg,#fff8e8,#fff 78%); border-color: #f5e7c8; }
+.meal-count:nth-child(4) { background: linear-gradient(135deg,#f8f0ff,#fff 78%); border-color: #eadcf8; }
+.meal-count.active { background: #eaf1ff; }
+
+.recipe-card:nth-child(3n+1) { border-top: 2px solid #6aa7ff; }
+.recipe-card:nth-child(3n+2) { border-top: 2px solid #52c7b0; }
+.recipe-card:nth-child(3n+3) { border-top: 2px solid #f3bd62; }
+.template-card:nth-child(3n+1) { border-top: 2px solid #6aa7ff; }
+.template-card:nth-child(3n+2) { border-top: 2px solid #52c7b0; }
+.template-card:nth-child(3n+3) { border-top: 2px solid #e7a8ce; }
+.product-card:nth-child(6n+1) .product-thumb { background: linear-gradient(135deg,#dceaff,#eef5ff); }
+.product-card:nth-child(6n+2) .product-thumb { background: linear-gradient(135deg,#daf4eb,#f0fcf7); }
+.product-card:nth-child(6n+3) .product-thumb { background: linear-gradient(135deg,#fff0d8,#fff9ed); }
+.product-card:nth-child(6n+4) .product-thumb { background: linear-gradient(135deg,#eee7ff,#f8f5ff); }
+.product-card:nth-child(6n+5) .product-thumb { background: linear-gradient(135deg,#ffe4ef,#fff4f8); }
+.product-card:nth-child(6n+6) .product-thumb { background: linear-gradient(135deg,#def5fa,#f1fcfe); }
+
+.quick-links a:nth-child(1) { background: #eef4ff; }
+.quick-links a:nth-child(2) { background: #eefbf6; }
+.quick-links a:nth-child(3) { background: #fff8e8; }
+.quick-links a:nth-child(4) { background: #f8f0ff; }
+.quick-links a:nth-child(1) b { color: #2f6bff; }
+.quick-links a:nth-child(2) b { color: #168b7c; }
+.quick-links a:nth-child(3) b { color: #d48723; }
+.quick-links a:nth-child(4) b { color: #8b5cf6; }
+
+.role-card:nth-child(4n+1) { border-left: 3px solid #6aa7ff; }
+.role-card:nth-child(4n+2) { border-left: 3px solid #52c7b0; }
+.role-card:nth-child(4n+3) { border-left: 3px solid #f3bd62; }
+.role-card:nth-child(4n+4) { border-left: 3px solid #c6a5ea; }
