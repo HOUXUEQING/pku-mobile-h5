@@ -154,7 +154,7 @@
     $("#viewRoot").innerHTML = html;
     setTop("结算管理", "财务结算 / 结算管理", "settlements");
     const legacyRolePanel = $$(".panel").find(p => p.querySelector(".panel-title")?.innerText === "角色权限");
-    if (legacyRolePanel) { legacyRolePanel.remove(); legacyRolePanel.parentElement.style.gridTemplateColumns = "1fr"; }
+    if (legacyRolePanel) { const parent = legacyRolePanel.parentElement; legacyRolePanel.remove(); if (parent) parent.style.gridTemplateColumns = "1fr"; }
     $$("[data-settlement-module]").forEach(b => b.addEventListener("click", () => { settlementModule = b.dataset.settlementModule; renderSettlements(); }));
     $$("[data-invoice-open]").forEach(b => b.addEventListener("click", () => openInvoice(b.dataset.invoiceOpen)));
     $$("[data-invoice-view]").forEach(b => b.addEventListener("click", () => { settlementModule = "开票记录"; renderSettlements(); }));
