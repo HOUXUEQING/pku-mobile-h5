@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>企康结算中心</title>
+  <link rel="stylesheet" href="./settlement.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#/工作台">
+        <img src="./assets/logo.png" alt="北大医疗" />
+        <span><b>企康结算中心</b><small>B2B HEALTH SETTLEMENT</small></span>
+      </a>
+      <div class="workspace-chip"><span>企康资金与结算</span><small>企业委托资金池 · 直付清算</small></div>
+
+      <nav class="menu">
+        <div class="menu-group">
+          <p>总览</p>
+          <a href="#/工作台" data-route="工作台" data-roles="finance,ops,enterprise,institution"><span class="mi">▦</span>工作台</a>
+        </div>
+        <div class="menu-group">
+          <p>企业资金</p>
+          <a href="#/企业合约" data-route="企业合约" data-roles="finance,ops,enterprise"><span class="mi">▤</span>企业合约</a>
+          <a href="#/企业资金账户" data-route="企业资金账户" data-roles="finance,ops,enterprise"><span class="mi">◈</span>企业资金账户</a>
+          <a href="#/员工额度账户" data-route="员工额度账户" data-roles="finance,ops,enterprise"><span class="mi">◉</span>员工额度账户</a>
+          <a href="#/结余处理" data-route="结余处理" data-roles="finance,ops,enterprise"><span class="mi">↩</span>结余处理</a>
+        </div>
+        <div class="menu-group">
+          <p>机构结算</p>
+          <a href="#/机构合约" data-route="机构合约" data-roles="finance,ops,institution"><span class="mi">▥</span>机构合约</a>
+          <a href="#/消费明细" data-route="消费明细" data-roles="finance,ops,institution"><span class="mi">≡</span>消费明细</a>
+          <a href="#/异常消费池" data-route="异常消费池" data-roles="finance,ops,institution"><span class="mi">!</span>异常消费池</a>
+          <a href="#/机构对账" data-route="机构对账" data-roles="finance,ops,institution"><span class="mi">⇄</span>机构对账</a>
+          <a href="#/差错工单" data-route="差错工单" data-roles="finance,ops,institution"><span class="mi">⚠</span>差错工单</a>
+          <a href="#/机构结算单" data-route="机构结算单" data-roles="finance,ops,institution"><span class="mi">¥</span>机构结算单</a>
+          <a href="#/打款管理" data-route="打款管理" data-roles="finance,ops,institution"><span class="mi">⇧</span>打款管理</a>
+        </div>
+        <div class="menu-group">
+          <p>账单与发票</p>
+          <a href="#/企业账单" data-route="企业账单" data-roles="finance,ops,enterprise"><span class="mi">▦</span>企业账单</a>
+          <a href="#/发票管理" data-route="发票管理" data-roles="finance,ops,enterprise"><span class="mi">▧</span>发票管理</a>
+        </div>
+        <div class="menu-group">
+          <p>数据与审计</p>
+          <a href="#/报表看板" data-route="报表看板" data-roles="finance,ops,enterprise,institution"><span class="mi">▥</span>报表看板</a>
+          <a href="#/审计日志" data-route="审计日志" data-roles="finance,ops"><span class="mi">◷</span>审计日志</a>
+        </div>
+        <div class="menu-group">
+          <p>系统</p>
+          <a href="#/系统管理" data-route="系统管理" data-roles="finance"><span class="mi">⚙</span>系统管理</a>
+        </div>
+      </nav>
+      <div class="sidebar-foot"><span class="avatar">李</span><div><b>李明</b><small>财务运营 · 企康事业部</small></div><i></i></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb" id="crumb">企康结算中心 / 工作台</div>
+        <div class="top-right">
+          <label class="role-switch">当前角色
+            <select id="roleSwitch">
+              <option value="finance">财务管理员</option>
+              <option value="ops">运营督导</option>
+              <option value="enterprise">企业 HR</option>
+              <option value="institution">机构用户</option>
+            </select>
+          </label>
+          <span class="top-date">2026-11-09</span>
+          <span class="top-user"><i>李</i><span><b>李明</b><small>财务运营</small></span></span>
+        </div>
+      </header>
+      <div class="view" id="viewRoot"></div>
+    </main>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <button class="drawer-close" id="drawerClose" aria-label="关闭">×</button>
+    <div id="drawerBody"></div>
+  </aside>
+  <div class="modal-wrap" id="modalWrap" aria-hidden="true">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modalClose" aria-label="关闭">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="./settlement.js"></script>
+</body>
+</html>
