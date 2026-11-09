@@ -2041,3 +2041,8 @@ body {
 .nav-group > p { margin: 6px 10px 2px; }
 .nav-item { min-height: 24px; height: 24px; padding-top: 0; padding-bottom: 0; }
 .nav-item .ic { width: 13px; height: 13px; }
+
+.mall-subcats { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin: -3px 0 11px; padding: 7px 9px; background: #f8faff; border: 1px solid #edf3fc; border-radius: 7px; }
+.mall-subcats > span { margin-right: 3px; color: #9aa8bc; font-size: 8px; }
+.mall-subcats button { height: 22px; padding: 0 8px; color: #7b8ca4; font-size: 8px; background: #fff; border: 1px solid #e7eef9; border-radius: 4px; }
+.mall-subcats button.active { color: #2f6bff; background: #edf3ff; border-color: #c9d9ff; }

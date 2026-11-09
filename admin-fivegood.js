@@ -181,17 +181,37 @@
     input.addEventListener("input", () => { const q = input.value.trim(); $$(".product-card").forEach(card => card.style.display = !q || card.innerText.includes(q) ? "" : "none"); });
   }
 
+  function orderRows() {
+    return D.orders.map(o => ({
+      ...o,
+      upstream: Math.round(o.amount * 0.6),
+      downstream: Math.round(o.amount * 0.82),
+      supplier: o.item.includes("营养") || o.item.includes("食材") ? "营养品供应链" : "北大医疗健康管理中心",
+      invoice: o.status === "已完成" ? "已开票" : o.status === "已取消" ? "无需开票" : "未开票"
+    }));
+  }
+
   function renderOrders() {
+    const rows = orderRows();
     const html = `
-      ${pageHead("订单中心", "PUBLIC MODULE / ORDERS", "", `<button class="btn" data-toast="原型演示：导出订单">${icon("chart")}导出订单</button>`)}
-      <div class="kpi-grid four">${kpi("check", "今日订单", 3, "单", "全部项目", "#2f6bff")}${kpi("project", "待处理", 2, "单", "待发货 / 待预约", "#f0a23a")}${kpi("users", "已完成", 4, "单", "本月累计", "#16a394")}${kpi("chart", "本月订单额", "¥ 5.2", "万", "含权益兑换", "#8b5cf6")}</div>
-      <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="orderSearch" placeholder="搜索订单号、员工、商品或项目" /></label><select class="filter-select" id="orderStatus"><option>全部状态</option><option>待发货</option><option>待预约</option><option>已完成</option><option>已取消</option></select><span class="tag blue">公共模块 · 全项目</span></div>
-      <section class="panel"><div class="table-wrap"><table class="data-table" id="orderTable"><thead><tr><th>订单号</th><th>员工</th><th>商品 / 服务</th><th>所属项目</th><th>金额</th><th>状态</th><th>下单时间</th></tr></thead><tbody>${D.orders.map(o => `<tr><td><span class="cell-main">${escape(o.id)}</span></td><td>${escape(o.user)}</td><td>${escape(o.item)}</td><td><span class="tag">${escape(o.project)}</span></td><td><b class="cell-main">¥${o.amount.toLocaleString("zh-CN")}</b></td><td><span class="tag ${o.status === "已完成" ? "green" : o.status === "已取消" ? "slate" : "gold"}">${escape(o.status)}</span></td><td>${escape(o.date)}</td></tr>`).join("")}</tbody></table></div></section>`;
+      ${pageHead("订单中心", "PUBLIC MODULE / ORDERS", "", `<button class="btn" data-toast="订单已导出">${icon("chart")}导出订单</button>`)}
+      <div class="kpi-grid four">${kpi("check", "今日订单", 3, "单", "全部项目", "#2f6bff")}${kpi("project", "待处理", rows.filter(o => o.status === "待发货" || o.status === "待预约").length, "单", "待发货 / 待预约", "#f0a23a")}${kpi("users", "待结算", 2, "单", "上游成本 / 下游收入", "#16a394")}${kpi("chart", "待开票", rows.filter(o => o.invoice === "未开票").length, "单", "已完成订单", "#8b5cf6")}</div>
+      <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="orderSearch" placeholder="搜索订单号、客户、商品或项目" /></label><select class="filter-select" id="orderStatus"><option>全部状态</option><option>待发货</option><option>待预约</option><option>已完成</option><option>已取消</option></select><span class="tag blue">公共模块 · 全项目</span></div>
+      <section class="panel"><div class="table-wrap"><table class="data-table" id="orderTable"><thead><tr><th>订单号</th><th>客户</th><th>商品 / 服务</th><th>所属项目</th><th>订单金额</th><th>上游结算</th><th>下游结算</th><th>开票</th><th>状态</th><th>下单时间</th></tr></thead><tbody>${rows.map(o => `<tr class="clickable" data-order-review="${o.id}"><td><span class="cell-main">${escape(o.id)}</span></td><td>${escape(o.user)}</td><td>${escape(o.item)}</td><td><span class="tag">${escape(o.project)}</span></td><td><b class="cell-main">¥${o.amount.toLocaleString("zh-CN")}</b></td><td>¥${o.upstream.toLocaleString("zh-CN")}</td><td>¥${o.downstream.toLocaleString("zh-CN")}</td><td><span class="tag ${o.invoice === "已开票" ? "green" : o.invoice === "未开票" ? "gold" : "slate"}">${escape(o.invoice)}</span></td><td><span class="tag ${o.status === "已完成" ? "green" : o.status === "已取消" ? "slate" : "gold"}">${escape(o.status)}</span></td><td>${escape(o.date)}</td></tr>`).join("")}</tbody></table></div></section>`;
     $("#viewRoot").innerHTML = html;
     setTop("订单中心", "公共模块 / 订单中心", "orders");
     const q = $("#orderSearch"), s = $("#orderStatus");
     const filter = () => { $$("#orderTable tbody tr").forEach(tr => tr.style.display = (!q.value.trim() || tr.innerText.includes(q.value.trim())) && (s.value === "全部状态" || tr.innerText.includes(s.value)) ? "" : "none"); };
     q.addEventListener("input", filter); s.addEventListener("change", filter);
+    $$("[data-order-review]").forEach(tr => tr.addEventListener("click", () => openOrderReview(tr.dataset.orderReview)));
+  }
+
+  function openOrderReview(id) {
+    const o = orderRows().find(x => x.id === id); if (!o) return;
+    openDrawer(`<p class="page-eyebrow">ORDER REVIEW</p><h2>${escape(o.id)}</h2><p class="drawer-sub">${escape(o.user)} · ${escape(o.project)} · ${escape(o.status)}</p>
+      <div class="drawer-section"><div class="info-list"><div class="info-item"><small>商品 / 服务</small><b>${escape(o.item)}</b></div><div class="info-item"><small>订单金额</small><b>¥${o.amount.toLocaleString("zh-CN")}</b></div><div class="info-item"><small>供应商来源</small><b>${escape(o.supplier)}</b></div><div class="info-item"><small>下单时间</small><b>${escape(o.date)}</b></div></div></div>
+      <div class="drawer-section"><h3>上下游结算</h3><div class="info-list"><div class="info-item"><small>上游结算</small><b>¥${o.upstream.toLocaleString("zh-CN")}</b></div><div class="info-item"><small>下游结算</small><b>¥${o.downstream.toLocaleString("zh-CN")}</b></div><div class="info-item"><small>订单毛利</small><b class="margin-positive">¥${(o.downstream - o.upstream).toLocaleString("zh-CN")}</b></div><div class="info-item"><small>开票状态</small><b>${escape(o.invoice)}</b></div></div></div>
+      <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><a class="btn primary" href="#settlements">去结算管理 →</a></div>`);
   }
 
   function renderArticles() {

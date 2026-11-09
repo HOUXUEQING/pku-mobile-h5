@@ -624,14 +624,14 @@
 
   function renderStudents() {
     const html = `
-      ${pageHead("学员管理", "PROGRAM PARTICIPANTS", "企业客户学员由负责企康项目的机构医师成员录入，账号为手机号 + 姓名", `<button class="btn primary" data-toast="原型演示：进入新增学员">${icon("plus")}新增学员</button>`)}
+      ${pageHead("客户管理", "CUSTOMER MANAGEMENT", "客户由业务方与项目服务团队共同维护，账号为手机号 + 姓名", `<button class="btn primary" data-toast="原型演示：进入新增客户">${icon("plus")}新增客户</button>`)}
       <div class="filter-bar">
-        <label class="filter-search">${icon("search")}<input id="studentSearch" placeholder="搜索姓名、手机号、项目或来源医师" /></label>
+        <label class="filter-search">${icon("search")}<input id="studentSearch" placeholder="搜索客户姓名、手机号、项目或来源医师" /></label>
         <select class="filter-select" id="studentStatus"><option>全部状态</option><option>在营</option><option>待入营</option><option>已完成</option></select>
-        <span class="tag blue">学员 ${D.students.length} 人</span>
+        <span class="tag blue">客户 ${D.students.length} 人</span>
       </div>
       <section class="panel"><div class="table-wrap"><table class="data-table" id="studentTable">
-        <thead><tr><th>学员</th><th>项目 / 营期</th><th>来源医师</th><th>服务团队</th><th>打卡完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead>
+        <thead><tr><th>客户</th><th>项目 / 营期</th><th>来源医师</th><th>服务团队</th><th>打卡完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead>
         <tbody>${D.students.map(s => `<tr class="clickable" data-student="${s.id}">
           <td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td>
           <td><span class="cell-main">${escape(projectById(s.projectId).name)}</span><span class="cell-sub">${escape(campById(s.campId).name)}</span></td>
@@ -641,7 +641,7 @@
       </table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("学员管理", "企康项目 / 学员管理");
+    setTop("客户管理", "合作方管理 / 客户管理");
     const input = $("#studentSearch");
     const status = $("#studentStatus");
     const filter = () => {

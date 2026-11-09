@@ -38,6 +38,7 @@
   let recipeMeal = "早餐";
   let mallKind = "全部";
   let mallCat = "全部";
+  let mallSubCat = "全部";
   let assessmentType = "全部";
 
   const projectName = () => wsProject === "FG001" ? "五好生活" : "减重营";
@@ -77,6 +78,16 @@
 
   function renderMall() {
     const catalog = D.mallCatalog;
+    D.supplements.forEach(s => {
+      if (catalog.some(p => p.id === "M-" + s.id)) return;
+      catalog.push({
+        id: "M-" + s.id, kind: "实物", major: "实物商品", category: "营养补剂", subCategory: s.category,
+        name: s.name, price: s.price, priceType: "个人补差", stock: s.stock, sales: s.sold,
+        status: s.active ? "上架" : "下架", fulfillment: "快递发货",
+        desc: "适用：" + s.suitable + "；禁忌：" + s.taboo,
+        supplierName: "营养品供应链", upstreamSettle: Math.round(s.settle * 0.7), downstreamSettle: s.settle
+      });
+    });
     const setPay = (id, points, personalPay) => {
       const item = catalog.find(p => p.id === id);
       if (item && !item.priceType.includes("自费")) { item.priceType = "积分+自费"; item.points = points; item.personalPay = personalPay; }
@@ -92,18 +103,22 @@
     });
     const majorItems = catalog.filter(p => mallKind === "全部" || p.major === mallKind);
     const categories = ["全部", ...new Set(majorItems.map(p => p.category))];
-    const list = majorItems.filter(p => mallCat === "全部" || p.category === mallCat);
+    const catItems = majorItems.filter(p => mallCat === "全部" || p.category === mallCat);
+    const subCategories = ["全部", ...new Set(catItems.map(p => p.subCategory))];
+    const list = catItems.filter(p => mallSubCat === "全部" || p.subCategory === mallSubCat);
     const html = `
-      ${head("商城", "PUBLIC MODULE / MALL", `<button class="btn primary" data-new-module="mall">${icon("plus")}新增商品</button>`)}
+      ${head("商城", "PUBLIC MODULE / MALL", `<button class="btn" data-new-supplement="1">${icon("plus")}新增营养补剂</button><button class="btn primary" data-new-module="mall">${icon("plus")}新增商品</button>`)}
       <div class="kpi-grid four">${kpi("project", "服务目录", catalog.filter(p => p.kind === "服务").length, "项", "可预约履约", "#2f6bff")}${kpi("check", "实物商品", catalog.filter(p => p.kind === "实物").length, "件", "积分 / 补差兑换", "#16a394")}${kpi("chart", "库存预警", catalog.filter(p => p.kind === "实物" && Number(p.stock) < 30).length, "件", "低于 30 件", "#f0a23a")}${kpi("users", "本月兑换", 469, "单", "服务 + 实物", "#8b5cf6")}</div>
       <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="mallSearch" placeholder="搜索商品、服务、大类或小类" /></label><span class="tag blue">公共模块 · 全项目</span></div>
       <div class="mall-tabs">${["全部", "服务目录", "实物商品"].map(k => `<button class="${mallKind === k ? "active" : ""}" data-mall-kind="${k}">${k}</button>`).join("")}</div>
       <div class="mall-cats">${categories.map(c => `<button class="${mallCat === c ? "active" : ""}" data-mall-cat="${c}">${c}</button>`).join("")}</div>
+      ${mallCat !== "全部" ? `<div class="mall-subcats"><span>小类</span>${subCategories.map(c => `<button class="${mallSubCat === c ? "active" : ""}" data-mall-subcat="${c}">${c}</button>`).join("")}</div>` : ""}
       <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-supply"><span>供应商：${esc(p.supplierName)}</span><span>上游 ${mallMoney(p.upstreamSettle)} / 下游 ${mallMoney(p.downstreamSettle)}</span></div><div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
     $("#viewRoot").innerHTML = html;
     setTop("商城", "公共模块 / 商城", "mall");
-    $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; renderMall(); }));
-    $$("[data-mall-cat]").forEach(b => b.addEventListener("click", () => { mallCat = b.dataset.mallCat; renderMall(); }));
+    $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; mallSubCat = "全部"; renderMall(); }));
+    $$("[data-mall-cat]").forEach(b => b.addEventListener("click", () => { mallCat = b.dataset.mallCat; mallSubCat = "全部"; renderMall(); }));
+    $$("[data-mall-subcat]").forEach(b => b.addEventListener("click", () => { mallSubCat = b.dataset.mallSubcat; renderMall(); }));
     $("#mallSearch").addEventListener("input", e => { const q = e.target.value.trim(); $$(".catalog-card").forEach(c => c.style.display = !q || c.innerText.includes(q) ? "" : "none"); });
   }
 
@@ -167,10 +182,11 @@
     ] }
   };
 
-  function openEditor(module, id) {
+  function openEditor(module, id, preset) {
     const cfg = moduleConfig[module]; if (!cfg) return;
-    const item = id ? cfg.data().find(x => x.id === id) : null;
-    const title = `${item ? "编辑" : "新建"}${cfg.label}`;
+    const isEdit = !!id;
+    const item = isEdit ? cfg.data().find(x => x.id === id) : (preset || null);
+    const title = `${isEdit ? "编辑" : "新建"}${cfg.label}`;
     const projects = item && item.projects ? item.projects : [];
     const selectedIngredients = item && item.ingredients ? item.ingredients.split("、") : [];
     const recipeExtra = module === "recipe" ? `<div class="field full"><span>食材（搜索食品库并勾选）</span><input id="ingredientSearch" placeholder="搜索食品名称或分类" /><div class="ingredient-picker" id="ingredientPicker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-ingredient="${esc(f.name)}"${selectedIngredients.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal/100g</small></span></label>`).join("")}</div><div class="ingredient-count" id="ingredientCount">已选 ${selectedIngredients.length} 项食材</div></div>` : "";
@@ -203,6 +219,8 @@
   }
 
   document.addEventListener("click", event => {
+    const addSupp = event.target.closest("[data-new-supplement]");
+    if (addSupp) { event.preventDefault(); openEditor("mall", "", { kind: "实物", major: "实物商品", category: "营养补剂", subCategory: "蛋白补充", priceType: "个人补差", fulfillment: "快递发货", status: "上架", supplierName: "营养品供应链" }); return; }
     const add = event.target.closest("[data-new-module]");
     if (add) { event.preventDefault(); openEditor(add.dataset.newModule, ""); return; }
     const edit = event.target.closest("[data-edit-module]");

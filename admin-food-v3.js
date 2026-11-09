@@ -39,7 +39,7 @@
   }[category] || "🥣");
   const foodThumb = (name, category, kind) => `<span class="food-thumb ${kind === "supp" ? "supp" : ""}">${emoji(category)}</span>`;
 
-  let foodTab = "营养补剂";
+  let foodTab = "食材库";
   let configMeal = "早餐";
   const config = { "早餐": ["藜麦糙米饭", "全麦吐司", "希腊酸奶碗"], "午餐": [], "晚餐": [], "加餐": [] };
 
@@ -48,8 +48,7 @@
       { key: "全天食谱", count: D.recipePlans.length },
       { key: "餐次配置", count: D.recipeTemplates.length },
       { key: "菜品库", count: D.recipeLibrary.length },
-      { key: "食材库", count: D.foods.length },
-      { key: "营养补剂", count: D.supplements.length }
+      { key: "食材库", count: D.foods.length }
     ];
     const action = foodTab === "营养补剂" ? `<button class="btn primary" data-food-new="supp">${icon("plus")}新增补剂</button>` : `<button class="btn primary" data-food-new="food">${icon("plus")}新增食材</button>`;
     let body = "";
