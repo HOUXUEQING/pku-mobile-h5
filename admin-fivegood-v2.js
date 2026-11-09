@@ -186,7 +186,8 @@
     const cfg = moduleConfig[module]; if (!cfg) return;
     const isEdit = !!id;
     const item = isEdit ? cfg.data().find(x => x.id === id) : (preset || null);
-    const title = `${isEdit ? "编辑" : "新建"}${cfg.label}`;
+    const isSupplement = !isEdit && preset && preset.category === "营养补剂";
+    const title = isEdit ? "编辑商品" : isSupplement ? "新增营养补剂" : `新建${cfg.label}`;
     const projects = item && item.projects ? item.projects : [];
     const selectedIngredients = item && item.ingredients ? item.ingredients.split("、") : [];
     const recipeExtra = module === "recipe" ? `<div class="field full"><span>食材（搜索食品库并勾选）</span><input id="ingredientSearch" placeholder="搜索食品名称或分类" /><div class="ingredient-picker" id="ingredientPicker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-ingredient="${esc(f.name)}"${selectedIngredients.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal/100g</small></span></label>`).join("")}</div><div class="ingredient-count" id="ingredientCount">已选 ${selectedIngredients.length} 项食材</div></div>` : "";
