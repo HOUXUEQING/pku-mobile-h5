@@ -156,6 +156,18 @@
         ${kpi("chart", "打卡完成率", completion, "%", "完成成员 ÷ 参营学员", "#8b5cf6")}
         ${kpi("heart", "风险学员", risks.length, "人", "连续未打卡 / 指标异常", "#c05a54")}
       </div>
+      <div class="overview-projects">
+        <a class="overview-card" href="#projects">
+          <div class="overview-card-head"><span class="tag blue">减重营</span><b>项目运营</b></div>
+          <div class="overview-card-stats"><div><small>在营项目</small><b>${activeProjects.length}</b></div><div><small>参营学员</small><b>165</b></div><div><small>打卡完成率</small><b>78.6%</b></div></div>
+          <span class="overview-card-link">进入项目管理 →</span>
+        </a>
+        <a class="overview-card five" href="#recipes">
+          <div class="overview-card-head"><span class="tag green">五好生活</span><b>全员健康福利</b></div>
+          <div class="overview-card-stats"><div><small>参与员工</small><b>${D.fiveGood.employees}</b></div><div><small>服务人次</small><b>${D.fiveGood.monthlyServices}</b></div><div><small>饮食打卡</small><b>${D.fiveGood.dietRate}%</b></div></div>
+          <span class="overview-card-link">进入五好工作区 →</span>
+        </a>
+      </div>
       <div class="dash-grid">
         <section class="panel chart-card">
           <div class="panel-head"><div><h3 class="panel-title">近 14 天打卡完成率</h3><p class="panel-sub">完成成员 ÷ 参营学员，按全部在营项目统计</p></div><a class="panel-link" href="#checkins">查看打卡记录 →</a></div>

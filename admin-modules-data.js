@@ -3,8 +3,7 @@ window.ADMIN_DATA = window.ADMIN_DATA || {};
 Object.assign(window.ADMIN_DATA, {
   fiveGood: {
     id: "FG001",
-    name: "星河科技五好生活",
-    enterprise: "星河科技",
+    name: "五好生活",
     institutionId: "I003",
     status: "进行中",
     start: "2026-09-01",
@@ -157,3 +156,60 @@ Object.assign(window.ADMIN_DATA, {
     { rank: 5, name: "陈思远", project: "五好生活", points: 920, streak: 10 }
   ]
 });
+
+Object.assign(window.ADMIN_DATA, {
+  recipeLibrary: [
+    { id: "R-B01", meal: "早餐", name: "燕麦鸡蛋能量碗", kcal: 420, protein: 24, ingredients: "燕麦、鸡蛋、无糖酸奶、蓝莓", tags: ["高蛋白", "快手"], status: "启用" },
+    { id: "R-B02", meal: "早餐", name: "全麦牛油果蛋卷", kcal: 390, protein: 21, ingredients: "全麦饼、牛油果、鸡蛋、生菜", tags: ["低GI", "饱腹"], status: "启用" },
+    { id: "R-B03", meal: "早餐", name: "紫薯豆浆早餐盘", kcal: 410, protein: 19, ingredients: "紫薯、豆浆、鸡蛋、坚果", tags: ["高纤维"], status: "启用" },
+    { id: "R-B04", meal: "早餐", name: "南瓜小米粥配蛋", kcal: 360, protein: 18, ingredients: "南瓜、小米、鸡蛋、青菜", tags: ["养胃"], status: "启用" },
+    { id: "R-B05", meal: "早餐", name: "香蕉燕麦松饼", kcal: 380, protein: 17, ingredients: "香蕉、燕麦、鸡蛋、牛奶", tags: ["无添加糖"], status: "启用" },
+    { id: "R-B06", meal: "早餐", name: "鸡蛋牛油果吐司", kcal: 400, protein: 22, ingredients: "全麦吐司、鸡蛋、牛油果", tags: ["高蛋白"], status: "草稿" },
+    { id: "R-L01", meal: "中餐", name: "糙米鸡胸彩蔬饭", kcal: 560, protein: 38, ingredients: "糙米、鸡胸、西兰花、胡萝卜", tags: ["减脂", "均衡"], status: "启用" },
+    { id: "R-L02", meal: "中餐", name: "藜麦牛肉时蔬碗", kcal: 570, protein: 36, ingredients: "藜麦、牛肉、彩椒、西兰花", tags: ["高蛋白"], status: "启用" },
+    { id: "R-L03", meal: "中餐", name: "香煎三文鱼沙拉", kcal: 610, protein: 42, ingredients: "三文鱼、生菜、藜麦、番茄", tags: ["优质脂肪"], status: "启用" },
+    { id: "R-L04", meal: "中餐", name: "虾仁芦笋意面", kcal: 540, protein: 35, ingredients: "意面、虾仁、芦笋、橄榄油", tags: ["低脂"], status: "启用" },
+    { id: "R-L05", meal: "中餐", name: "烤鸡腿藜麦沙拉", kcal: 560, protein: 40, ingredients: "鸡腿、藜麦、生菜、番茄", tags: ["高蛋白"], status: "启用" },
+    { id: "R-L06", meal: "中餐", name: "黑椒牛肉糙米饭", kcal: 600, protein: 39, ingredients: "牛肉、糙米、彩椒、洋葱", tags: ["饱腹"], status: "草稿" },
+    { id: "R-D01", meal: "晚餐", name: "清蒸鲈鱼豆腐", kcal: 520, protein: 32, ingredients: "鲈鱼、北豆腐、葱姜、青菜", tags: ["低脂", "易消化"], status: "启用" },
+    { id: "R-D02", meal: "晚餐", name: "菌菇豆腐荞麦面", kcal: 510, protein: 27, ingredients: "荞麦面、菌菇、豆腐、青菜", tags: ["素食"], status: "启用" },
+    { id: "R-D03", meal: "晚餐", name: "番茄牛肉杂粮饭", kcal: 520, protein: 34, ingredients: "牛肉、番茄、杂粮饭、洋葱", tags: ["家常"], status: "启用" },
+    { id: "R-D04", meal: "晚餐", name: "冬瓜鸡肉菌菇汤", kcal: 520, protein: 31, ingredients: "冬瓜、鸡肉、菌菇、枸杞", tags: ["清淡"], status: "启用" },
+    { id: "R-D05", meal: "晚餐", name: "清蒸鳕鱼蔬菜", kcal: 460, protein: 32, ingredients: "鳕鱼、西兰花、胡萝卜、柠檬", tags: ["低脂"], status: "启用" },
+    { id: "R-D06", meal: "晚餐", name: "海带豆腐鱼片汤", kcal: 500, protein: 30, ingredients: "海带、豆腐、鱼片、姜丝", tags: ["低热量"], status: "启用" },
+    { id: "R-S01", meal: "加餐", name: "无糖酸奶坚果杯", kcal: 180, protein: 9, ingredients: "无糖酸奶、杏仁、蓝莓", tags: ["高蛋白"], status: "启用" },
+    { id: "R-S02", meal: "加餐", name: "蓝莓奇亚籽杯", kcal: 180, protein: 7, ingredients: "蓝莓、奇亚籽、无糖酸奶", tags: ["高纤维"], status: "启用" },
+    { id: "R-S03", meal: "加餐", name: "低糖水果拼盘", kcal: 180, protein: 4, ingredients: "蓝莓、草莓、奇异果", tags: ["低糖"], status: "启用" },
+    { id: "R-S04", meal: "加餐", name: "杏仁小袋", kcal: 180, protein: 6, ingredients: "原味杏仁", tags: ["便携"], status: "启用" },
+    { id: "R-S05", meal: "加餐", name: "低脂奶酪杯", kcal: 200, protein: 12, ingredients: "低脂奶酪、蓝莓", tags: ["高蛋白"], status: "启用" },
+    { id: "R-S06", meal: "加餐", name: "奇异果酸奶", kcal: 200, protein: 8, ingredients: "奇异果、无糖酸奶", tags: ["维C"], status: "草稿" }
+  ],
+
+  mallCatalog: [
+    { id: "M-S01", kind: "服务", major: "服务目录", category: "健康筛查", subCategory: "年度体检", name: "职工年度体检", price: 0, priceType: "企业权益", stock: "—", sales: 386, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "预约履约", desc: "基础检查、影像、肿瘤标志物与报告解读。" },
+    { id: "M-S02", kind: "服务", major: "服务目录", category: "健康筛查", subCategory: "专项筛查", name: "无痛胃肠镜检查", price: 1299, priceType: "个人补差", stock: "—", sales: 86, projects: ["五好生活"], status: "上架", fulfillment: "到院检查", desc: "麻醉下胃肠镜联合检查，含病理。" },
+    { id: "M-S03", kind: "服务", major: "服务目录", category: "健康筛查", subCategory: "睡眠筛查", name: "医疗级多导睡眠监测", price: 899, priceType: "个人补差", stock: "—", sales: 42, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "预约履约", desc: "睡眠结构、呼吸事件与血氧监测。" },
+    { id: "M-S04", kind: "服务", major: "服务目录", category: "健康筛查", subCategory: "心肺筛查", name: "心肺运动 CPET 筛查", price: 699, priceType: "企业权益", stock: "—", sales: 64, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "到院检查", desc: "评估心肺耐力与运动风险。" },
+    { id: "M-S05", kind: "服务", major: "服务目录", category: "慢病管理", subCategory: "体重管理", name: "减重训练营", price: 0, priceType: "企业权益", stock: "—", sales: 120, projects: ["减重营"], status: "上架", fulfillment: "营期服务", desc: "营养、运动、健康管理多学科减重营。" },
+    { id: "M-S06", kind: "服务", major: "服务目录", category: "慢病管理", subCategory: "五高管理", name: "五高一重管理服务", price: 0, priceType: "企业权益", stock: "—", sales: 218, projects: ["五好生活"], status: "上架", fulfillment: "年度服务", desc: "五高人群分层管理与随访。" },
+    { id: "M-S07", kind: "服务", major: "服务目录", category: "慢病管理", subCategory: "心脑健康", name: "心脑健康训练营", price: 0, priceType: "企业权益", stock: "—", sales: 96, projects: ["五好生活"], status: "上架", fulfillment: "营期服务", desc: "心脑血管风险干预与生活方式训练。" },
+    { id: "M-S08", kind: "服务", major: "服务目录", category: "慢病管理", subCategory: "肺结节", name: "肺结节管理服务", price: 0, priceType: "企业权益", stock: "—", sales: 38, projects: ["五好生活"], status: "上架", fulfillment: "年度服务", desc: "肺结节风险分层、复查与转诊。" },
+    { id: "M-S09", kind: "服务", major: "服务目录", category: "就医服务", subCategory: "就医协助", name: "职工就医快通服务", price: 0, priceType: "企业权益", stock: "—", sales: 142, projects: ["五好生活"], status: "上架", fulfillment: "预约履约", desc: "挂号、陪诊、检查加急的就医协助。" },
+    { id: "M-S10", kind: "服务", major: "服务目录", category: "就医服务", subCategory: "线上问诊", name: "专家线上二次诊疗", price: 299, priceType: "个人补差", stock: "—", sales: 57, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "线上服务", desc: "专家基于病历与检查资料提供二次意见。" },
+    { id: "M-S11", kind: "服务", major: "服务目录", category: "特色服务", subCategory: "心理关怀", name: "心理健康管理服务（EAP）", price: 0, priceType: "企业权益", stock: "—", sales: 186, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "预约履约", desc: "心理评估、咨询与危机干预。" },
+    { id: "M-S12", kind: "服务", major: "服务目录", category: "特色服务", subCategory: "健康科普", name: "专家入企健康讲座", price: 0, priceType: "企业权益", stock: "—", sales: 24, projects: ["五好生活"], status: "上架", fulfillment: "到企服务", desc: "按企业需求配置专家讲座与现场咨询。" },
+    { id: "M-S13", kind: "服务", major: "服务目录", category: "应急保障", subCategory: "急救培训", name: "职场急救培训服务", price: 0, priceType: "企业权益", stock: "—", sales: 18, projects: ["五好生活"], status: "上架", fulfillment: "到企服务", desc: "心肺复苏、AED 与常见急症处置培训。" },
+    { id: "M-S14", kind: "服务", major: "服务目录", category: "应急保障", subCategory: "活动保障", name: "大型活动应急保障", price: 0, priceType: "企业权益", stock: "—", sales: 9, projects: ["五好生活"], status: "草稿", fulfillment: "现场服务", desc: "活动医疗点、急救人员与转运预案。" },
+    { id: "M-G01", kind: "实物", major: "实物商品", category: "运动装备", subCategory: "运动水杯", name: "便携运动水杯 500ml", price: 59, priceType: "积分兑换", stock: 50, sales: 86, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "快递发货", desc: "BPA-free 材质，运动随身饮水。" },
+    { id: "M-G02", kind: "实物", major: "实物商品", category: "运动装备", subCategory: "跳绳", name: "专业计数跳绳", price: 79, priceType: "积分兑换", stock: 29, sales: 42, projects: ["减重营"], status: "上架", fulfillment: "快递发货", desc: "防滑手柄、轴承顺滑，居家燃脂。" },
+    { id: "M-G03", kind: "实物", major: "实物商品", category: "运动装备", subCategory: "瑜伽垫", name: "加厚防滑瑜伽垫", price: 129, priceType: "积分兑换", stock: 20, sales: 31, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "快递发货", desc: "加厚缓冲，适合居家拉伸与普拉提。" },
+    { id: "M-G04", kind: "实物", major: "实物商品", category: "运动装备", subCategory: "筋膜枪", name: "便携筋膜枪", price: 399, priceType: "积分兑换", stock: 5, sales: 12, projects: ["减重营"], status: "上架", fulfillment: "快递发货", desc: "多档调节，运动后放松肌肉。" },
+    { id: "M-G05", kind: "实物", major: "实物商品", category: "健康食品", subCategory: "营养补充", name: "乳清蛋白粉", price: 299, priceType: "积分兑换", stock: 15, sales: 26, projects: ["五好生活", "减重营"], status: "上架", fulfillment: "快递发货", desc: "每份 20g 蛋白质，运动后补充。" },
+    { id: "M-G06", kind: "实物", major: "实物商品", category: "健康食品", subCategory: "健康主食", name: "健康厨房基础食材包", price: 199, priceType: "积分兑换", stock: 180, sales: 128, projects: ["五好生活"], status: "上架", fulfillment: "快递发货", desc: "杂粮、燕麦、藜麦等基础食材组合。" },
+    { id: "M-G07", kind: "实物", major: "实物商品", category: "健康监测", subCategory: "体脂秤", name: "电子体脂秤", price: 199, priceType: "积分兑换", stock: 10, sales: 18, projects: ["减重营"], status: "上架", fulfillment: "快递发货", desc: "体重、体脂、肌肉量等数据记录。" },
+    { id: "M-G08", kind: "实物", major: "实物商品", category: "睡眠改善", subCategory: "睡眠监测", name: "多导睡眠监测", price: 899, priceType: "个人补差", stock: 30, sales: 12, projects: ["五好生活"], status: "下架", fulfillment: "到院检查", desc: "睡眠呼吸与结构监测。" }
+  ]
+});
+
+window.ADMIN_DATA.fiveGood.name = "五好生活";
+delete window.ADMIN_DATA.fiveGood.enterprise;

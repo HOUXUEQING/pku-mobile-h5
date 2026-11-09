@@ -1,0 +1,177 @@
+/* =========================================================
+   五好生活细化：食谱库 / 商城目录 / 测评筛选 / 编辑抽屉
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  const D = window.ADMIN_DATA;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = v => String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const icon = n => `<svg class="ic"><use href="#i-${n}"/></svg>`;
+  const tag = s => {
+    const m = { "上架": "green", "启用": "green", "已发布": "green", "进行中": "green", "已完成": "green", "草稿": "gold", "待发布": "gold", "下架": "slate", "停用": "slate", "已结束": "slate", "待发货": "gold", "待预约": "gold", "已取消": "slate" };
+    return `<span class="tag ${m[s] || "slate"}">${esc(s)}</span>`;
+  };
+  const head = (title, eyebrow, actions) => `<div class="page-head"><div><p class="page-eyebrow">${eyebrow}</p><h2>${title}</h2></div><div class="page-actions">${actions || ""}</div></div>`;
+  const kpi = (ic, label, value, unit, foot, color) => `<article class="kpi-card" style="--kpi:${color};--kpi-soft:${color}18"><span class="kpi-icon">${icon(ic)}</span><div class="kpi-label">${label}</div><div class="kpi-num">${value}<small>${unit || ""}</small></div><div class="kpi-sub">${foot || ""}</div></article>`;
+  const setTop = (title, crumb, nav) => {
+    $("#topTitle").textContent = title;
+    $("#breadcrumb").textContent = crumb;
+    $$(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.nav === nav));
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+  const openDrawer = html => {
+    $("#drawerBody").innerHTML = html;
+    $("#drawer").classList.add("open");
+    $("#drawer").setAttribute("aria-hidden", "false");
+    $("#drawerBackdrop").classList.add("open");
+  };
+  const notify = text => {
+    const t = $("#toast"); if (!t) return;
+    t.textContent = text; t.classList.add("show");
+    clearTimeout(notify.t); notify.t = setTimeout(() => t.classList.remove("show"), 1900);
+  };
+
+  let wsProject = "FG001";
+  let recipeMeal = "早餐";
+  let mallKind = "全部";
+  let mallCat = "全部";
+  let assessmentType = "全部";
+
+  const projectName = () => wsProject === "FG001" ? "五好生活" : "减重营";
+  const workspaceBar = () => {
+    const opts = [{ id: "FG001", name: "五好生活" }, { id: "P001", name: D.projects.find(p => p.id === "P001").name }];
+    return `<div class="workspace-bar"><div class="workspace-title"><small>项目工作区</small><b>${esc(opts.find(o => o.id === wsProject).name)}</b></div><select class="workspace-select" id="wsProject">${opts.map(o => `<option value="${o.id}"${o.id === wsProject ? " selected" : ""}>${esc(o.name)}</option>`).join("")}</select></div>`;
+  };
+  const bindWs = rerender => {
+    const s = $("#wsProject"); if (s) s.addEventListener("change", () => { wsProject = s.value; rerender(); });
+  };
+
+  function renderRecipes() {
+    const meals = ["早餐", "中餐", "晚餐", "加餐"];
+    const recipes = D.recipeLibrary.filter(r => r.meal === recipeMeal);
+    const html = `
+      ${head("食谱库", "PROJECT WORKSPACE / RECIPE LIBRARY", `<button class="btn" data-publish-type="食谱" data-publish-name="${esc(recipeMeal)}食谱">发布</button><button class="btn primary" data-new-module="recipe">${icon("plus")}新建食谱</button>`)}
+      ${workspaceBar()}
+      <div class="filter-bar"><span class="tag blue">按餐次类型配置</span><span class="tag">${recipes.length} 个${esc(recipeMeal)}食谱</span><a class="btn small" href="#foods">食品库</a><a class="btn small" href="#meal-templates">餐次模板</a></div>
+      <div class="meal-tabs">${meals.map(m => `<button class="${recipeMeal === m ? "active" : ""}" data-recipe-meal="${m}">${m}</button>`).join("")}</div>
+      <div class="recipe-card-grid">${recipes.map(r => `<article class="recipe-card"><div class="recipe-card-top"><span class="tag ${r.meal === "早餐" ? "gold" : r.meal === "中餐" ? "blue" : r.meal === "晚餐" ? "green" : "slate"}">${esc(r.meal)}</span>${tag(r.status)}</div><h3>${esc(r.name)}</h3><p>${esc(r.ingredients)}</p><div class="recipe-card-meta"><span><b>${r.kcal}</b> kcal</span><span><b>${r.protein}g</b> 蛋白质</span></div><div class="recipe-card-foot"><div>${(r.tags || []).map(t => `<i>${esc(t)}</i>`).join("")}</div><button class="panel-link" data-edit-module="recipe" data-id="${r.id}">编辑 →</button></div></article>`).join("")}</div>
+      <div class="recipe-layout" style="margin-top:13px"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">本周排餐</h3></div><span class="tag green">2026-10-19 — 2026-10-25</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>日期</th><th>早餐</th><th>中餐</th><th>晚餐</th><th>加餐</th><th>热量</th></tr></thead><tbody>${D.recipePlans.map(r => `<tr><td><span class="cell-main">${esc(r.weekday)}</span><span class="cell-sub">${esc(r.date)}</span></td>${["breakfast", "lunch", "dinner", "snack"].map(k => `<td><span class="meal-name">${esc(r[k].name)}</span><span class="meal-kcal">${r[k].kcal} kcal</span></td>`).join("")}<td>${r.calories} kcal</td></tr>`).join("")}</tbody></table></div></section><aside class="form-aside"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">营养目标</h3></div></div><div class="panel-body"><div class="metric-bars">${[["热量", 93, "1680 / 1800"], ["蛋白质", 86, "86 / 90g"], ["碳水", 88, "210 / 240g"], ["脂肪", 72, "48 / 67g"]].map(([l, v, d]) => `<div class="metric-bar"><span>${l}</span><div class="bar"><i style="width:${v}%"></i></div><b>${d}</b></div>`).join("")}</div></div></section></aside></div>`;
+    $("#viewRoot").innerHTML = html;
+    setTop("食谱库", "项目工作区 / 食谱库", "recipes");
+    bindWs(renderRecipes);
+    $$("[data-recipe-meal]").forEach(b => b.addEventListener("click", () => { recipeMeal = b.dataset.recipeMeal; renderRecipes(); }));
+  }
+
+  function renderMall() {
+    const catalog = D.mallCatalog;
+    const majorItems = catalog.filter(p => mallKind === "全部" || p.major === mallKind);
+    const categories = ["全部", ...new Set(majorItems.map(p => p.category))];
+    const list = majorItems.filter(p => mallCat === "全部" || p.category === mallCat);
+    const html = `
+      ${head("商城", "PUBLIC MODULE / MALL", `<button class="btn primary" data-new-module="mall">${icon("plus")}新增商品</button>`)}
+      <div class="kpi-grid four">${kpi("project", "服务目录", catalog.filter(p => p.kind === "服务").length, "项", "可预约履约", "#2f6bff")}${kpi("check", "实物商品", catalog.filter(p => p.kind === "实物").length, "件", "积分 / 补差兑换", "#16a394")}${kpi("chart", "库存预警", catalog.filter(p => p.kind === "实物" && Number(p.stock) < 30).length, "件", "低于 30 件", "#f0a23a")}${kpi("users", "本月兑换", 469, "单", "服务 + 实物", "#8b5cf6")}</div>
+      <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="mallSearch" placeholder="搜索商品、服务、大类或小类" /></label><span class="tag blue">公共模块 · 全项目</span></div>
+      <div class="mall-tabs">${["全部", "服务目录", "实物商品"].map(k => `<button class="${mallKind === k ? "active" : ""}" data-mall-kind="${k}">${k}</button>`).join("")}</div>
+      <div class="mall-cats">${categories.map(c => `<button class="${mallCat === c ? "active" : ""}" data-mall-cat="${c}">${c}</button>`).join("")}</div>
+      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-price"><b>${p.priceType === "企业权益" ? "企业权益" : p.priceType === "积分兑换" ? `${p.price} 积分` : `¥${Number(p.price).toLocaleString("zh-CN")}`}</b><small>${esc(p.fulfillment)}</small></div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
+    $("#viewRoot").innerHTML = html;
+    setTop("商城", "公共模块 / 商城", "mall");
+    $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; renderMall(); }));
+    $$("[data-mall-cat]").forEach(b => b.addEventListener("click", () => { mallCat = b.dataset.mallCat; renderMall(); }));
+    $("#mallSearch").addEventListener("input", e => { const q = e.target.value.trim(); $$(".catalog-card").forEach(c => c.style.display = !q || c.innerText.includes(q) ? "" : "none"); });
+  }
+
+  function renderAssessments() {
+    const types = ["全部", "健康测评", "心理测评", "睡眠测评", "行为测评", "营养测评"];
+    const list = D.assessmentLibrary.filter(a => assessmentType === "全部" || a.type === assessmentType);
+    const html = `
+      ${head("测评", "PUBLIC MODULE / ASSESSMENTS", `<button class="btn primary" data-new-module="assessment">${icon("plus")}新建测评</button>`)}
+      <div class="kpi-grid four">${kpi("chart", "测评工具", D.assessmentLibrary.length, "个", "五好 + 减重营", "#2f6bff")}${kpi("users", "累计完成", 896, "人次", "全部项目", "#16a394")}${kpi("heart", "高风险", 31, "人", "待跟进", "#e15b64")}${kpi("check", "启用中", D.assessmentLibrary.filter(a => a.status === "启用").length, "个", "公共测评库", "#8b5cf6")}</div>
+      <div class="assessment-tabs">${types.map(t => `<button class="${assessmentType === t ? "active" : ""}" data-assessment-type="${t}">${t}</button>`).join("")}</div>
+      <section class="panel"><div class="panel-head"><div><h3 class="panel-title">测评工具</h3></div><span class="tag blue">${assessmentType === "全部" ? "全部类型" : assessmentType}</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>测评名称</th><th>类型</th><th>适用项目</th><th>题量</th><th>已完成</th><th>状态</th><th></th></tr></thead><tbody>${list.map(a => `<tr><td><span class="cell-main">${esc(a.name)}</span></td><td><span class="tag blue">${esc(a.type)}</span></td><td><div class="tag-row">${a.projects.map(p => `<span class="tag">${esc(p)}</span>`).join("")}</div></td><td>${a.questions}</td><td>${a.completed}</td><td>${tag(a.status)}</td><td><button class="panel-link" data-edit-module="assessment" data-id="${a.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    $("#viewRoot").innerHTML = html;
+    setTop("测评", "公共模块 / 测评", "assessments");
+    $$("[data-assessment-type]").forEach(b => b.addEventListener("click", () => { assessmentType = b.dataset.assessmentType; renderAssessments(); }));
+  }
+
+  const moduleConfig = {
+    mall: { label: "商品", data: () => D.mallCatalog, fields: [
+      ["kind", "商品类型", "select", ["服务", "实物"]], ["major", "大类", "select", ["服务目录", "实物商品"]],
+      ["category", "中类", "text"], ["subCategory", "小类", "text"], ["name", "商品名称", "text"],
+      ["priceType", "价格类型", "select", ["企业权益", "个人补差", "积分兑换"]], ["price", "价格", "number"],
+      ["stock", "库存", "text"], ["fulfillment", "履约方式", "text"], ["desc", "商品说明", "textarea", null, true]
+    ] },
+    recipe: { label: "食谱", data: () => D.recipeLibrary, fields: [
+      ["meal", "餐次", "select", ["早餐", "中餐", "晚餐", "加餐"]], ["name", "食谱名称", "text"],
+      ["kcal", "热量", "number"], ["protein", "蛋白质", "number"], ["ingredients", "食材", "textarea", null, true],
+      ["tags", "标签", "text"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] },
+    food: { label: "食品", data: () => D.foods, fields: [
+      ["category", "分类", "text"], ["name", "食品名称", "text"], ["kcal", "热量", "number"],
+      ["protein", "蛋白质", "number"], ["carb", "碳水", "number"], ["fat", "脂肪", "number"],
+      ["fiber", "膳食纤维", "number"], ["allergens", "过敏原", "text"], ["status", "状态", "select", ["启用", "停用"]]
+    ] },
+    template: { label: "模板", data: () => D.mealTemplates, fields: [
+      ["meal", "餐次", "select", ["早餐", "中餐", "晚餐", "加餐", "全天"]], ["name", "模板名称", "text"],
+      ["kcal", "热量", "number"], ["protein", "蛋白质", "number"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] },
+    exercise: { label: "运动处方", data: () => D.exercisePrescriptions, fields: [
+      ["name", "处方名称", "text"], ["audience", "适用人群", "text"], ["type", "运动类型", "text"],
+      ["frequency", "频次", "text"], ["duration", "时长", "text"], ["intensity", "强度", "text"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] },
+    psych: { label: "心理评估", data: () => D.psychAssessments, fields: [
+      ["name", "评估名称", "text"], ["scale", "量表", "text"], ["questions", "题量", "number"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] },
+    assessment: { label: "测评", data: () => D.assessmentLibrary, fields: [
+      ["name", "测评名称", "text"], ["type", "类型", "select", ["健康测评", "心理测评", "睡眠测评", "行为测评", "营养测评"]],
+      ["questions", "题量", "number"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] },
+    survey: { label: "问卷", data: () => D.surveys, fields: [
+      ["name", "问卷名称", "text"], ["questions", "题量", "number"], ["target", "目标份数", "number"], ["status", "状态", "select", ["进行中", "已结束", "草稿"]]
+    ] },
+    article: { label: "文章", data: () => D.articles, fields: [
+      ["title", "文章标题", "text"], ["channel", "栏目", "text"], ["status", "状态", "select", ["已发布", "待发布", "草稿"]]
+    ] },
+    task: { label: "打卡任务", data: () => D.campTasks, fields: [
+      ["name", "任务名称", "text"], ["type", "类型", "select", ["体重", "饮食", "运动", "睡眠"]], ["window", "打卡时间窗", "text"], ["points", "积分", "number"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] },
+    reward: { label: "连续奖励", data: () => D.streakRewards, fields: [
+      ["name", "奖励名称", "text"], ["days", "连续天数", "number"], ["reward", "奖励内容", "text"], ["stock", "库存", "number"], ["status", "状态", "select", ["启用", "草稿"]]
+    ] }
+  };
+
+  function openEditor(module, id) {
+    const cfg = moduleConfig[module]; if (!cfg) return;
+    const item = id ? cfg.data().find(x => x.id === id) : null;
+    const title = `${item ? "编辑" : "新建"}${cfg.label}`;
+    const projects = item && item.projects ? item.projects : [];
+    const fields = cfg.fields.map(([key, label, type, options, full]) => {
+      const value = item ? item[key] : "";
+      let control;
+      if (type === "select") control = `<select>${options.map(o => `<option${String(value) === o ? " selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
+      else if (type === "textarea") control = `<textarea rows="3">${esc(value)}</textarea>`;
+      else control = `<input type="${type === "number" ? "number" : "text"}" value="${esc(value)}" />`;
+      return `<label class="field${full ? " full" : ""}"><span>${label}</span>${control}</label>`;
+    }).join("");
+    openDrawer(`
+      <p class="page-eyebrow">EDITOR</p><h2>${title}</h2><p class="drawer-sub">${cfg.label}配置</p>
+      <div class="drawer-section"><div class="publish-form">${fields}<div class="field full"><span>适用项目</span><div class="check-grid">${["五好生活", "减重营"].map(p => `<label class="check-item"><input type="checkbox"${projects.includes(p) ? " checked" : ""}/><span>${p}</span></label>`).join("")}</div></div></div></div>
+      <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn" data-toast="${title}已保存">保存</button><button class="btn primary" data-toast="${title}已发布">保存并发布</button></div>`);
+  }
+
+  document.addEventListener("click", event => {
+    const add = event.target.closest("[data-new-module]");
+    if (add) { event.preventDefault(); openEditor(add.dataset.newModule, ""); return; }
+    const edit = event.target.closest("[data-edit-module]");
+    if (edit) { event.preventDefault(); openEditor(edit.dataset.editModule, edit.dataset.id); return; }
+  });
+
+  if (window.AdminFiveGood) {
+    window.AdminFiveGood.recipes = renderRecipes;
+    window.AdminFiveGood.mall = renderMall;
+    window.AdminFiveGood.assessments = renderAssessments;
+  }
+})();

@@ -1562,3 +1562,42 @@ a, a:hover, a:focus, a:active,
 .sidebar-user { margin-bottom: 10px; }
 
 .nav-item { height: 27px; font-size: 10px; }
+
+.overview-projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; margin-bottom: 13px; }
+.overview-card { display: block; padding: 14px 16px; color: #263f64; background: #fff; border: 1px solid #e7eef9; border-radius: 14px; box-shadow: 0 5px 18px rgba(36,77,145,.03); text-decoration: none; }
+.overview-card:hover { border-color: #c7d9ff; }
+.overview-card.five { background: linear-gradient(135deg,#f5fffb,#f7fbff); }
+.overview-card-head { display: flex; align-items: center; gap: 8px; }
+.overview-card-head b { color: #263f64; font-size: 12px; }
+.overview-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.overview-card-stats small { display: block; color: #98a6ba; font-size: 8px; }
+.overview-card-stats b { display: block; margin-top: 2px; color: #172b4d; font-size: 19px; }
+.overview-card.five .overview-card-stats b { color: #168b7c; }
+.overview-card-link { display: inline-block; margin-top: 10px; color: #2f6bff; font-size: 8px; }
+.overview-card.five .overview-card-link { color: #168b7c; }
+@media (max-width: 760px) { .overview-projects { grid-template-columns: 1fr; } }
+
+/* 食谱库 / 商城目录 / 测评筛选 */
+.meal-tabs, .mall-tabs, .assessment-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 11px; }
+.meal-tabs button, .mall-tabs button, .assessment-tabs button { height: 29px; padding: 0 12px; color: #6f8097; font-size: 9px; background: #fff; border: 1px solid #e2ebf9; border-radius: 7px; }
+.meal-tabs button.active, .mall-tabs button.active, .assessment-tabs button.active { color: #fff; background: #2f6bff; border-color: #2f6bff; }
+.mall-cats { display: flex; flex-wrap: wrap; gap: 5px; margin: -3px 0 12px; }
+.mall-cats button { height: 25px; padding: 0 9px; color: #72829a; font-size: 8px; background: transparent; border: 1px solid #e2ebf9; border-radius: 5px; }
+.mall-cats button.active { color: #2f6bff; background: #edf3ff; border-color: #cbdcff; }
+.recipe-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin-bottom: 13px; }
+.recipe-card { padding: 15px; background: #fff; border: 1px solid #e7eef9; border-radius: 14px; box-shadow: 0 5px 18px rgba(36,77,145,.03); }
+.recipe-card-top { display: flex; align-items: center; justify-content: space-between; }
+.recipe-card h3 { margin: 11px 0 6px; color: #263f64; font-size: 16px; }
+.recipe-card p { min-height: 31px; margin: 0; color: #8d9bb0; font-size: 9px; line-height: 1.65; }
+.recipe-card-meta { display: flex; gap: 14px; margin-top: 11px; padding: 9px 0; border-top: 1px solid #eef3fb; border-bottom: 1px solid #eef3fb; color: #8d9bb0; font-size: 8px; }
+.recipe-card-meta b { color: #2f6bff; font-size: 13px; }
+.recipe-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 9px; }
+.recipe-card-foot i { display: inline-block; margin-right: 4px; padding: 2px 5px; color: #6f8097; font-size: 7px; font-style: normal; background: #f4f8ff; border-radius: 3px; }
+.recipe-card-foot .panel-link { font-size: 8px; }
+.catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.catalog-card .product-thumb { height: 90px; }
+.product-desc { min-height: 31px; margin: 0 0 10px; color: #8d9bb0; font-size: 8.5px; line-height: 1.6; }
+.product-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #97a5b8; font-size: 8px; }
+.product-card-foot .panel-link { font-size: 8px; }
+@media (max-width: 1320px) { .recipe-card-grid, .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .recipe-card-grid, .catalog-grid { grid-template-columns: 1fr; } }
