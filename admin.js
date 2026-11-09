@@ -138,7 +138,14 @@
   function renderDashboard() {
     const activeProjects = D.projects.filter(p => p.status === "进行中");
     const risks = D.students.filter(s => s.risk !== "低");
-    const followups = [D.students.find(s => s.id === "S005"), D.students.find(s => s.id === "S009"), D.students.find(s => s.id === "S003"), D.students.find(s => s.id === "S007")];
+    const followups = [
+      { id: "S005", name: "陈浩", meta: "中石油华北员工减重营", project: "减重营", reason: "连续 3 天未完整打卡", risk: "高", owner: "王琳", action: "电话跟进", tone: "red" },
+      { id: "S003", name: "王凯", meta: "中石油华北员工减重营", project: "减重营", reason: "完成率 64% · 饮食记录缺失", risk: "中", owner: "陈晓", action: "营养师批注", tone: "orange" },
+      { id: "S009", name: "何佳", meta: "中石油华北员工减重营", project: "减重营", reason: "完成率 57% · 饮食不规律", risk: "中", owner: "王琳", action: "健管师随访", tone: "orange" },
+      { id: "S007", name: "刘洋", meta: "金融街企业减重营", project: "减重营", reason: "脂肪肝 · 运动不足", risk: "中", owner: "王琳", action: "运动处方", tone: "orange" },
+      { id: "", name: "赵一诺", meta: "五好生活 · 市场部", project: "五好生活", reason: "饮食 2/3 · 今日未运动", risk: "中", owner: "王琳", action: "营养师跟进", tone: "gold" },
+      { id: "", name: "陈思远", meta: "五好生活 · 研发中心", project: "五好生活", reason: "睡眠 6.4h · 睡眠未达标", risk: "中", owner: "陈晓", action: "睡眠关怀", tone: "purple" }
+    ];
     const completion = 78.6;
     const board = D.checkinBoards[boardCamp] || D.checkinBoards.C001;
     const boardToday = board[boardDay] || board.today;
@@ -150,21 +157,23 @@
     const html = `
       ${pageHead("运营工作台", "OPERATIONS OVERVIEW", "", `<button class="btn primary" type="button" data-go="project/new">${icon("plus")}新建项目</button>`)}
       <div class="kpi-grid">
-        ${kpi("project", "在营项目", activeProjects.length, "个", "另 1 个项目报名中", "#1e8fbf")}
-        ${kpi("users", "参营学员", 165, "人", "当前在营项目去重人数", "#466c9e")}
-        ${kpi("check", "今日完成", 94, "人", "达到完成标准", "#2f8f83")}
-        ${kpi("chart", "打卡完成率", completion, "%", "完成成员 ÷ 参营学员", "#8b5cf6")}
-        ${kpi("heart", "风险学员", risks.length, "人", "连续未打卡 / 指标异常", "#c05a54")}
+        ${kpi("project", "负责项目", activeProjects.length + 1, "个", "减重营 2 · 五好生活 1", "#2f6bff")}
+        ${kpi("users", "负责学员", 451, "人", "参营 165 · 五好员工 286", "#6a5bd4")}
+        ${kpi("check", "今日完成", 94, "人", "达到完成标准", "#16a394")}
+        ${kpi("chart", "打卡完成率", completion, "%", "完成成员 ÷ 参营学员", "#e8a13c")}
+        ${kpi("heart", "风险成员", 12, "人", "减重 4 · 五好生活 8", "#e15b64")}
       </div>
       <div class="overview-projects">
         <a class="overview-card" href="#projects">
-          <div class="overview-card-head"><span class="tag blue">减重营</span><b>项目运营</b></div>
+          <div class="overview-card-head"><span class="tag blue">减重营</span><b>减重营数据统计</b><span class="overview-badge">进行中</span></div>
           <div class="overview-card-stats"><div><small>在营项目</small><b>${activeProjects.length}</b></div><div><small>参营学员</small><b>165</b></div><div><small>打卡完成率</small><b>78.6%</b></div></div>
+          <div class="overview-lines"><span><i style="width:78.6%"></i></span><em>平均减重 -4.8kg · 今日完成 94 人</em></div>
           <span class="overview-card-link">进入项目管理 →</span>
         </a>
         <a class="overview-card five" href="#recipes">
-          <div class="overview-card-head"><span class="tag green">五好生活</span><b>全员健康福利</b></div>
+          <div class="overview-card-head"><span class="tag green">五好生活</span><b>五好生活数据统计</b><span class="overview-badge green">全员服务</span></div>
           <div class="overview-card-stats"><div><small>参与员工</small><b>${D.fiveGood.employees}</b></div><div><small>服务人次</small><b>${D.fiveGood.monthlyServices}</b></div><div><small>饮食打卡</small><b>${D.fiveGood.dietRate}%</b></div></div>
+          <div class="overview-lines"><span><i style="width:${D.fiveGood.dietRate}%"></i></span><em>睡眠达标 ${D.fiveGood.sleepRate}% · 运动达标 ${D.fiveGood.exerciseRate}%</em></div>
           <span class="overview-card-link">进入五好工作区 →</span>
         </a>
       </div>
@@ -207,27 +216,31 @@
       </div>
       <div class="dash-bottom">
         <section class="panel">
-          <div class="panel-head"><div><h3 class="panel-title">今日待跟进</h3><p class="panel-sub">连续未打卡、完成率偏低、健康风险</p></div><a class="panel-link" href="#students">全部学员 →</a></div>
+          <div class="panel-head"><div><h3 class="panel-title">待跟进</h3></div><div class="followup-summary"><span class="tag red">高 1</span><span class="tag gold">中 5</span><a class="panel-link" href="#students">全部学员 →</a></div></div>
           <div class="table-wrap">
             <table class="data-table">
-              <thead><tr><th>学员</th><th>项目 / 营期</th><th>完成率</th><th>当前风险</th><th>负责团队</th><th>建议动作</th></tr></thead>
-              <tbody>${followups.map(s => `<tr class="clickable" data-student="${s.id}">
-                <td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td>
-                <td><span class="cell-main">${escape(projectById(s.projectId).name)}</span><span class="cell-sub">${escape(campById(s.campId).name)}</span></td>
-                <td><b style="color:${s.completion < 60 ? "#c05a54" : "#a46f24"};font-family:var(--serif);font-size:14px">${s.completion}%</b></td>
-                <td>${statusTag(s.risk)}</td><td>${escape(s.team)}</td>
-                <td><span class="tag ${s.risk === "高" ? "red" : "gold"}">${s.risk === "高" ? "电话跟进" : "教练批注"}</span></td>
+              <thead><tr><th>成员</th><th>项目归属</th><th>待跟进原因</th><th>风险</th><th>负责人</th><th>动作</th></tr></thead>
+              <tbody>${followups.map(s => `<tr class="${s.id ? "clickable" : ""}"${s.id ? ` data-student="${s.id}"` : ""}>
+                <td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.meta)}</small></span></span></td>
+                <td><span class="tag ${s.project === "五好生活" ? "green" : "blue"}">${escape(s.project)}</span></td>
+                <td><span class="cell-main">${escape(s.reason)}</span></td>
+                <td>${statusTag(s.risk)}</td><td>${escape(s.owner)}</td>
+                <td><span class="priority ${s.tone}">${escape(s.action)}</span></td>
               </tr>`).join("")}</tbody>
             </table>
           </div>
         </section>
         <section class="panel">
-          <div class="panel-head"><div><h3 class="panel-title">风险提示</h3><p class="panel-sub">需要优先关注的学员</p></div></div>
+          <div class="panel-head"><div><h3 class="panel-title">风险成员</h3></div><div class="risk-total"><span class="tag red">减重营 4</span><span class="tag green">五好生活 8</span></div></div>
           <div class="panel-body">
-            ${risks.slice(0, 4).map(s => `<div class="project-mini clickable" data-student="${s.id}" style="margin-bottom:7px">
-              <div class="project-mini-top"><span>${escape(s.name)} · ${statusTag(s.risk)}</span><span>${s.completion}%</span></div>
-              <small>${escape(s.tags.join(" · "))} · ${escape(s.team)}</small>
+            ${risks.slice(0, 3).map(s => `<div class="project-mini clickable risk-item" data-student="${s.id}" style="margin-bottom:7px">
+              <div class="project-mini-top"><span>${escape(s.name)} ${statusTag(s.risk)}</span><span>${s.completion}%</span></div>
+              <small><span class="tag blue">减重营</span> ${escape(s.tags.join(" · "))} · ${escape(s.team)}</small>
             </div>`).join("")}
+            <div class="project-mini risk-item five-risk" style="margin-bottom:7px">
+              <div class="project-mini-top"><span>五好生活 · 高风险 8</span><span>心理/睡眠</span></div>
+              <small><span class="tag green">五好生活</span> 情绪压力 8 · 睡眠困扰 12 · 待分配跟进</small>
+            </div>
           </div>
         </section>
       </div>

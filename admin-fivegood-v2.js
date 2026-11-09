@@ -55,8 +55,7 @@
     const html = `
       ${head("食谱库", "PROJECT WORKSPACE / RECIPE LIBRARY", `<button class="btn" data-publish-type="食谱" data-publish-name="${esc(recipeMeal)}食谱">发布</button><button class="btn primary" data-new-module="recipe">${icon("plus")}新建食谱</button>`)}
       ${workspaceBar()}
-      <div class="filter-bar"><span class="tag blue">按餐次类型配置</span><span class="tag">${recipes.length} 个${esc(recipeMeal)}食谱</span><a class="btn small" href="#foods">食品库</a><a class="btn small" href="#meal-templates">餐次模板</a></div>
-      <div class="meal-tabs">${meals.map(m => `<button class="${recipeMeal === m ? "active" : ""}" data-recipe-meal="${m}">${m}</button>`).join("")}</div>
+      <div class="meal-count-grid">${meals.map(m => { const count = D.recipeLibrary.filter(r => r.meal === m).length; return `<button class="meal-count${recipeMeal === m ? " active" : ""}" data-recipe-meal="${m}"><span>${m}</span><b>${count}</b><small>个模板</small></button>`; }).join("")}</div>
       <div class="recipe-card-grid">${recipes.map(r => `<article class="recipe-card"><div class="recipe-card-top"><span class="tag ${r.meal === "早餐" ? "gold" : r.meal === "中餐" ? "blue" : r.meal === "晚餐" ? "green" : "slate"}">${esc(r.meal)}</span>${tag(r.status)}</div><h3>${esc(r.name)}</h3><p>${esc(r.ingredients)}</p><div class="recipe-card-meta"><span><b>${r.kcal}</b> kcal</span><span><b>${r.protein}g</b> 蛋白质</span></div><div class="recipe-card-foot"><div>${(r.tags || []).map(t => `<i>${esc(t)}</i>`).join("")}</div><button class="panel-link" data-edit-module="recipe" data-id="${r.id}">编辑 →</button></div></article>`).join("")}</div>
       <div class="recipe-layout" style="margin-top:13px"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">本周排餐</h3></div><span class="tag green">2026-10-19 — 2026-10-25</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>日期</th><th>早餐</th><th>中餐</th><th>晚餐</th><th>加餐</th><th>热量</th></tr></thead><tbody>${D.recipePlans.map(r => `<tr><td><span class="cell-main">${esc(r.weekday)}</span><span class="cell-sub">${esc(r.date)}</span></td>${["breakfast", "lunch", "dinner", "snack"].map(k => `<td><span class="meal-name">${esc(r[k].name)}</span><span class="meal-kcal">${r[k].kcal} kcal</span></td>`).join("")}<td>${r.calories} kcal</td></tr>`).join("")}</tbody></table></div></section><aside class="form-aside"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">营养目标</h3></div></div><div class="panel-body"><div class="metric-bars">${[["热量", 93, "1680 / 1800"], ["蛋白质", 86, "86 / 90g"], ["碳水", 88, "210 / 240g"], ["脂肪", 72, "48 / 67g"]].map(([l, v, d]) => `<div class="metric-bar"><span>${l}</span><div class="bar"><i style="width:${v}%"></i></div><b>${d}</b></div>`).join("")}</div></div></section></aside></div>`;
     $("#viewRoot").innerHTML = html;
@@ -106,7 +105,7 @@
     ] },
     recipe: { label: "食谱", data: () => D.recipeLibrary, fields: [
       ["meal", "餐次", "select", ["早餐", "中餐", "晚餐", "加餐"]], ["name", "食谱名称", "text"],
-      ["kcal", "热量", "number"], ["protein", "蛋白质", "number"], ["ingredients", "食材", "textarea", null, true],
+      ["kcal", "热量", "number"], ["protein", "蛋白质", "number"],
       ["tags", "标签", "text"], ["status", "状态", "select", ["启用", "草稿"]]
     ] },
     food: { label: "食品", data: () => D.foods, fields: [
@@ -148,6 +147,9 @@
     const item = id ? cfg.data().find(x => x.id === id) : null;
     const title = `${item ? "编辑" : "新建"}${cfg.label}`;
     const projects = item && item.projects ? item.projects : [];
+    const selectedIngredients = item && item.ingredients ? item.ingredients.split("、") : [];
+    const recipeExtra = module === "recipe" ? `<div class="field full"><span>食材（搜索食品库并勾选）</span><input id="ingredientSearch" placeholder="搜索食品名称或分类" /><div class="ingredient-picker" id="ingredientPicker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-ingredient="${esc(f.name)}"${selectedIngredients.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal/100g</small></span></label>`).join("")}</div><div class="ingredient-count" id="ingredientCount">已选 ${selectedIngredients.length} 项食材</div></div>` : "";
+    const exerciseExtra = module === "exercise" ? `<div class="field full"><span>图文 / 视频素材</span><div class="media-upload-grid"><label class="media-upload"><input type="file" accept="image/*" multiple /><b>上传图文</b><small>JPG / PNG，支持多图</small></label><label class="media-upload"><input type="file" accept="video/*" /><b>上传视频</b><small>MP4 / MOV，建议 60 秒内</small></label></div></div>` : "";
     const fields = cfg.fields.map(([key, label, type, options, full]) => {
       const value = item ? item[key] : "";
       let control;
@@ -158,8 +160,20 @@
     }).join("");
     openDrawer(`
       <p class="page-eyebrow">EDITOR</p><h2>${title}</h2><p class="drawer-sub">${cfg.label}配置</p>
-      <div class="drawer-section"><div class="publish-form">${fields}<div class="field full"><span>适用项目</span><div class="check-grid">${["五好生活", "减重营"].map(p => `<label class="check-item"><input type="checkbox"${projects.includes(p) ? " checked" : ""}/><span>${p}</span></label>`).join("")}</div></div></div></div>
+      <div class="drawer-section"><div class="publish-form">${fields}${recipeExtra}${exerciseExtra}<div class="field full"><span>适用项目</span><div class="check-grid">${["五好生活", "减重营"].map(p => `<label class="check-item"><input type="checkbox"${projects.includes(p) ? " checked" : ""}/><span>${p}</span></label>`).join("")}</div></div></div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn" data-toast="${title}已保存">保存</button><button class="btn primary" data-toast="${title}已发布">保存并发布</button></div>`);
+    const foodSearch = $("#ingredientSearch");
+    if (foodSearch) {
+      foodSearch.addEventListener("input", () => {
+        const q = foodSearch.value.trim().toLowerCase();
+        $$(".ingredient-item").forEach(el => el.style.display = !q || el.innerText.toLowerCase().includes(q) ? "" : "none");
+      });
+      $$("[data-ingredient]").forEach(el => el.addEventListener("change", () => {
+        const count = $$("[data-ingredient]:checked").length;
+        const countEl = $("#ingredientCount");
+        if (countEl) countEl.textContent = `已选 ${count} 项食材`;
+      }));
+    }
   }
 
   document.addEventListener("click", event => {
