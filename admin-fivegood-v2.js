@@ -64,6 +64,10 @@
     $$("[data-recipe-meal]").forEach(b => b.addEventListener("click", () => { recipeMeal = b.dataset.recipeMeal; renderRecipes(); }));
   }
 
+  function mallMoney(v) {
+    return "¥" + Number(v || 0).toLocaleString("zh-CN", { maximumFractionDigits: 2 });
+  }
+
   function mallPrice(p) {
     if (p.priceType === "积分+自费") return `<b class="mall-mixed-price">${Number(p.points || 0)} 积分 <em>+</em> ¥${Number(p.personalPay || 0).toFixed(2)}</b><small>个人自费部分</small>`;
     if (p.priceType === "企业权益") return `<b>企业权益</b><small>${esc(p.fulfillment)}</small>`;
@@ -80,6 +84,12 @@
     setPay("M-G06", 200, 9.9);
     setPay("M-G01", 500, 29.9);
     setPay("M-S05", 800, 99);
+    catalog.forEach(p => {
+      p.supplierName = p.supplierName || (p.major === "服务" ? "北大医疗健康管理中心" : "健康商城供应链");
+      const base = Number(p.price || p.personalPay || 50);
+      if (!p.upstreamSettle) p.upstreamSettle = Math.max(8, Math.round(base * 0.6));
+      if (!p.downstreamSettle) p.downstreamSettle = Math.max(12, Math.round(base * 0.82));
+    });
     const majorItems = catalog.filter(p => mallKind === "全部" || p.major === mallKind);
     const categories = ["全部", ...new Set(majorItems.map(p => p.category))];
     const list = majorItems.filter(p => mallCat === "全部" || p.category === mallCat);
@@ -89,7 +99,7 @@
       <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="mallSearch" placeholder="搜索商品、服务、大类或小类" /></label><span class="tag blue">公共模块 · 全项目</span></div>
       <div class="mall-tabs">${["全部", "服务目录", "实物商品"].map(k => `<button class="${mallKind === k ? "active" : ""}" data-mall-kind="${k}">${k}</button>`).join("")}</div>
       <div class="mall-cats">${categories.map(c => `<button class="${mallCat === c ? "active" : ""}" data-mall-cat="${c}">${c}</button>`).join("")}</div>
-      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
+      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-supply"><span>供应商：${esc(p.supplierName)}</span><span>上游 ${mallMoney(p.upstreamSettle)} / 下游 ${mallMoney(p.downstreamSettle)}</span></div><div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
     $("#viewRoot").innerHTML = html;
     setTop("商城", "公共模块 / 商城", "mall");
     $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; renderMall(); }));
@@ -115,6 +125,7 @@
       ["kind", "商品类型", "select", ["服务", "实物"]], ["major", "大类", "select", ["服务目录", "实物商品"]],
       ["category", "中类", "text"], ["subCategory", "小类", "text"], ["name", "商品名称", "text"],
       ["priceType", "价格类型", "select", ["企业权益", "个人补差", "积分兑换", "积分+自费"]], ["price", "价格 / 企业价", "number"], ["points", "所需积分", "number"], ["personalPay", "个人自费金额（元）", "number"],
+      ["supplierName", "供应商来源", "text"], ["upstreamSettle", "上游结算价", "number"], ["downstreamSettle", "下游结算价", "number"],
       ["stock", "库存", "text"], ["fulfillment", "履约方式", "text"], ["desc", "商品说明", "textarea", null, true]
     ] },
     recipe: { label: "食谱", data: () => D.recipeLibrary, fields: [

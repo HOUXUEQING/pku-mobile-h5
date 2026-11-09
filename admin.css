@@ -2023,3 +2023,21 @@ body {
 .checkin-score button.active { color: #2f6bff; background: #edf3ff; border-color: #c9d9ff; }
 
 .checkin-sub { display: block; margin-top: 5px; color: #60758c; font-size: 10px; }
+
+.health-extra-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.health-extra .data-table th, .health-extra .data-table td { padding: 8px; }
+.health-extra .empty { padding: 22px 12px; }
+@media (max-width: 1120px) { .health-extra-grid { grid-template-columns: 1fr; } }
+
+.product-supply { display: flex; flex-wrap: wrap; gap: 4px 9px; margin: 7px 0; color: #8d9bb0; font-size: 7px; }
+.product-supply span { padding: 2px 5px; background: #f8faff; border-radius: 3px; }
+.margin-positive { color: #168b7c !important; }
+.settlement-tabs { margin-top: 2px; }
+
+/* 26 项菜单紧凑布局 */
+.nav { gap: 0; overflow-y: auto; padding-bottom: 3px; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav-group { margin-bottom: 3px; }
+.nav-group > p { margin: 6px 10px 2px; }
+.nav-item { min-height: 24px; height: 24px; padding-top: 0; padding-bottom: 0; }
+.nav-item .ic { width: 13px; height: 13px; }

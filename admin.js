@@ -665,6 +665,7 @@
   function renderStudentDetail(id) {
     const s = studentById(id);
     if (!s) return renderStudents();
+    if (window.AdminHealth && window.AdminHealth.records) { window.AdminHealth.records(id); return; }
     const p = projectById(s.projectId);
     const tabs = [["profile", "学员档案"], ["checkins", "打卡记录"], ["body", "体成分与指标"], ["notes", "服务记录"]];
     let content = "";
@@ -1235,6 +1236,9 @@
     else if (view === "accounts") renderAccounts();
     else if (view === "roles") renderRoles();
     else if (view === "health-records" && window.AdminHealth) window.AdminHealth.records();
+    else if (view === "business-parties" && window.AdminFinance) window.AdminFinance.business();
+    else if (view === "providers" && window.AdminFinance) window.AdminFinance.providers();
+    else if (view === "settlements" && window.AdminFinance) window.AdminFinance.settlements();
     else if (view === "life-checkins") { location.hash = "#checkins"; return; }
     else if (window.AdminFiveGood && window.AdminFiveGood[view]) window.AdminFiveGood[view]();
     else renderDashboard();

@@ -5,6 +5,7 @@
 (function () {
   "use strict";
 
+  const D = window.ADMIN_DATA;
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const escape = v => String(v == null ? "" : v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -109,7 +110,64 @@
     return `<div class="health-metric ${tone}"><small>${label}</small><b>${value}<em>${unit}</em></b><span class="health-metric-status">${status}</span></div>`;
   }
 
-  function render() {
+  function studentRecord(studentId) {
+    const s = D.students.find(x => x.id === studentId);
+    if (!s) return null;
+    const project = D.projects.find(p => p.id === s.projectId);
+    const values = D.bodyValues[s.id] || [];
+    return {
+      id: "ST-" + s.id, studentId: s.id, name: s.name, dept: project ? project.name : "学员", age: 32,
+      risk: s.risk, score: Math.max(35, Math.round(s.completion)), tags: s.tags || ["健康档案"],
+      manager: s.team || "健管师", lastContact: s.lastCheckin || "—",
+      metrics: {
+        bp: ["126/82", "mmHg", "正常"], glucose: ["5.2", "mmol/L", "正常"],
+        ldl: ["2.9", "mmol/L", "正常"], bmi: ["24.2", "", "偏高"],
+        uric: ["332", "μmol/L", "正常"], sleep: ["7.1", "小时", "正常"],
+        mood: ["7", "/10", "正常"], steps: ["6,800", "步", "偏低"]
+      },
+      exam: { date: s.lastCheckin || "2026-09-20", tags: (s.tags || []).concat(["健康档案已同步"]) },
+      management: { title: "学员健康管理 · 12 周", progress: s.completion, week: Math.max(1, Math.round(s.completion / 8)), total: 12, owner: s.team || "健管师", next: "2026-11-20" },
+      followups: [{ title: "健康档案同步", date: s.lastCheckin || "2026-10-21", note: "来自学员管理与健康档案的合并记录。", status: "已同步", tone: "green" }],
+      trends: values.slice(0, 4).map(v => [v.name, v.pre, v.post, v.reference, v.status])
+    };
+  }
+
+  function checkinRowsFor(selected) {
+    if (!selected.studentId) {
+      return [
+        { date: "2026-10-20", time: "07:40", weight: "72.4", meals: 3, exercise: 30, complete: true },
+        { date: "2026-10-22", time: "07:32", weight: "72.1", meals: 2, exercise: 0, complete: false },
+        { date: "2026-10-25", time: "07:35", weight: "71.8", meals: 3, exercise: 25, complete: true }
+      ];
+    }
+    return D.checkins.filter(k => k.studentId === selected.studentId).slice(0, 8);
+  }
+
+  function bodyRowsFor(selected) {
+    if (selected.studentId && D.bodyValues[selected.studentId]) {
+      return D.bodyValues[selected.studentId].slice(0, 8).map(v => ({ name: v.name, pre: v.pre, post: v.post, reference: v.reference, status: v.status }));
+    }
+    return selected.trends.map(t => ({ name: t[0], pre: t[1], post: t[2], reference: t[3], status: t[4] }));
+  }
+
+  function extraPanels(selected) {
+    const checkins = checkinRowsFor(selected);
+    const body = bodyRowsFor(selected);
+    return `<div class="health-extra-grid">
+      <section class="panel health-extra"><div class="panel-head"><div><h3 class="panel-title">打卡记录</h3><p class="panel-sub">与学员管理打卡记录同步</p></div><span class="tag blue">${checkins.length} 条</span></div><div class="table-wrap">${checkins.length ? `<table class="data-table"><thead><tr><th>日期</th><th>体重</th><th>三餐</th><th>运动</th><th>完成</th></tr></thead><tbody>${checkins.map(k => `<tr><td>${escape(k.date)}<span class="cell-sub">${escape(k.time)}</span></td><td><b class="cell-main">${k.weight} kg</b></td><td>${k.meals}/3</td><td>${k.exercise} 分钟</td><td>${k.complete ? '<span class="tag green">已完成</span>' : '<span class="tag gold">待完成</span>'}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">该档案暂无打卡记录</div>`}</div></section>
+      <section class="panel health-extra"><div class="panel-head"><div><h3 class="panel-title">体成分与指标</h3><p class="panel-sub">营前 / 营后及最近一次记录</p></div><span class="tag green">${body.length} 项</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>指标</th><th>基线</th><th>当前</th><th>参考范围</th><th>状态</th></tr></thead><tbody>${body.map(b => `<tr><td><b class="cell-main">${escape(b.name)}</b></td><td>${escape(b.pre)}</td><td><b class="cell-main">${escape(b.post)}</b></td><td class="ref-value">${escape(b.reference)}</td><td><span class="tag ${b.status === "改善" || b.status === "正常" ? "green" : "gold"}">${escape(b.status)}</span></td></tr>`).join("")}</tbody></table></div></section>
+    </div>`;
+  }
+
+  function render(studentId) {
+    if (studentId) {
+      const existing = records.find(r => r.studentId === studentId);
+      const record = existing || studentRecord(studentId);
+      if (record && !existing) records.unshift(record);
+      if (record) selectedId = record.id;
+      riskFilter = "全部";
+      query = "";
+    }
     const filtered = records.filter(r => (riskFilter === "全部" || r.risk === riskFilter) && (!query || (r.name + r.dept).includes(query)));
     if (!filtered.some(r => r.id === selectedId) && filtered.length) selectedId = filtered[0].id;
     const selected = records.find(r => r.id === selectedId) || records[0];
@@ -141,6 +199,7 @@
             <section class="panel health-followups"><div class="panel-head"><div><h3 class="panel-title">随访记录</h3></div><span class="tag gold">${selected.followups.length} 条</span></div><div class="panel-body">${selected.followups.map(f => `<div class="health-followup"><div><b>${escape(f.title)}</b><small>${escape(f.date)} · ${escape(f.note)}</small></div><span class="tag ${f.tone}">${escape(f.status)}</span></div>`).join("")}</div></section>
             <section class="panel health-trends"><div class="panel-head"><div><h3 class="panel-title">结果趋势</h3></div><span class="tag blue">基线 → 当前</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>指标</th><th>基线</th><th>当前</th><th>目标</th><th>状态</th></tr></thead><tbody>${selected.trends.map(t => `<tr><td><b class="cell-main">${escape(t[0])}</b></td><td>${escape(t[1])}</td><td><b class="cell-main">${escape(t[2])}</b></td><td>${escape(t[3])}</td><td><span class="tag ${t[4] === "正常" ? "green" : "gold"}">${escape(t[4])}</span></td></tr>`).join("")}</tbody></table></div></section>
           </div>
+          ${extraPanels(selected)}
         </section>
       </div>
     `;
