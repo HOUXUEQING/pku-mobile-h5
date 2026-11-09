@@ -105,7 +105,7 @@
     $("#topTitle").textContent = title;
     $("#breadcrumb").textContent = breadcrumb;
     const active = (location.hash.split("/")[0] || "#dashboard").slice(1);
-    const navMap = { project: "projects", student: "students", member: "members", department: "departments" };
+    const navMap = { project: "projects", student: "students", member: "members", department: "departments", institution: "institutions" };
     const nav = navMap[active] || active || "dashboard";
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.nav === nav));
   }
@@ -233,7 +233,7 @@
 
   function renderInstitutions() {
     const html = `
-      ${pageHead("机构管理", "MEMBER INSTITUTIONS", "北大医疗集团成员机构，机构下可维护成员、科室与企康项目", `<button class="btn primary" data-toast="原型演示：进入新增机构">${icon("plus")}新增机构</button>`)}
+      ${pageHead("机构管理", "MEMBER INSTITUTIONS", "北大医疗集团成员机构，机构下可维护成员、科室与企康项目", `<a class="btn primary" href="#institution/new">${icon("plus")}新增机构</a>`)}
       <div class="filter-bar">
         <label class="filter-search">${icon("search")}<input id="instSearch" placeholder="搜索机构名称、地区或类型" /></label>
         <select class="filter-select" id="instRegion"><option>全部地区</option>${[...new Set(D.institutions.map(i => i.region))].map(r => `<option>${r}</option>`).join("")}</select>
@@ -273,6 +273,7 @@
     const depts = D.departments.filter(d => d.institutionId === id);
     const members = D.members.filter(m => m.institutionId === id);
     openDrawer(`
+      <a class="btn small drawer-edit" data-close-drawer href="#institution/${i.id}/edit">编辑机构</a>
       <p class="page-eyebrow">INSTITUTION PROFILE</p><h2>${escape(i.name)}</h2><p class="drawer-sub">${escape(i.city)} · ${escape(i.type)}</p>
       <div class="drawer-section"><div class="info-list">
         <div class="info-item"><small>负责人</small><b>${escape(i.manager)}</b></div>
@@ -333,8 +334,8 @@
   function memberDrawer(id) {
     const m = memberById(id);
     openDrawer(`
+      <a class="btn small drawer-edit" data-close-drawer href="#member/${m.id}/edit">编辑成员介绍</a>
       <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">${avatar(m, "avatar-lg")}<div><p class="page-eyebrow">MEMBER PROFILE</p><h2 style="margin-bottom:3px">${escape(m.name)}</h2><p class="drawer-sub">${escape(m.title)} · ${escape(m.role)}</p><div class="tag-row" style="margin-top:7px">${roleTag(m.role)}<span class="tag">${escape(m.gender)}</span></div></div></div>
-      <div style="margin-bottom:13px"><a class="btn small" data-close-drawer href="#member/${m.id}/edit">编辑成员介绍</a></div>
       <div class="info-list">
         <div class="info-item"><small>所属机构</small><b>${escape(instById(m.institutionId).name)}</b></div>
         <div class="info-item"><small>所在科室</small><b>${escape(m.dept)}</b></div>
@@ -391,8 +392,8 @@
   function departmentDrawer(id) {
     const d = D.departments.find(x => x.id === id);
     openDrawer(`
+      <a class="btn small drawer-edit" data-close-drawer href="#department/${d.id}/edit">编辑科室</a>
       <p class="page-eyebrow">DEPARTMENT PROFILE</p><h2>${escape(d.name)}</h2><p class="drawer-sub">${escape(instById(d.institutionId).name)} · ${escape(d.category)}</p>
-      <div style="margin:12px 0 4px"><a class="btn small" data-close-drawer href="#department/${d.id}/edit">编辑科室</a></div>
       <div class="drawer-section"><div class="info-list"><div class="info-item"><small>学科带头人</small><b>${escape(d.leader)}</b></div><div class="info-item"><small>医生团队</small><b>${d.doctors} 人</b></div></div></div>
       <div class="drawer-section"><h3>科室介绍</h3><p style="margin-bottom:0;color:#5d7a8a;font-size:10px;line-height:1.9">${escape(d.intro)}</p></div>
       <div class="drawer-section"><h3>科室特色</h3><div class="people-list">${d.featureList.map((f, i) => `<div class="person-card"><span><b>${String(i + 1).padStart(2, "0")} ${escape(f)}</b><small>特色项目</small></span></div>`).join("")}</div></div>
@@ -743,7 +744,6 @@
                 ${field("项目名称", `<input value="${escape(p ? p.name : "")}" placeholder="请输入项目名称" />`, true)}
                 ${field("企业客户", `<input value="${escape(p ? p.enterprise : "")}" placeholder="请输入企业客户名称" />`)}
                 ${field("服务主体机构", `<select>${institutionOptions(p ? p.institutionId : "I001")}</select>`)}
-                ${field("项目状态", `<select>${["进行中", "报名中", "已结营"].map(s => `<option${p && p.status === s ? " selected" : ""}>${s}</option>`).join("")}</select>`)}
                 ${field("项目周期开始", `<input type="date" value="${escape(p ? p.start : "2026-11-20")}" />`)}
                 ${field("项目周期结束", `<input type="date" value="${escape(p ? p.end : "2027-02-20")}" />`)}
                 ${field("项目负责人", `<input value="${escape(p ? p.manager : "王倩")}" />`)}
@@ -793,7 +793,7 @@
                 <div class="info-list">
                   <div class="info-item"><small>企业客户</small><b>${escape(p ? p.enterprise : "—")}</b></div>
                   <div class="info-item"><small>当前营期</small><b>${escape(camp ? camp.name : "—")}</b></div>
-                  <div class="info-item"><small>项目状态</small><b>${escape(p ? p.status : "报名中")}</b></div>
+                  <div class="info-item"><small>项目状态</small><b>${statusTag(p ? p.status : "报名中")}</b></div>
                   <div class="info-item"><small>计划学员</small><b>${p ? p.target : 60} 人</b></div>
                 </div>
               </div>
@@ -976,6 +976,68 @@
     }
   }
 
+  function renderInstitutionForm(id) {
+    const editing = !!id;
+    const i = editing ? instById(id) : null;
+    const title = editing ? "编辑机构" : "新增机构";
+    const intro = i ? `${i.name}是北大医疗集团成员机构，位于${i.city}。` : "";
+    const html = `
+      <button class="back-link" data-back="institutions">${icon("back")}返回机构列表</button>
+      <div class="detail-head"><div><h2>${title}</h2></div></div>
+      <form class="entity-form" onsubmit="return false">
+        <div class="form-layout">
+          <div class="form-main">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">机构信息</h3></div>
+              <div class="panel-body form-grid">
+                ${field("机构名称", `<input value="${escape(i ? i.name : "")}" placeholder="请输入机构名称" />`, true)}
+                ${field("机构简称", `<input value="${escape(i ? i.short : "")}" placeholder="请输入机构简称" />`)}
+                ${field("所属地区", `<input value="${escape(i ? i.region : "")}" placeholder="请输入所属地区" />`)}
+                ${field("城市", `<input value="${escape(i ? i.city : "")}" placeholder="请输入城市" />`)}
+                ${field("机构类型", `<select>${["综合医院", "康复医院", "健康管理中心", "专科医院"].map(t => `<option${i && i.type === t ? " selected" : ""}>${t}</option>`).join("")}</select>`)}
+                ${field("负责人", `<input value="${escape(i ? i.manager : "")}" placeholder="请输入负责人" />`)}
+                ${field("联系电话", `<input value="${escape(i ? i.phone : "")}" placeholder="请输入联系电话" />`)}
+                ${field("机构状态", `<select>${["启用", "停用"].map(s => `<option${i && i.status === s ? " selected" : ""}>${s}</option>`).join("")}</select>`)}
+                ${field("机构地址", `<input value="${escape(i ? i.address : "")}" placeholder="请输入机构地址" />`, true)}
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">机构介绍</h3></div>
+              <div class="panel-body">
+                ${field("机构介绍", `<textarea rows="6" placeholder="请输入机构介绍">${escape(intro)}</textarea>`, true)}
+              </div>
+            </section>
+
+            <div class="form-actions">
+              <a class="btn" href="#institutions">取消</a>
+              <button class="btn primary" type="button" data-save-form="institution" data-back="institutions">保存机构</button>
+            </div>
+          </div>
+
+          <aside class="form-aside">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">机构数据</h3></div>
+              <div class="panel-body">
+                <div class="detail-stats" style="grid-template-columns:repeat(3,1fr);gap:7px">
+                  <div class="detail-stat"><small>成员</small><b>${i ? i.members : 0}</b></div>
+                  <div class="detail-stat"><small>科室</small><b>${i ? i.departments : 0}</b></div>
+                  <div class="detail-stat"><small>项目</small><b>${i ? i.projects : 0}</b></div>
+                </div>
+                <div class="info-list" style="margin-top:14px">
+                  <div class="info-item full"><small>所属集团</small><b>北大医疗集团</b></div>
+                  <div class="info-item full"><small>机构状态</small><b>${statusTag(i ? i.status : "启用")}</b></div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </form>
+    `;
+    $("#viewRoot").innerHTML = html;
+    setTop(title, `内容管理 / ${title}`);
+  }
+
   /* ---------------------------------------------------------
      Router
      --------------------------------------------------------- */
@@ -1000,6 +1062,11 @@
       if (parts[1] === "new") { renderDepartmentForm(null); return; }
       if (parts[2] === "edit") { renderDepartmentForm(parts[1]); return; }
       return renderDepartments();
+    }
+    if (view === "institution") {
+      if (parts[1] === "new") { renderInstitutionForm(null); return; }
+      if (parts[2] === "edit") { renderInstitutionForm(parts[1]); return; }
+      return renderInstitutions();
     }
     if (view === "student") {
       if (lastStudent !== parts[1]) { studentTab = "profile"; lastStudent = parts[1]; }

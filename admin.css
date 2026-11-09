@@ -1372,3 +1372,12 @@ button.panel-link {
   .picker-hospital { grid-template-columns: 1fr; }
   .picker-hospital-head { border-right: 0; border-bottom: 1px solid #e7eef9; }
 }
+
+a.btn, a.panel-link, .back-link, .drawer-edit { text-decoration: none; }
+.drawer h2 { margin-right: 132px; }
+.drawer-edit {
+  position: absolute;
+  top: 13px;
+  right: 54px;
+  z-index: 3;
+}
