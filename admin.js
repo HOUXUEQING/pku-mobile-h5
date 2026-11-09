@@ -238,7 +238,6 @@
         <label class="filter-search">${icon("search")}<input id="instSearch" placeholder="搜索机构名称、地区或类型" /></label>
         <select class="filter-select" id="instRegion"><option>全部地区</option>${[...new Set(D.institutions.map(i => i.region))].map(r => `<option>${r}</option>`).join("")}</select>
         <span class="tag blue">共 ${D.institutions.length} 家成员机构</span>
-        <a class="btn small primary" href="#institution/new">${icon("plus")}新增机构</a>
       </div>
       <section class="panel"><div class="table-wrap"><table class="data-table" id="instTable">
         <thead><tr><th>机构</th><th>地区 / 城市</th><th>机构类型</th><th>负责人</th><th>成员</th><th>科室</th><th>企康项目</th><th>状态</th><th></th></tr></thead>
