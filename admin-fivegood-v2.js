@@ -64,8 +64,22 @@
     $$("[data-recipe-meal]").forEach(b => b.addEventListener("click", () => { recipeMeal = b.dataset.recipeMeal; renderRecipes(); }));
   }
 
+  function mallPrice(p) {
+    if (p.priceType === "积分+自费") return `<b class="mall-mixed-price">${Number(p.points || 0)} 积分 <em>+</em> ¥${Number(p.personalPay || 0).toFixed(2)}</b><small>个人自费部分</small>`;
+    if (p.priceType === "企业权益") return `<b>企业权益</b><small>${esc(p.fulfillment)}</small>`;
+    if (p.priceType === "积分兑换") return `<b>${p.price} 积分</b><small>${esc(p.fulfillment)}</small>`;
+    return `<b>¥${Number(p.price).toLocaleString("zh-CN")}</b><small>${esc(p.fulfillment)}</small>`;
+  }
+
   function renderMall() {
     const catalog = D.mallCatalog;
+    const setPay = (id, points, personalPay) => {
+      const item = catalog.find(p => p.id === id);
+      if (item && !item.priceType.includes("自费")) { item.priceType = "积分+自费"; item.points = points; item.personalPay = personalPay; }
+    };
+    setPay("M-G06", 200, 9.9);
+    setPay("M-G01", 500, 29.9);
+    setPay("M-S05", 800, 99);
     const majorItems = catalog.filter(p => mallKind === "全部" || p.major === mallKind);
     const categories = ["全部", ...new Set(majorItems.map(p => p.category))];
     const list = majorItems.filter(p => mallCat === "全部" || p.category === mallCat);
@@ -75,7 +89,7 @@
       <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="mallSearch" placeholder="搜索商品、服务、大类或小类" /></label><span class="tag blue">公共模块 · 全项目</span></div>
       <div class="mall-tabs">${["全部", "服务目录", "实物商品"].map(k => `<button class="${mallKind === k ? "active" : ""}" data-mall-kind="${k}">${k}</button>`).join("")}</div>
       <div class="mall-cats">${categories.map(c => `<button class="${mallCat === c ? "active" : ""}" data-mall-cat="${c}">${c}</button>`).join("")}</div>
-      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-price"><b>${p.priceType === "企业权益" ? "企业权益" : p.priceType === "积分兑换" ? `${p.price} 积分` : `¥${Number(p.price).toLocaleString("zh-CN")}`}</b><small>${esc(p.fulfillment)}</small></div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
+      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
     $("#viewRoot").innerHTML = html;
     setTop("商城", "公共模块 / 商城", "mall");
     $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; renderMall(); }));
@@ -100,7 +114,7 @@
     mall: { label: "商品", data: () => D.mallCatalog, fields: [
       ["kind", "商品类型", "select", ["服务", "实物"]], ["major", "大类", "select", ["服务目录", "实物商品"]],
       ["category", "中类", "text"], ["subCategory", "小类", "text"], ["name", "商品名称", "text"],
-      ["priceType", "价格类型", "select", ["企业权益", "个人补差", "积分兑换"]], ["price", "价格", "number"],
+      ["priceType", "价格类型", "select", ["企业权益", "个人补差", "积分兑换", "积分+自费"]], ["price", "价格 / 企业价", "number"], ["points", "所需积分", "number"], ["personalPay", "个人自费金额（元）", "number"],
       ["stock", "库存", "text"], ["fulfillment", "履约方式", "text"], ["desc", "商品说明", "textarea", null, true]
     ] },
     recipe: { label: "食谱", data: () => D.recipeLibrary, fields: [
@@ -150,6 +164,7 @@
     const selectedIngredients = item && item.ingredients ? item.ingredients.split("、") : [];
     const recipeExtra = module === "recipe" ? `<div class="field full"><span>食材（搜索食品库并勾选）</span><input id="ingredientSearch" placeholder="搜索食品名称或分类" /><div class="ingredient-picker" id="ingredientPicker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-ingredient="${esc(f.name)}"${selectedIngredients.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal/100g</small></span></label>`).join("")}</div><div class="ingredient-count" id="ingredientCount">已选 ${selectedIngredients.length} 项食材</div></div>` : "";
     const exerciseExtra = module === "exercise" ? `<div class="field full"><span>图文 / 视频素材</span><div class="media-upload-grid"><label class="media-upload"><input type="file" accept="image/*" multiple /><b>上传图文</b><small>JPG / PNG，支持多图</small></label><label class="media-upload"><input type="file" accept="video/*" /><b>上传视频</b><small>MP4 / MOV，建议 60 秒内</small></label></div></div>` : "";
+    const mallExtra = module === "mall" ? `<div class="field full"><span>个人部分付费配置</span><div class="payment-config-note">价格类型选择“积分+自费”时，可同时配置所需积分与个人自费金额，例如：<b>200 积分 + ¥9.90</b>。企业承担部分继续使用企业价 / 结算价。</div></div>` : "";
     const fields = cfg.fields.map(([key, label, type, options, full]) => {
       const value = item ? item[key] : "";
       let control;
@@ -160,7 +175,7 @@
     }).join("");
     openDrawer(`
       <p class="page-eyebrow">EDITOR</p><h2>${title}</h2><p class="drawer-sub">${cfg.label}配置</p>
-      <div class="drawer-section"><div class="publish-form">${fields}${recipeExtra}${exerciseExtra}<div class="field full"><span>适用项目</span><div class="check-grid">${["五好生活", "减重营"].map(p => `<label class="check-item"><input type="checkbox"${projects.includes(p) ? " checked" : ""}/><span>${p}</span></label>`).join("")}</div></div></div></div>
+      <div class="drawer-section"><div class="publish-form">${fields}${recipeExtra}${exerciseExtra}${mallExtra}<div class="field full"><span>适用项目</span><div class="check-grid">${["五好生活", "减重营"].map(p => `<label class="check-item"><input type="checkbox"${projects.includes(p) ? " checked" : ""}/><span>${p}</span></label>`).join("")}</div></div></div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn" data-toast="${title}已保存">保存</button><button class="btn primary" data-toast="${title}已发布">保存并发布</button></div>`);
     const foodSearch = $("#ingredientSearch");
     if (foodSearch) {

@@ -190,3 +190,30 @@ window.ADMIN_DATA.checkinBoards.C005 = {
   yesterday: { date: "10-20", checked: 244, completed: 232, rate: 81.1 },
   trend: [72, 73, 75, 74, 77, 78, 76, 79, 80, 78, 81, 82, 82.5, 82.5]
 };
+
+window.ADMIN_DATA.fiveBoard = {
+  members: 186, advanced: 116, premium: 23, index: 72, target: 70,
+  rate: 50, rateDelta: 4, renewal: 73, surveys: 42,
+  dimensions: [
+    { key: "eat", label: "吃好", value: 72, color: "#16a394" },
+    { key: "sleep", label: "睡好", value: 66, color: "#8b5cf6" },
+    { key: "move", label: "动好", value: 68, color: "#2f6bff" },
+    { key: "mind", label: "心好", value: 68, color: "#e8a13c" },
+    { key: "check", label: "查好", value: 92, color: "#e15b64" }
+  ],
+  products: [
+    { name: "基础版", audience: "全员普惠", price: 3980, members: 2, desc: "五维评估 + 12 次月度任务 + 年度报告" },
+    { name: "进阶版", audience: "高风险人群", price: 6980, members: 3, desc: "基础版 + 营养师月度 1v1 + 体测 4 次" },
+    { name: "尊享版", audience: "高管 / 核心人才", price: 12800, members: 1, desc: "进阶版 + 专属健康管家 + EAP 6 次 + 深度体检" }
+  ],
+  memberRows: [
+    { name: "林悦", version: "进阶版", index: 80.4, status: "正常" },
+    { name: "陈嘉禾", version: "基础版", index: 65.1, status: "正常" },
+    { name: "周雯", version: "尊享版", index: 87.6, status: "正常" },
+    { name: "徐一鸣", version: "进阶版", index: 58.2, status: "待提升" },
+    { name: "何雨桐", version: "基础版", index: 71.3, status: "正常" },
+    { name: "赵启明", version: "进阶版", index: 62.7, status: "待提升" },
+    { name: "吴倩", version: "尊享版", index: 76.5, status: "正常" },
+    { name: "孙宁", version: "基础版", index: 69.4, status: "待提升" }
+  ]
+};

@@ -1944,3 +1944,55 @@ body {
 .food-cell small { display: block; margin-top: 2px; color: #98a6ba; font-size: 8px; }
 
 .ingredient-search { height: 34px; margin-bottom: 7px; padding: 0 10px; color: #344563; font: inherit; font-size: 9px; background: #f8faff; border: 1px solid #e2ebf9; border-radius: 7px; outline: none; }
+
+/* 五好生活看板 */
+.five-board { margin: 12px 0; padding: 15px; background: linear-gradient(135deg,#f2f7ff,#fff 62%); border: 1px solid #dfeafe; border-radius: 15px; box-shadow: 0 7px 24px rgba(36,77,145,.04); }
+.five-board-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.five-board-head h3 { margin: 2px 0 2px; color: #172b4d; font-size: 17px; }
+.five-board-head p { margin: 0; color: #8d9bb0; font-size: 8px; }
+.five-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.five-kpi { padding: 12px 13px; background: #fff; border: 1px solid #e7eef9; border-top: 2px solid #2f6bff; border-radius: 10px; }
+.five-kpi.purple { border-top-color: #8b5cf6; background: linear-gradient(135deg,#f7f2ff,#fff 76%); }
+.five-kpi.green { border-top-color: #16a394; background: linear-gradient(135deg,#eefbf6,#fff 76%); }
+.five-kpi.gold { border-top-color: #e8a13c; background: linear-gradient(135deg,#fff8e8,#fff 76%); }
+.five-kpi small { display: block; color: #8d9bb0; font-size: 8px; }
+.five-kpi b { display: block; margin: 3px 0 1px; color: #2f6bff; font-size: 24px; line-height: 1.1; }
+.five-kpi.purple b { color: #8b5cf6; }
+.five-kpi.green b { color: #16a394; }
+.five-kpi.gold b { color: #d48723; }
+.five-kpi b em { margin-left: 2px; color: #8d9bb0; font-size: 9px; font-style: normal; font-weight: 400; }
+.five-kpi span { color: #98a6ba; font-size: 7px; }
+.five-board-grid { display: grid; grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: 10px; margin-top: 10px; }
+.five-radar-panel { padding-bottom: 10px; }
+.five-radar-wrap { display: grid; place-items: center; padding: 3px 0 0; }
+.five-radar { width: 238px; height: 238px; }
+.five-dims { display: grid; gap: 7px; padding: 0 14px 5px; }
+.five-dim { display: grid; grid-template-columns: 47px minmax(0,1fr) 28px; align-items: center; gap: 7px; color: #6f8097; font-size: 8px; }
+.five-dim > span { display: flex; align-items: center; gap: 5px; }
+.five-dim > span i { width: 5px; height: 5px; border-radius: 50%; }
+.five-dim > div { height: 5px; overflow: hidden; background: #edf3ff; border-radius: 99px; }
+.five-dim > div i { display: block; height: 100%; border-radius: inherit; }
+.five-dim > b { color: #405772; font-size: 9px; text-align: right; }
+.five-side { display: grid; align-content: start; gap: 10px; }
+.five-product-list { display: grid; gap: 1px; }
+.five-product { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-top: 1px solid #eef3fb; }
+.five-product:first-child { border-top: 0; }
+.five-product-name { display: flex; align-items: center; gap: 6px; }
+.five-product-name b { color: #263f64; font-size: 10px; }
+.five-product-name span { padding: 2px 5px; color: #2f6bff; font-size: 7px; background: #edf3ff; border-radius: 3px; }
+.five-product > div > small { display: block; margin-top: 3px; color: #98a6ba; font-size: 7px; }
+.five-product-price { flex: none; text-align: right; }
+.five-product-price b { display: block; color: #172b4d; font-size: 12px; }
+.five-product-price span { color: #98a6ba; font-size: 7px; }
+.five-member-table th, .five-member-table td { padding: 7px 10px; }
+.five-member-table .avatar-sm { width: 21px; height: 21px; font-size: 8px; }
+.five-index { display: flex; align-items: center; gap: 6px; }
+.five-index b { width: 30px; color: #2f6bff; font-size: 9px; }
+.five-index > span { width: 62px; height: 4px; overflow: hidden; background: #edf3ff; border-radius: 99px; }
+.five-index > span i { display: block; height: 100%; background: linear-gradient(90deg,#62c8ff,#2f6bff); border-radius: inherit; }
+@media (max-width: 1120px) { .five-kpis { grid-template-columns: repeat(2, 1fr); } .five-board-grid { grid-template-columns: 1fr; } }
+
+.mall-mixed-price { color: #2f6bff !important; font-size: 12px !important; }
+.mall-mixed-price em { margin: 0 2px; color: #16a394; font-size: 10px; font-style: normal; }
+.payment-config-note { padding: 10px 12px; color: #60758c; font-size: 8px; line-height: 1.7; background: linear-gradient(135deg,#eefbf8,#f8faff); border: 1px solid #d8f0e7; border-radius: 8px; }
+.payment-config-note b { color: #16a394; }

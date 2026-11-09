@@ -88,6 +88,35 @@
     </svg>`;
   }
 
+  function radarChart(dims, size) {
+    const s = size || 238, c = s / 2, r = s * 0.31;
+    const point = (i, radius) => {
+      const angle = -Math.PI / 2 + i * 2 * Math.PI / dims.length;
+      return [c + Math.cos(angle) * radius, c + Math.sin(angle) * radius];
+    };
+    let grid = "";
+    [.25, .5, .75, 1].forEach(level => {
+      const pts = dims.map((d, i) => point(i, r * level).map(n => n.toFixed(1)).join(",")).join(" ");
+      grid += `<polygon points="${pts}" fill="${level === 1 ? "#f7faff" : "none"}" stroke="#e3ecfa" stroke-width="1"/>`;
+    });
+    const axes = dims.map((d, i) => {
+      const [x, y] = point(i, r);
+      return `<line x1="${c}" y1="${c}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#e3ecfa" stroke-width="1"/>`;
+    }).join("");
+    const valuePoints = dims.map((d, i) => point(i, r * d.value / 100).map(n => n.toFixed(1)).join(",")).join(" ");
+    const labels = dims.map((d, i) => {
+      const [x, y] = point(i, r + 19);
+      return `<text x="${x.toFixed(1)}" y="${(y + 2).toFixed(1)}" text-anchor="middle" fill="#64758c" font-size="9">${escape(d.label)}</text>`;
+    }).join("");
+    const dots = dims.map((d, i) => {
+      const [x, y] = point(i, r * d.value / 100);
+      return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.7" fill="#fff" stroke="#2f6bff" stroke-width="1.5"/>`;
+    }).join("");
+    return `<svg class="five-radar" viewBox="0 0 ${s} ${s}" role="img" aria-label="五维画像">
+      ${grid}${axes}<polygon points="${valuePoints}" fill="rgba(47,107,255,.14)" stroke="#2f6bff" stroke-width="1.7" stroke-linejoin="round"/>${dots}${labels}
+    </svg>`;
+  }
+
   function getBodyValues(s) {
     if (D.bodyValues[s.id]) return D.bodyValues[s.id];
     return [
@@ -137,6 +166,7 @@
 
   function renderDashboard() {
     const activeProjects = D.projects.filter(p => p.status === "进行中");
+    const five = D.fiveBoard;
     const risks = D.students.filter(s => s.risk !== "低");
     const followups = [
       { id: "S005", name: "陈浩", meta: "中石油华北员工减重营", project: "减重营", reason: "连续 3 天未完整打卡", risk: "高", owner: "王琳", action: "电话跟进", tone: "red" },
@@ -177,6 +207,32 @@
           <span class="overview-card-link">进入五好工作区 →</span>
         </a>
       </div>
+      <section class="five-board">
+        <div class="five-board-head"><div><p class="page-eyebrow">FIVE GOOD · OVERVIEW</p><h3>五好生活看板</h3><p>五维健康画像 · 产品结构 · 会员指数</p></div><a class="panel-link" href="#fivegood">进入五好工作台 →</a></div>
+        <div class="five-kpis">
+          <div class="five-kpi blue"><small>在册会员</small><b>${five.members}<em>人</em></b><span>进阶版 ${five.advanced} · 尊享 ${five.premium}</span></div>
+          <div class="five-kpi purple"><small>平均五好指数</small><b>${five.index}</b><span>达标线 ${five.target}</span></div>
+          <div class="five-kpi green"><small>达标率</small><b>${five.rate}<em>%</em></b><span>较上月 +${five.rateDelta}pt</span></div>
+          <div class="five-kpi gold"><small>年度续费意向</small><b>${five.renewal}<em>%</em></b><span>基于 ${five.surveys} 份回访</span></div>
+        </div>
+        <div class="five-board-grid">
+          <section class="panel five-radar-panel">
+            <div class="panel-head"><div><h3 class="panel-title">五维画像</h3><p class="panel-sub">全员平均</p></div><span class="tag blue">达标线 ${five.target}</span></div>
+            <div class="five-radar-wrap">${radarChart(five.dimensions)}</div>
+            <div class="five-dims">${five.dimensions.map(d => `<div class="five-dim"><span><i style="background:${d.color}"></i>${escape(d.label)}</span><div><i style="width:${d.value}%;background:${d.color}"></i></div><b>${d.value}</b></div>`).join("")}</div>
+          </section>
+          <div class="five-side">
+            <section class="panel five-products">
+              <div class="panel-head"><div><h3 class="panel-title">产品结构</h3></div><span class="tag green">三个档位</span></div>
+              <div class="five-product-list">${five.products.map(p => `<div class="five-product"><div><div class="five-product-name"><b>${escape(p.name)}</b><span>${escape(p.audience)}</span></div><small>${escape(p.desc)}</small></div><div class="five-product-price"><b>¥${p.price.toLocaleString("zh-CN")}</b><span>${p.members} 人</span></div></div>`).join("")}</div>
+            </section>
+            <section class="panel five-members">
+              <div class="panel-head"><div><h3 class="panel-title">会员</h3></div><span class="tag">按指数排序</span></div>
+              <div class="table-wrap"><table class="data-table five-member-table"><thead><tr><th>会员</th><th>版本</th><th>五好指数</th><th>状态</th></tr></thead><tbody>${five.memberRows.map(m => `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(m.name.slice(0, 1))}</span><b>${escape(m.name)}</b></span></td><td>${escape(m.version)}</td><td><div class="five-index"><b>${m.index.toFixed(1)}</b><span><i style="width:${Math.min(100, m.index)}%"></i></span></div></td><td><span class="tag ${m.status === "正常" ? "green" : "gold"}">${escape(m.status)}</span></td></tr>`).join("")}</tbody></table></div>
+            </section>
+          </div>
+        </div>
+      </section>
       <div class="dash-grid">
         <section class="panel article-board">
           <div class="panel-head"><div><h3 class="panel-title">文章浏览数据</h3></div><a class="panel-link" href="#articles">内容发布 →</a></div>
