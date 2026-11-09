@@ -92,11 +92,15 @@
         <label class="field"><span>蛋白质</span><input id="templateProtein" type="number" value="${t ? t.protein : ""}" /></label>
         <label class="field"><span>归属</span><select id="templateOwner"><option${t && t.owner === "标准" ? " selected" : ""}>标准</option><option${!t || t.owner === "我的" ? " selected" : ""}>我的</option></select></label>
         <label class="field"><span>状态</span><select><option${t && t.status === "启用" ? " selected" : ""}>启用</option><option${t && t.status === "草稿" ? " selected" : ""}>草稿</option></select></label>
-        <div class="field full"><span>选择食材（来自食品库）</span><div class="ingredient-picker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-template-dish="${esc(f.name)}"${selected.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal</small></span></label>`).join("")}</div></div>
+        <div class="field full"><span>选择食材（来自食品库，可搜索）</span><input class="ingredient-search" id="templateIngredientSearch" placeholder="搜索食材名称或分类" /><div class="ingredient-picker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-template-dish="${esc(f.name)}"${selected.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal</small></span></label>`).join("")}</div></div>
       </div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn" data-toast="模版已保存">保存</button><button class="btn primary" data-toast="模版已发布">保存并发布</button></div>`);
-    const count = $("[data-template-dish]");
-    if (count) {
+    const search = $("#templateIngredientSearch");
+    if (search) search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      $$(".ingredient-item").forEach(el => el.style.display = !q || el.innerText.toLowerCase().includes(q) ? "" : "none");
+    });
+    if ($("[data-template-dish]")) {
       $$("[data-template-dish]").forEach(el => el.addEventListener("change", () => {
         const n = $$("[data-template-dish]:checked").length;
         const name = $("#templateName");
