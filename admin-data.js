@@ -39,7 +39,8 @@ window.ADMIN_DATA = {
     { id: "M009", name: "刘洋", gender: "男", photo: "", institutionId: "I002", dept: "运动康复中心", role: "康复师", title: "康复治疗师", qualification: "运动康复 · 骨科康复", projects: ["P001"], phone: "138****1029", intro: "负责运动功能评估、康复训练计划和营期运动康复指导。", specialty: "运动康复、骨科康复" },
     { id: "M010", name: "王倩", gender: "女", photo: "", institutionId: "I006", dept: "健康管理中心", role: "运营管理", title: "项目运营经理", qualification: "健康管理 · 项目运营", projects: ["P001", "P002", "P003"], phone: "138****1030", intro: "负责企康项目运营管理、营期排期、服务团队协调和项目数据复盘。", specialty: "项目运营管理" },
     { id: "M011", name: "赵敏", gender: "女", photo: "", institutionId: "I001", dept: "营养门诊", role: "营养师", title: "注册营养师", qualification: "临床营养 · 膳食管理", projects: ["P001"], phone: "138****1031", intro: "负责营期膳食管理、营养宣教和体重管理随访。", specialty: "膳食管理、营养宣教" },
-    { id: "M012", name: "周明", gender: "男", photo: "", institutionId: "I001", dept: "内分泌科", role: "医师", title: "主治医师", qualification: "内分泌代谢 · 肥胖症", projects: ["P001"], phone: "138****1032", intro: "负责营期医学评估、肥胖相关代谢疾病诊疗和健康风险把控。", specialty: "肥胖症、内分泌代谢疾病" }
+    { id: "M012", name: "周明", gender: "男", photo: "", institutionId: "I001", dept: "内分泌科", role: "医师", title: "主治医师", qualification: "内分泌代谢 · 肥胖症", projects: ["P001"], phone: "138****1032", intro: "负责营期医学评估、肥胖相关代谢疾病诊疗和健康风险把控。", specialty: "肥胖症、内分泌代谢疾病" },
+    { id: "M013", name: "康俊萍", gender: "女", photo: "", institutionId: "I001", dept: "心血管内科", role: "医师", title: "副主任医师", qualification: "心血管病学 · 心脏康复", projects: ["P001"], phone: "138****1033", intro: "从事心血管内科临床工作，关注冠心病、高血压及心脏康复管理。", specialty: "冠心病、高血压、心脏康复" }
   ],
 
   projects: [

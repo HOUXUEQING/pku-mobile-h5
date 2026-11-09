@@ -880,6 +880,14 @@
     setTop(title, `内容管理 / ${title}`);
   }
 
+  function doctorPickerHtml(institutionId, selectedNames) {
+    return D.members.filter(m => m.institutionId === institutionId).map(m => `<label class="picker-member${selectedNames.has(m.name) ? " selected" : ""}">
+      <input type="checkbox" data-doctor-pick="${m.id}"${selectedNames.has(m.name) ? " checked" : ""} />
+      ${avatar(m)}
+      <span class="picker-member-info"><b>${escape(m.name)}</b><small>${escape(m.title)} · ${escape(instById(m.institutionId).short)}</small></span>
+    </label>`).join("");
+  }
+
   function renderDepartmentForm(id) {
     const editing = !!id;
     const d = editing ? D.departments.find(x => x.id === id) : null;
@@ -899,7 +907,7 @@
               <div class="panel-head"><h3 class="panel-title">科室信息</h3></div>
               <div class="panel-body form-grid">
                 ${field("科室名称", `<input value="${escape(d ? d.name : "")}" placeholder="请输入科室名称" />`)}
-                ${field("所属机构", `<select>${institutionOptions(institutionId)}</select>`)}
+                ${field("所属机构", `<select id="deptInstitution">${institutionOptions(institutionId)}</select>`)}
                 ${field("科室分类", `<select>${["科室中心", "特色中心", "特色门诊"].map(c => `<option${d && d.category === c ? " selected" : ""}>${c}</option>`).join("")}</select>`)}
                 ${field("学科带头人", `<input value="${escape(d ? d.leader : "")}" placeholder="请输入学科带头人" />`)}
                 ${field("医生数量", `<input type="number" value="${d ? d.doctors : 0}" />`)}
@@ -920,13 +928,7 @@
             <section class="panel">
               <div class="panel-head"><h3 class="panel-title">医生团队</h3></div>
               <div class="panel-body">
-                <div class="doctor-picker">
-                  ${doctors.map(m => `<label class="picker-member${selectedNames.has(m.name) ? " selected" : ""}">
-                    <input type="checkbox" data-doctor-pick="${m.id}"${selectedNames.has(m.name) ? " checked" : ""} />
-                    ${avatar(m)}
-                    <span class="picker-member-info"><b>${escape(m.name)}</b><small>${escape(m.title)} · ${escape(instById(m.institutionId).short)}</small></span>
-                  </label>`).join("")}
-                </div>
+                <div class="doctor-picker" id="doctorPicker">${doctorPickerHtml(institutionId, selectedNames)}</div>
               </div>
             </section>
 
@@ -943,7 +945,7 @@
                 <div class="info-list">
                   <div class="info-item full"><small>机构</small><b>${escape(instById(institutionId).name)}</b></div>
                   <div class="info-item"><small>科室分类</small><b>${escape(d ? d.category : "科室中心")}</b></div>
-                  <div class="info-item"><small>医生团队</small><b>${d ? d.team.length : 0} 人</b></div>
+                  <div class="info-item"><small>医生团队</small><b id="doctorCount">${d ? d.team.length : 0} 人</b></div>
                 </div>
               </div>
             </section>
@@ -953,6 +955,25 @@
     `;
     $("#viewRoot").innerHTML = html;
     setTop(title, `内容管理 / ${title}`);
+
+    const deptInst = $("#deptInstitution");
+    const doctorPicker = $("#doctorPicker");
+    const doctorCount = $("#doctorCount");
+    const updateDoctorCount = () => {
+      if (!doctorPicker || !doctorCount) return;
+      const picked = $$("[data-doctor-pick]:checked", doctorPicker).length;
+      doctorCount.textContent = `${picked} 人`;
+    };
+    if (doctorPicker) {
+      doctorPicker.addEventListener("change", updateDoctorCount);
+      updateDoctorCount();
+    }
+    if (deptInst && doctorPicker) {
+      deptInst.addEventListener("change", () => {
+        doctorPicker.innerHTML = doctorPickerHtml(deptInst.value, new Set());
+        updateDoctorCount();
+      });
+    }
   }
 
   /* ---------------------------------------------------------
