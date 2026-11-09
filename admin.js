@@ -25,6 +25,7 @@
   let projectStatus = "全部";
   let boardCamp = "C001";
   let boardDay = "today";
+  let checkinType = "体重";
 
   function icon(name, cls) {
     return `<svg class="ic ${cls || ""}"><use href="#i-${name}"/></svg>`;
@@ -551,7 +552,7 @@
     const manager = teamMembers.find(m => m.role === "运营管理");
     const isFive = p.type === "五好生活";
     const projTabs = isFive
-      ? [["overview", "概览"], ["team", "服务团队"], ["students", "参与员工"], ["checkins", "生活打卡"], ["data", "数据"]]
+      ? [["overview", "概览"], ["team", "服务团队"], ["students", "参与员工"], ["data", "数据"]]
       : [["overview", "概览"], ["team", "服务团队"], ["students", "学员"], ["checkins", "打卡"], ["data", "数据"]];
     let content = "";
     if (projectTab === "overview") {
@@ -592,7 +593,7 @@
     } else if (projectTab === "students") {
       if (isFive) {
         const people = [...new Map(D.lifeCheckins.map(c => [c.name, c])).values()];
-        content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">参与员工</h3><p class="panel-sub">五好生活 · ${people.length} 位员工</p></div><a class="panel-link" href="#life-checkins">生活打卡 →</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>员工</th><th>部门</th><th>饮食</th><th>睡眠</th><th>运动</th><th>完成情况</th></tr></thead><tbody>${people.map(c => `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(c.name.slice(0, 1))}</span><b>${escape(c.name)}</b></span></td><td>${escape(c.dept)}</td><td>${escape(c.diet)}</td><td>${escape(c.sleep)}</td><td>${escape(c.exercise)}</td><td><span class="tag ${c.completion === "全部完成" ? "green" : "gold"}">${escape(c.completion)}</span></td></tr>`).join("")}</tbody></table></div></section>`;
+        content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">参与员工</h3><p class="panel-sub">五好生活 · ${people.length} 位员工</p></div><span class="tag green">参与员工</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>员工</th><th>部门</th><th>饮食</th><th>睡眠</th><th>运动</th><th>完成情况</th></tr></thead><tbody>${people.map(c => `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(c.name.slice(0, 1))}</span><b>${escape(c.name)}</b></span></td><td>${escape(c.dept)}</td><td>${escape(c.diet)}</td><td>${escape(c.sleep)}</td><td>${escape(c.exercise)}</td><td><span class="tag ${c.completion === "全部完成" ? "green" : "gold"}">${escape(c.completion)}</span></td></tr>`).join("")}</tbody></table></div></section>`;
       } else {
         content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">学员名单</h3><p class="panel-sub">${escape(camp.name)} · ${students.length} 位学员</p></div><button class="btn small" data-toast="原型演示：批量导入学员">导入学员</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>学员</th><th>来源医师</th><th>服务团队</th><th>完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead><tbody>${students.map(s => `<tr class="clickable" data-student="${s.id}"><td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td><td>${escape(s.sourceDoctor)}</td><td>${escape(s.team)}</td><td><b class="cell-main">${s.completion}%</b></td><td>${escape(s.weightChange)} kg</td><td>${statusTag(s.risk)}</td><td>${escape(s.lastCheckin)}</td></tr>`).join("")}</tbody></table></div></section>`;
       }
@@ -720,21 +721,63 @@
      Checkins
      --------------------------------------------------------- */
 
+  function checkinRows(type) {
+    const weight = [
+      { id: "CK-W01", name: "林悦", date: "2026-10-20 07:46:00", value: "69.1 kg", photo: "已上传", note: "开营基线已记录，接下来重点看第一周的..." },
+      { id: "CK-W02", name: "林悦", date: "2026-10-22 07:38:00", value: "68.4 kg", photo: "无", note: "" },
+      { id: "CK-W03", name: "林悦", date: "2026-10-23 07:50:00", value: "68 kg", photo: "无", note: "" },
+      { id: "CK-W04", name: "林悦", date: "2026-10-25 07:47:00", value: "67.9 kg", photo: "已上传", note: "下降节奏不错，注意蛋白质摄入不要低于..." },
+      { id: "CK-W05", name: "林悦", date: "2026-10-26 07:12:00", value: "67.4 kg", photo: "无", note: "" },
+      { id: "CK-W06", name: "林悦", date: "2026-10-28 07:38:00", value: "67.7 kg", photo: "无", note: "" },
+      { id: "CK-W07", name: "林悦", date: "2026-10-29 07:22:00", value: "67.2 kg", photo: "已上传", note: "下降节奏不错，注意蛋白质摄入不要低于..." },
+      { id: "CK-W08", name: "林悦", date: "2026-10-31 07:25:00", value: "66.5 kg", photo: "无", note: "" },
+      { id: "CK-W09", name: "林悦", date: "2026-11-01 07:32:00", value: "66.3 kg", photo: "无", note: "" },
+      { id: "CK-W10", name: "林悦", date: "2026-11-03 07:31:00", value: "66 kg", photo: "已上传", note: "下降节奏不错，注意蛋白质摄入不要低于..." }
+    ];
+    const diet = [
+      { id: "CK-D01", name: "林悦", date: "2026-10-20 12:18:00", value: "早餐 1/3", photo: "已上传", note: "早餐记录完整，主食份量合适" },
+      { id: "CK-D02", name: "林悦", date: "2026-10-22 18:36:00", value: "午餐 2/3", photo: "已上传", note: "" },
+      { id: "CK-D03", name: "林悦", date: "2026-10-23 12:42:00", value: "早餐 2/3", photo: "无", note: "" },
+      { id: "CK-D04", name: "林悦", date: "2026-10-25 19:05:00", value: "晚餐 3/3", photo: "已上传", note: "晚餐蔬菜比例不错，建议增加优质蛋白" },
+      { id: "CK-D05", name: "林悦", date: "2026-10-28 12:28:00", value: "午餐 2/3", photo: "无", note: "" },
+      { id: "CK-D06", name: "林悦", date: "2026-11-03 18:15:00", value: "晚餐 3/3", photo: "已上传", note: "连续记录较好，保持当前节奏" }
+    ];
+    const exercise = [
+      { id: "CK-E01", name: "林悦", date: "2026-10-20 19:20:00", value: "快走 32 分钟", photo: "无", note: "有氧完成，注意运动后补水" },
+      { id: "CK-E02", name: "林悦", date: "2026-10-22 20:05:00", value: "拉伸 15 分钟", photo: "已上传", note: "" },
+      { id: "CK-E03", name: "林悦", date: "2026-10-25 18:50:00", value: "快走 40 分钟", photo: "无", note: "" },
+      { id: "CK-E04", name: "林悦", date: "2026-10-28 20:12:00", value: "居家力量 25 分钟", photo: "已上传", note: "动作完成度不错，注意膝盖感受" },
+      { id: "CK-E05", name: "林悦", date: "2026-10-31 19:06:00", value: "快走 35 分钟", photo: "无", note: "" },
+      { id: "CK-E06", name: "林悦", date: "2026-11-03 20:00:00", value: "拉伸 20 分钟", photo: "已上传", note: "连续运动保持良好" }
+    ];
+    return type === "饮食" ? diet : type === "运动" ? exercise : weight;
+  }
+
+  function openCheckinRecord(type, index) {
+    const row = checkinRows(type)[index]; if (!row) return;
+    openDrawer(`
+      <p class="page-eyebrow">CHECK-IN REVIEW</p><h2>${escape(row.name)} · ${escape(type)}打卡</h2><p class="drawer-sub">${escape(row.date)} · 记录不可删除，仅可批注与评分</p>
+      <div class="drawer-section"><div class="info-list"><div class="info-item"><small>${type}</small><b>${escape(row.value)}</b></div><div class="info-item"><small>照片</small><b>${row.photo === "已上传" ? "已上传" : "未上传"}</b></div><div class="info-item"><small>记录时间</small><b>${escape(row.date)}</b></div></div></div>
+      <div class="drawer-section"><h3>批注</h3><textarea class="checkin-comment" rows="4" placeholder="填写批注内容">${escape(row.note)}</textarea></div>
+      <div class="drawer-section"><h3>评分</h3><div class="checkin-score">${[1, 2, 3, 4, 5].map(n => `<button class="${n === 4 ? "active" : ""}" data-toast="已评分 ${n} 分">${n} 分</button>`).join("")}</div></div>
+      <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn primary" data-toast="批注与评分已保存">保存批注</button></div>
+    `);
+  }
+
   function renderCheckins() {
+    const rows = checkinRows(checkinType);
+    const label = checkinType === "饮食" ? "饮食" : checkinType === "运动" ? "运动" : "体重";
     const html = `
-      ${pageHead("打卡记录", "DAILY CHECK-INS", "", "")}
-      <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="checkinSearch" placeholder="搜索学员、项目或日期" /></label></div>
-      <section class="panel"><div class="table-wrap"><table class="data-table" id="checkinTable"><thead><tr><th>日期</th><th>学员</th><th>项目</th><th>体重</th><th>三餐</th><th>加餐</th><th>运动</th><th>完成</th><th>健管师评分</th><th>营养师评分</th></tr></thead><tbody>
-        ${D.checkins.map(k => { const s = studentById(k.studentId); return `<tr class="clickable" data-checkin="${k.id}"><td>${escape(k.date)}<span class="cell-sub">${escape(k.time)}</span></td><td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td><td>${escape(projectById(s.projectId).name)}</td><td>${k.weight} kg</td><td>${k.meals}/3</td><td>${k.snacks}</td><td>${k.exercise} 分钟</td><td>${k.complete ? '<span class="tag green">已完成</span>' : '<span class="tag red">未完成</span>'}</td><td><span class="tag gold">${k.healthScore}</span></td><td><span class="tag green">${k.nutritionScore}</span></td></tr>`; }).join("")}
+      <div class="page-head checkin-head"><div><p class="page-eyebrow">DAILY CHECK-INS</p><h2>打卡记录</h2><p class="checkin-sub">共 156 条 · 记录不可删除，仅可批注与评分</p></div><div class="page-actions"><button class="btn" data-toast="导出记录已生成">${icon("download")}导出记录</button></div></div>
+      <div class="checkin-tabs">${[["体重", 156], ["饮食", 52], ["运动", 39]].map(([type, count]) => `<button class="${checkinType === type ? "active" : ""}" data-checkin-type="${type}">${type}<b>${count}</b></button>`).join("")}</div>
+      <section class="panel checkin-panel"><div class="table-wrap"><table class="data-table checkin-table"><thead><tr><th>学员</th><th>时间</th><th>${label}</th><th>照片</th><th>批注</th></tr></thead><tbody>
+        ${rows.map((row, index) => `<tr class="clickable" data-checkin-record="${index}"><td><span class="person-cell"><span class="avatar avatar-sm">${escape(row.name.slice(0, 1))}</span><b>${escape(row.name)}</b></span></td><td>${escape(row.date)}</td><td><b class="checkin-value">${escape(row.value)}</b></td><td>${row.photo === "已上传" ? '<span class="checkin-photo"><i></i>已上传</span>' : '<span class="checkin-photo none">无</span>'}</td><td>${row.note ? `<span class="checkin-note">${escape(row.note)}</span>` : '<span class="tag gold">待批注</span>'}</td></tr>`).join("")}
       </tbody></table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
     setTop("打卡记录", "企康项目 / 打卡记录");
-    const input = $("#checkinSearch");
-    input.addEventListener("input", () => {
-      const q = input.value.trim();
-      $$("#checkinTable tbody tr").forEach(tr => tr.style.display = !q || tr.innerText.includes(q) ? "" : "none");
-    });
+    $$("[data-checkin-type]").forEach(b => b.addEventListener("click", () => { checkinType = b.dataset.checkinType; renderCheckins(); }));
+    $$("[data-checkin-record]").forEach(tr => tr.addEventListener("click", () => openCheckinRecord(checkinType, Number(tr.dataset.checkinRecord))));
   }
 
   function checkinDrawer(id) {
@@ -1192,6 +1235,7 @@
     else if (view === "accounts") renderAccounts();
     else if (view === "roles") renderRoles();
     else if (view === "health-records" && window.AdminHealth) window.AdminHealth.records();
+    else if (view === "life-checkins") { location.hash = "#checkins"; return; }
     else if (window.AdminFiveGood && window.AdminFiveGood[view]) window.AdminFiveGood[view]();
     else renderDashboard();
     window.scrollTo({ top: 0, behavior: "instant" });
