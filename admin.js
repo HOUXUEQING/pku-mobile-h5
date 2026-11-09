@@ -178,10 +178,26 @@
         </a>
       </div>
       <div class="dash-grid">
-        <section class="panel chart-card">
-          <div class="panel-head"><div><h3 class="panel-title">近 14 天打卡完成率</h3><p class="panel-sub">完成成员 ÷ 参营学员，按全部在营项目统计</p></div><a class="panel-link" href="#checkins">查看打卡记录 →</a></div>
-          <div class="chart-wrap">${lineChart(D.chart.labels, D.chart.completion, { min: 60, max: 90, suffix: "%", color: "#2f6bff", id: "completion", height: 300 })}</div>
-          <div class="chart-legend"><span><i class="legend-dot" style="background:#2f6bff"></i>完成率</span></div>
+        <section class="panel article-board">
+          <div class="panel-head"><div><h3 class="panel-title">文章浏览数据</h3></div><a class="panel-link" href="#articles">内容发布 →</a></div>
+          <div class="panel-body">
+            <div class="article-kpis">
+              <div><small>累计阅读</small><b>2,996</b></div>
+              <div><small>已发布</small><b>3</b></div>
+              <div><small>今日阅读</small><b>286</b></div>
+            </div>
+            <div class="article-list">
+              ${D.articles.filter(a => a.status === "已发布").sort((a, b) => b.views - a.views).slice(0, 4).map((a, i) => {
+                const max = Math.max(...D.articles.map(x => x.views));
+                return `<div class="article-row">
+                  <span class="article-rank">${String(i + 1).padStart(2, "0")}</span>
+                  <div class="article-info"><b>${escape(a.title)}</b><small>${escape(a.channel)} · ${a.projects.map(escape).join(" / ")}</small></div>
+                  <div class="article-views"><b>${a.views.toLocaleString("zh-CN")}</b><small>阅读</small></div>
+                  <div class="article-bar"><i style="width:${Math.max(8, Math.round(a.views / max * 100))}%"></i></div>
+                </div>`;
+              }).join("")}
+            </div>
+          </div>
         </section>
         <section class="panel board-panel">
           <div class="panel-head board-head">
@@ -207,9 +223,9 @@
               <div class="board-rate-head"><span>完成率</span><b>${boardToday.rate}%</b></div>
               <div class="board-progress"><i style="width:${Math.min(100, boardToday.rate)}%"></i></div>
             </div>
-            <div class="board-chart">
-              <div class="board-chart-head"><span>近 14 天完成率</span><em>${escape(boardCampInfo.name)}</em></div>
-              ${lineChart(D.chart.labels, boardTrend, { min: boardMin, max: boardMax, suffix: "%", color: "#2f6bff", id: "board-" + boardCamp, height: 132 })}
+            <div class="board-breakdown">
+              <div class="board-breakdown-head"><span>今日完成构成</span><em>${boardToday.checked} / ${board.total} 人打卡</em></div>
+              ${[["体重", 112, 120, "#2f6bff"], ["三餐", 108, 120, "#16a394"], ["运动", 101, 120, "#e8a13c"]].map(([l, v, total, c]) => `<div class="board-breakdown-row"><span>${l}</span><div><i style="width:${Math.round(v / total * 100)}%;background:${c}"></i></div><b>${v}/${total}</b></div>`).join("")}
             </div>
           </div>
         </section>

@@ -1651,3 +1651,26 @@ a, a:hover, a:focus, a:active,
 .ingredient-item { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: center; column-gap: 7px; }
 .ingredient-item input { width: 14px; height: 14px; margin: 0; }
 .ingredient-item > span { min-width: 0; }
+
+.article-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 13px; }
+.article-kpis div { padding: 11px 12px; background: #f8faff; border: 1px solid #edf3fc; border-radius: 10px; }
+.article-kpis small { display: block; color: #91a1b6; font-size: 8px; }
+.article-kpis b { display: block; margin-top: 2px; color: #172b4d; font-size: 22px; }
+.article-list { display: grid; gap: 2px; }
+.article-row { display: grid; grid-template-columns: 26px minmax(0,1fr) 72px 90px; align-items: center; gap: 9px; padding: 10px 2px; border-top: 1px solid #eef3fb; }
+.article-rank { color: #a6b2c2; font-size: 10px; }
+.article-info { min-width: 0; }
+.article-info b { display: block; overflow: hidden; color: #2b4267; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.article-info small { display: block; margin-top: 2px; color: #98a6ba; font-size: 8px; }
+.article-views { text-align: right; }
+.article-views b { display: block; color: #2f6bff; font-size: 12px; }
+.article-views small { color: #9aa8bc; font-size: 7px; }
+.article-bar { height: 5px; overflow: hidden; background: #edf3ff; border-radius: 99px; }
+.article-bar i { display: block; height: 100%; background: linear-gradient(90deg,#62c8ff,#2f6bff); border-radius: inherit; }
+.board-breakdown { margin-top: 13px; padding-top: 10px; border-top: 1px solid #eef3fb; }
+.board-breakdown-head { display: flex; justify-content: space-between; margin-bottom: 7px; color: #687c97; font-size: 9px; }
+.board-breakdown-head em { color: #9aa8bc; font-size: 8px; font-style: normal; }
+.board-breakdown-row { display: grid; grid-template-columns: 32px minmax(0,1fr) 48px; align-items: center; gap: 7px; margin-bottom: 7px; color: #7b8ca4; font-size: 8px; }
+.board-breakdown-row > div { height: 5px; overflow: hidden; background: #edf3ff; border-radius: 99px; }
+.board-breakdown-row i { display: block; height: 100%; border-radius: inherit; }
+.board-breakdown-row b { color: #405772; font-size: 8px; font-weight: 500; text-align: right; }

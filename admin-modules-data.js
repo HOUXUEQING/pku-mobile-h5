@@ -45,7 +45,15 @@ Object.assign(window.ADMIN_DATA, {
     { id: "F009", name: "鸡蛋", category: "蛋类", kcal: 143, protein: 12.6, carb: 0.7, fat: 9.5, fiber: 0, allergens: "蛋类", status: "启用" },
     { id: "F010", name: "蓝莓", category: "水果", kcal: 57, protein: 0.7, carb: 14, fat: 0.3, fiber: 2.4, allergens: "—", status: "启用" },
     { id: "F011", name: "藜麦", category: "谷物", kcal: 368, protein: 14, carb: 64, fat: 6, fiber: 7, allergens: "—", status: "启用" },
-    { id: "F012", name: "杏仁", category: "坚果", kcal: 579, protein: 21, carb: 22, fat: 50, fiber: 12.5, allergens: "坚果", status: "停用" }
+    { id: "F012", name: "杏仁", category: "坚果", kcal: 579, protein: 21, carb: 22, fat: 50, fiber: 12.5, allergens: "坚果", status: "停用" },
+    { id: "F013", name: "藜麦糙米饭", category: "主食", kcal: 300, protein: 12, carb: 54, fat: 4, fiber: 5, allergens: "—", status: "启用" },
+    { id: "F014", name: "全麦吐司", category: "主食", kcal: 150, protein: 6, carb: 26, fat: 2, fiber: 4, allergens: "麸质", status: "启用" },
+    { id: "F015", name: "希腊酸奶碗", category: "乳制品", kcal: 145, protein: 16, carb: 12, fat: 3, fiber: 0, allergens: "乳制品", status: "启用" },
+    { id: "F016", name: "牛油果沙拉", category: "蔬果", kcal: 150, protein: 3, carb: 9, fat: 12, fiber: 5, allergens: "—", status: "启用" },
+    { id: "F017", name: "水煮蛋", category: "蛋类", kcal: 78, protein: 6, carb: 1, fat: 5, fiber: 0, allergens: "蛋类", status: "启用" },
+    { id: "F018", name: "燕麦牛奶粥", category: "主食", kcal: 220, protein: 12, carb: 30, fat: 5, fiber: 4, allergens: "乳制品、麸质", status: "启用" },
+    { id: "F019", name: "苹果酸奶杯", category: "乳制品", kcal: 179, protein: 8, carb: 22, fat: 4, fiber: 3, allergens: "乳制品", status: "启用" },
+    { id: "F020", name: "香蕉酸奶杯", category: "乳制品", kcal: 165, protein: 7, carb: 22, fat: 4, fiber: 2, allergens: "乳制品", status: "启用" }
   ],
 
   mealTemplates: [
@@ -213,3 +221,17 @@ Object.assign(window.ADMIN_DATA, {
 
 window.ADMIN_DATA.fiveGood.name = "五好生活";
 delete window.ADMIN_DATA.fiveGood.enterprise;
+
+Object.assign(window.ADMIN_DATA, {
+  recipeTemplates: [
+    { id: "RT001", name: "标准早餐", meal: "早餐", kcal: 595, protein: 34, carbs: 98, fat: 8, dishes: ["藜麦糙米饭", "全麦吐司", "希腊酸奶碗"], tags: ["均衡", "高蛋白"], owner: "标准", status: "启用" },
+    { id: "RT002", name: "减脂午餐", meal: "中餐", kcal: 520, protein: 38, carbs: 62, fat: 14, dishes: ["糙米鸡胸彩蔬饭", "西兰花", "无糖酸奶"], tags: ["减脂", "低脂"], owner: "标准", status: "启用" },
+    { id: "RT003", name: "均衡晚餐", meal: "晚餐", kcal: 510, protein: 32, carbs: 55, fat: 16, dishes: ["清蒸鲈鱼豆腐", "西兰花", "糙米"], tags: ["均衡"], owner: "标准", status: "启用" },
+    { id: "RT004", name: "轻食加餐", meal: "加餐", kcal: 180, protein: 9, carbs: 18, fat: 7, dishes: ["无糖酸奶坚果杯", "蓝莓", "杏仁"], tags: ["低糖", "高蛋白"], owner: "标准", status: "启用" },
+    { id: "RT005", name: "高蛋白早餐", meal: "早餐", kcal: 460, protein: 32, carbs: 42, fat: 16, dishes: ["水煮蛋", "全麦吐司", "牛油果沙拉"], tags: ["高蛋白", "饱腹"], owner: "标准", status: "启用" },
+    { id: "RT006", name: "低GI午餐", meal: "中餐", kcal: 560, protein: 30, carbs: 72, fat: 15, dishes: ["藜麦糙米饭", "鸡胸肉", "西兰花"], tags: ["低GI"], owner: "标准", status: "启用" },
+    { id: "RT007", name: "我的早餐", meal: "早餐", kcal: 430, protein: 26, carbs: 48, fat: 13, dishes: ["燕麦牛奶粥", "水煮蛋", "苹果酸奶杯"], tags: ["我的搭配"], owner: "我的", status: "草稿" },
+    { id: "RT008", name: "我的午餐", meal: "中餐", kcal: 540, protein: 34, carbs: 65, fat: 15, dishes: ["藜麦糙米饭", "鸡胸肉", "牛油果沙拉"], tags: ["我的搭配"], owner: "我的", status: "草稿" },
+    { id: "RT009", name: "我的加餐", meal: "加餐", kcal: 165, protein: 7, carbs: 22, fat: 4, dishes: ["香蕉酸奶杯"], tags: ["我的搭配"], owner: "我的", status: "草稿" }
+  ]
+});
