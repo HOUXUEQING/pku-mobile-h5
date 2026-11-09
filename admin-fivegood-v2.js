@@ -60,7 +60,7 @@
       <div class="recipe-card-grid">${recipes.map(r => `<article class="recipe-card"><div class="recipe-card-top"><span class="tag ${r.meal === "早餐" ? "gold" : r.meal === "中餐" ? "blue" : r.meal === "晚餐" ? "green" : "slate"}">${esc(r.meal)}</span>${tag(r.status)}</div><h3>${esc(r.name)}</h3><p>${esc(r.ingredients)}</p><div class="recipe-card-meta"><span><b>${r.kcal}</b> kcal</span><span><b>${r.protein}g</b> 蛋白质</span></div><div class="recipe-card-foot"><div>${(r.tags || []).map(t => `<i>${esc(t)}</i>`).join("")}</div><button class="panel-link" data-edit-module="recipe" data-id="${r.id}">编辑 →</button></div></article>`).join("")}</div>
       <div class="recipe-layout" style="margin-top:13px"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">本周排餐</h3></div><span class="tag green">2026-10-19 — 2026-10-25</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>日期</th><th>早餐</th><th>中餐</th><th>晚餐</th><th>加餐</th><th>热量</th></tr></thead><tbody>${D.recipePlans.map(r => `<tr><td><span class="cell-main">${esc(r.weekday)}</span><span class="cell-sub">${esc(r.date)}</span></td>${["breakfast", "lunch", "dinner", "snack"].map(k => `<td><span class="meal-name">${esc(r[k].name)}</span><span class="meal-kcal">${r[k].kcal} kcal</span></td>`).join("")}<td>${r.calories} kcal</td></tr>`).join("")}</tbody></table></div></section><aside class="form-aside"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">营养目标</h3></div></div><div class="panel-body"><div class="metric-bars">${[["热量", 93, "1680 / 1800"], ["蛋白质", 86, "86 / 90g"], ["碳水", 88, "210 / 240g"], ["脂肪", 72, "48 / 67g"]].map(([l, v, d]) => `<div class="metric-bar"><span>${l}</span><div class="bar"><i style="width:${v}%"></i></div><b>${d}</b></div>`).join("")}</div></div></section></aside></div>`;
     $("#viewRoot").innerHTML = html;
-    setTop("食谱库", "项目工作区 / 食谱库", "recipes");
+    setTop("食谱库", "内容管理 / 食谱库", "recipes");
     bindWs(renderRecipes);
     $$("[data-recipe-meal]").forEach(b => b.addEventListener("click", () => { recipeMeal = b.dataset.recipeMeal; renderRecipes(); }));
   }
@@ -115,7 +115,7 @@
       ${mallCat !== "全部" ? `<div class="mall-subcats"><span>小类</span>${subCategories.map(c => `<button class="${mallSubCat === c ? "active" : ""}" data-mall-subcat="${c}">${c}</button>`).join("")}</div>` : ""}
       <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-supply"><span>供应商：${esc(p.supplierName)}</span><span>上游 ${mallMoney(p.upstreamSettle)} / 下游 ${mallMoney(p.downstreamSettle)}</span></div><div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
     $("#viewRoot").innerHTML = html;
-    setTop("商城", "公共模块 / 商城", "mall");
+    setTop("商城", "交易管理 / 商城", "mall");
     $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; mallSubCat = "全部"; renderMall(); }));
     $$("[data-mall-cat]").forEach(b => b.addEventListener("click", () => { mallCat = b.dataset.mallCat; mallSubCat = "全部"; renderMall(); }));
     $$("[data-mall-subcat]").forEach(b => b.addEventListener("click", () => { mallSubCat = b.dataset.mallSubcat; renderMall(); }));
@@ -131,7 +131,7 @@
       <div class="assessment-tabs">${types.map(t => `<button class="${assessmentType === t ? "active" : ""}" data-assessment-type="${t}">${t}</button>`).join("")}</div>
       <section class="panel"><div class="panel-head"><div><h3 class="panel-title">测评工具</h3></div><span class="tag blue">${assessmentType === "全部" ? "全部类型" : assessmentType}</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>测评名称</th><th>类型</th><th>适用项目</th><th>题量</th><th>已完成</th><th>状态</th><th></th></tr></thead><tbody>${list.map(a => `<tr><td><span class="cell-main">${esc(a.name)}</span></td><td><span class="tag blue">${esc(a.type)}</span></td><td><div class="tag-row">${a.projects.map(p => `<span class="tag">${esc(p)}</span>`).join("")}</div></td><td>${a.questions}</td><td>${a.completed}</td><td>${tag(a.status)}</td><td><button class="panel-link" data-edit-module="assessment" data-id="${a.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
     $("#viewRoot").innerHTML = html;
-    setTop("测评", "公共模块 / 测评", "assessments");
+    setTop("测评", "内容管理 / 测评", "assessments");
     $$("[data-assessment-type]").forEach(b => b.addEventListener("click", () => { assessmentType = b.dataset.assessmentType; renderAssessments(); }));
   }
 

@@ -66,7 +66,7 @@
     }
 
     $("#viewRoot").innerHTML = `${pageHead("食品库", action)}<div class="food-tabs">${tabs.map(t => `<button class="${foodTab === t.key ? "active" : ""}" data-food-tab="${t.key}"><span>${t.key}</span><b>${t.count}</b></button>`).join("")}</div>${body}`;
-    setTop("食品库", "项目工作区 / 食品库", "foods");
+    setTop("食品库", "内容管理 / 食品库", "foods");
     $$("[data-food-tab]").forEach(b => b.addEventListener("click", () => { foodTab = b.dataset.foodTab; renderFoods(); }));
     $$("[data-food-edit]").forEach(b => b.addEventListener("click", () => openFoodEditor(b.dataset.foodEdit, b.dataset.id)));
     $$("[data-food-new]").forEach(b => b.addEventListener("click", () => openFoodEditor(b.dataset.foodNew, "")));
@@ -120,7 +120,7 @@
         </section>
       </div>`;
     $("#viewRoot").innerHTML = html;
-    setTop("餐次配置", "项目工作区 / 餐次配置", "meal-templates");
+    setTop("餐次配置", "内容管理 / 餐次配置", "meal-templates");
     $$("[data-config-meal]").forEach(b => b.addEventListener("click", () => { configMeal = b.dataset.configMeal; renderMealConfig(); }));
     $$("[data-config-dish]").forEach(b => b.addEventListener("click", () => {
       const name = b.dataset.configDish;

@@ -95,7 +95,7 @@
 
   function setTop() {
     $("#topTitle").textContent = "健康档案";
-    $("#breadcrumb").textContent = "健康数据 / 健康档案";
+    $("#breadcrumb").textContent = "健康管理 / 健康档案";
     $$(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.nav === "health-records"));
     window.scrollTo({ top: 0, behavior: "instant" });
   }

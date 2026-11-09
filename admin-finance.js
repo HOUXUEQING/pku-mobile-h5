@@ -152,7 +152,9 @@
       <div class="checkin-tabs settlement-tabs">${modules.map(t => `<button class="${settlementModule === t ? "active" : ""}" data-settlement-module="${t}">${t}<b>${t === "对账管理" ? reconciliations.length : t === "差异处理" ? differences.length : t === "结算单" ? settlements.length : t === "开票记录" ? invoices.length : ""}</b></button>`).join("")}</div>
       ${content}`;
     $("#viewRoot").innerHTML = html;
-    setTop("结算管理", "公共模块 / 结算管理", "settlements");
+    setTop("结算管理", "财务结算 / 结算管理", "settlements");
+    const legacyRolePanel = $$(".panel").find(p => p.querySelector(".panel-title")?.innerText === "角色权限");
+    if (legacyRolePanel) { legacyRolePanel.remove(); legacyRolePanel.parentElement.style.gridTemplateColumns = "1fr"; }
     $$("[data-settlement-module]").forEach(b => b.addEventListener("click", () => { settlementModule = b.dataset.settlementModule; renderSettlements(); }));
     $$("[data-invoice-open]").forEach(b => b.addEventListener("click", () => openInvoice(b.dataset.invoiceOpen)));
     $$("[data-invoice-view]").forEach(b => b.addEventListener("click", () => { settlementModule = "开票记录"; renderSettlements(); }));

@@ -58,7 +58,7 @@
       <div class="order-status-tabs">${statuses.map(s => `<button class="${status === s ? "active" : ""}" data-order-status="${s}">${s}</button>`).join("")}<span class="tag blue">全渠道订单 · 360 档案 · 服务轨迹</span></div>
       <section class="panel order-panel"><div class="table-wrap"><table class="data-table order-table"><thead><tr><th>订单号</th><th>类型</th><th>客户</th><th>商品 / 服务</th><th>金额</th><th>来源渠道</th><th>状态</th><th>时间</th><th></th></tr></thead><tbody>${filtered.map(r => `<tr class="clickable" data-order-v5="${r.id}"><td><b class="cell-main">${esc(r.id)}</b></td><td>${tag(r.type, r.type === "服务预约" ? "blue" : r.type === "商品" ? "green" : r.type === "积分兑换" ? "gold" : r.type === "服务包" ? "purple" : "slate")}</td><td><span class="person-cell"><span class="avatar avatar-sm">${esc(r.name.slice(0, 1))}</span><span><b>${esc(r.name)}</b><small>${esc(r.dept)}</small></span></span></td><td><b class="cell-main">${esc(r.item)}</b><span class="cell-sub">${esc(r.detail)}</span></td><td>${esc(r.amount)}</td><td>${esc(r.channel)}</td><td>${tag(r.status, r.status === "已完成" || r.status === "已确认" ? "green" : r.status === "已取消" ? "slate" : "gold")}</td><td>${esc(r.date)}</td><td class="order-arrow">›</td></tr>`).join("")}</tbody></table></div></section>`;
     $("#viewRoot").innerHTML = html;
-    setTop("订单中心", "客户 / 订单中心", "orders");
+    setTop("订单中心", "交易管理 / 订单中心", "orders");
     $$("[data-order-tab]").forEach(b => b.addEventListener("click", () => { tab = b.dataset.orderTab; renderOrders(); }));
     $$("[data-order-status]").forEach(b => b.addEventListener("click", () => { status = b.dataset.orderStatus; renderOrders(); }));
     const search = $("#orderSearch");

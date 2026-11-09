@@ -67,7 +67,7 @@
       </div>
       <div class="package-grid">${packages.map(p => `<article class="package-card"><div class="package-card-head"><div><div class="package-title-row"><h3>${esc(p.name)}</h3>${tag(p.status, p.status === "在售" ? "green" : "gold")}</div><p>${esc(p.id)} · ${esc(p.audience)} · 含 ${p.serviceCount} 项服务</p></div><button class="package-edit" data-edit-package="${p.id}" aria-label="编辑服务包">${icon("edit")}</button></div><p class="package-desc">${esc(p.desc)}</p><div class="package-price-row"><div><small>售价</small><b>${money(p.price)}</b></div><div><small>结算价</small><b>${money(p.settle)}</b></div><div class="package-margin"><small>毛利</small><b>${p.margin || margin(p.price, p.settle)}%</b></div></div><div class="package-card-foot"><button class="btn small" data-view-package="${p.id}">查看组成</button>${p.name.includes("五好") ? `<a class="panel-link" href="#mall">五好运营 →</a>` : ""}</div></article>`).join("")}</div>`;
     $("#viewRoot").innerHTML = html;
-    setTop("服务包与组合", "商品 / 服务包与组合", "packages");
+    setTop("服务包与组合", "交易管理 / 服务包与组合", "packages");
     $$("[data-view-package]").forEach(b => b.addEventListener("click", () => showPackage(b.dataset.viewPackage)));
     $$("[data-edit-package]").forEach(b => b.addEventListener("click", () => editPackage(b.dataset.editPackage)));
     $$("[data-new-package]").forEach(b => b.addEventListener("click", () => editPackage("")));
@@ -96,7 +96,7 @@
       <div class="pricing-layout"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">价格总表</h3><p class="panel-sub">标准版口径</p></div><span class="tag blue">${rows.length} 项服务</span></div><div class="table-wrap"><table class="data-table pricing-table"><thead><tr><th>服务</th><th>成本</th><th>结算价</th><th>挂牌价</th><th>协议价</th><th>毛利率</th></tr></thead><tbody>${rows.map(s => `<tr><td><b class="cell-main">${esc(s.name)}</b><span class="cell-sub">${esc(s.category)}</span></td><td>${money(s.cost)}</td><td>${money(s.settle)}</td><td><b class="cell-main">${money(s.list)}</b></td><td>${money(s.agreement)}</td><td><span class="tag ${s.margin >= 40 ? "green" : "gold"}">${s.margin}%</span></td></tr>`).join("")}</tbody></table></div></section>
         <aside class="panel pricing-calculator"><div class="panel-head"><div><h3 class="panel-title">毛利测算</h3><p class="panel-sub">快速试算</p></div></div><div class="panel-body"><label class="field"><span>服务</span><select id="priceService">${services.map((s, i) => `<option value="${i}">${esc(s.name)}</option>`).join("")}</select></label><label class="field"><span>成交价</span><input id="priceDeal" type="number" value="1280" /></label><label class="field"><span>数量</span><input id="priceQty" type="number" value="200" /></label><div class="price-calc-result"><div><span>单笔成本</span><b id="priceCost">¥720</b></div><div><span>单笔毛利</span><b class="margin-positive" id="priceUnitMargin">¥560</b></div><div><span>合计毛利</span><b id="priceTotalMargin">¥112,000</b></div></div><div class="price-calc-note">毛利率 <b id="priceMargin">43.8%</b>，高于同类目均值 32%</div></div></aside></div>`;
     $("#viewRoot").innerHTML = html;
-    setTop("价格与政策", "商品 / 价格与政策", "pricing");
+    setTop("价格与政策", "交易管理 / 价格与政策", "pricing");
     const calculate = () => {
       const s = services[Number($("#priceService").value)] || services[0];
       const deal = Number($("#priceDeal").value || 0);

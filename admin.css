@@ -2120,3 +2120,5 @@ body {
 .order-table .cell-sub, .pricing-table .cell-sub, .data-table .cell-sub { display: block; }
 .order-table .cell-main, .pricing-table .cell-main { display: inline-block; }
 .order-table td .cell-sub { margin-top: 3px; }
+
+.role-settlement-panel { margin-top: 14px; }

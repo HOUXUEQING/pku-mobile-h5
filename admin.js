@@ -352,7 +352,7 @@
       </table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("机构管理", "内容管理 / 机构管理");
+    setTop("机构管理", "基础管理 / 机构管理");
     const input = $("#instSearch");
     const region = $("#instRegion");
     const filter = () => {
@@ -416,7 +416,7 @@
       </table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("机构成员", "内容管理 / 机构成员");
+    setTop("机构成员", "基础管理 / 机构成员");
     const input = $("#memberSearch");
     const role = $("#memberRole");
     const filter = () => {
@@ -474,7 +474,7 @@
       </table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("科室管理", "内容管理 / 科室管理");
+    setTop("科室管理", "基础管理 / 科室管理");
     const input = $("#deptSearch");
     const cat = $("#deptCategory");
     const filter = () => {
@@ -806,7 +806,7 @@
       <section class="panel"><div class="panel-head"><div><h3 class="panel-title">指标字典</h3><p class="panel-sub">${list.length} 项 · 分类来源于健康指标参考</p></div><span class="tag green">启用</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>指标名称</th><th>分类</th><th>单位</th><th>参考值 / 范围</th><th>录入角色</th><th>状态</th></tr></thead><tbody>${list.map(i => `<tr><td><span class="cell-main">${escape(i.name)}</span></td><td><span class="tag ${i.category === "肾功能相关" ? "green" : i.category === "肝功能相关" ? "gold" : "blue"}">${escape(i.category)}</span></td><td>${escape(i.unit)}</td><td class="ref-value">${escape(i.reference)}</td><td>${escape(i.inputRole)}</td><td><span class="tag green">启用</span></td></tr>`).join("")}</tbody></table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("体成分指标", "健康数据 / 体成分指标");
+    setTop("体成分指标", "健康管理 / 体成分指标");
     $$("[data-indicator-cat]").forEach(btn => btn.addEventListener("click", () => { indicatorCat = btn.dataset.indicatorCat; renderIndicators(); }));
   }
 
@@ -821,7 +821,7 @@
       <section class="panel"><div class="table-wrap"><table class="data-table" id="accountTable"><thead><tr><th>账号</th><th>手机号</th><th>角色</th><th>数据范围</th><th>负责项目</th><th>状态</th><th>最近登录</th></tr></thead><tbody>${D.accounts.map(a => `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(a.name.slice(0, 1))}</span><span><b>${escape(a.name)}</b><small>${escape(a.id)}</small></span></span></td><td>${escape(a.phone)}</td><td>${roleTag(a.role)}</td><td><span class="cell-main">${escape(a.scope)}</span></td><td><div class="tag-row">${a.projects.length ? a.projects.map(p => `<span class="tag">${escape(projectById(p).name)}</span>`).join("") : '<span class="tag slate">全部项目</span>'}</div></td><td>${statusTag(a.status)}</td><td>${escape(a.lastLogin)}</td></tr>`).join("")}</tbody></table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("账号管理", "系统管理 / 账号管理");
+    setTop("账号管理", "基础管理 / 账号管理");
     const input = $("#accountSearch");
     input.addEventListener("input", () => {
       const q = input.value.trim();
@@ -838,9 +838,10 @@
           <p>${escape(r.desc)}</p><div class="permission-tags">${r.permissions.map(p => `<span>${escape(p)}</span>`).join("")}</div>
         </article>`).join("")}
       </div>
+      <section class="panel role-settlement-panel"><div class="panel-head"><div><h3 class="panel-title">结算角色权限</h3><p class="panel-sub">对账、差异处理、结算与开票的操作权限</p></div><span class="tag blue">财务结算</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>角色</th><th>对账管理</th><th>差异处理</th><th>结算确认</th><th>开票管理</th><th>报表查看</th></tr></thead><tbody><tr><td><b class="cell-main">超级管理员</b></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td></tr><tr><td><b class="cell-main">运营督导</b></td><td><span class="tag blue">只读</span></td><td><span class="tag green">可操作</span></td><td><span class="tag blue">只读</span></td><td><span class="tag blue">只读</span></td><td><span class="tag green">可查看</span></td></tr><tr><td><b class="cell-main">财务管理员</b></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td></tr><tr><td><b class="cell-main">业务方</b></td><td><span class="tag blue">只读</span></td><td><span class="tag blue">只读</span></td><td><span class="tag blue">只读</span></td><td><span class="tag gold">受限</span></td><td><span class="tag blue">仅本业务方</span></td></tr></tbody></table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
-    setTop("角色权限", "系统管理 / 角色权限");
+    setTop("角色权限", "基础管理 / 角色权限");
   }
 
   /* ---------------------------------------------------------
