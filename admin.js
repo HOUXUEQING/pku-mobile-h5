@@ -157,7 +157,7 @@
     const html = `
       ${pageHead("运营工作台", "OPERATIONS OVERVIEW", "", `<button class="btn primary" type="button" data-go="project/new">${icon("plus")}新建项目</button>`)}
       <div class="kpi-grid">
-        ${kpi("project", "负责项目", activeProjects.length + 1, "个", "减重营 2 · 五好生活 1", "#2f6bff")}
+        ${kpi("project", "负责项目", activeProjects.length, "个", "减重营 2 · 五好生活 1", "#2f6bff")}
         ${kpi("users", "负责学员", 451, "人", "参营 165 · 五好员工 286", "#6a5bd4")}
         ${kpi("check", "今日完成", 94, "人", "达到完成标准", "#16a394")}
         ${kpi("chart", "打卡完成率", completion, "%", "完成成员 ÷ 参营学员", "#e8a13c")}
@@ -464,7 +464,7 @@
           return `
           <article class="project-card" data-project="${p.id}">
             <div class="project-card-top">
-              <div><p class="project-code">${escape(p.id)}</p><h3>${escape(p.name)}</h3><p class="enterprise">${escape(p.enterprise)} · ${escape(instById(p.institutionId).name)}</p></div>
+              <div><p class="project-code">${escape(p.id)} · ${escape(p.type || "减重营")}</p><h3>${escape(p.name)}</h3><p class="enterprise">${escape(p.enterprise)} · ${escape(instById(p.institutionId).name)}</p></div>
               ${statusTag(p.status)}
             </div>
             <div class="project-meta-grid">
@@ -472,7 +472,7 @@
               <div class="project-meta-item"><small>运营督导</small><b>${escape(info.supervisor ? info.supervisor.name : "—")}</b></div>
               <div class="project-meta-item"><small>运营管理</small><b>${escape(info.manager ? info.manager.name : "—")}</b></div>
               <div class="project-meta-item"><small>服务成员</small><b>${info.team.length} 人</b></div>
-              <div class="project-meta-item"><small>学员数量</small><b>${p.enrolled} <em>/ ${p.target} 人</em></b></div>
+              <div class="project-meta-item"><small>${p.type === "五好生活" ? "参与员工" : "学员数量"}</small><b>${p.enrolled} <em>/ ${p.target} 人</em></b></div>
               <div class="project-meta-item"><small>打卡完成率</small><b>${p.status === "报名中" ? "—" : p.completion + "%"}</b></div>
             </div>
             <div class="project-card-foot"><span>负责人 ${escape(p.manager)}</span><span>查看项目 →</span></div>
@@ -493,15 +493,18 @@
     const teamMembers = camp.team.map(memberById).filter(Boolean);
     const supervisor = teamMembers.find(m => m.role === "运营督导");
     const manager = teamMembers.find(m => m.role === "运营管理");
-    const projTabs = [["overview", "概览"], ["team", "服务团队"], ["students", "学员"], ["checkins", "打卡"], ["data", "数据"]];
+    const isFive = p.type === "五好生活";
+    const projTabs = isFive
+      ? [["overview", "概览"], ["team", "服务团队"], ["students", "参与员工"], ["checkins", "生活打卡"], ["data", "数据"]]
+      : [["overview", "概览"], ["team", "服务团队"], ["students", "学员"], ["checkins", "打卡"], ["data", "数据"]];
     let content = "";
     if (projectTab === "overview") {
       content = `
         <div class="detail-stats">
-          <div class="detail-stat"><small>参营学员</small><b>${p.enrolled}</b><span>目标 ${p.target} 人</span></div>
-          <div class="detail-stat"><small>打卡学员</small><b>${p.checkinUsers}</b><span>至少完成 1 次有效打卡</span></div>
+          <div class="detail-stat"><small>${isFive ? "参与员工" : "参营学员"}</small><b>${p.enrolled}</b><span>目标 ${p.target} 人</span></div>
+          <div class="detail-stat"><small>${isFive ? "打卡员工" : "打卡学员"}</small><b>${p.checkinUsers}</b><span>至少完成 1 次有效打卡</span></div>
           <div class="detail-stat"><small>打卡完成率</small><b>${p.completion}%</b><span>完成成员 ÷ 参营学员</span></div>
-          <div class="detail-stat"><small>平均减重</small><b>${p.weightLoss ? "-" + p.weightLoss : "—"}</b><span>kg / 人</span></div>
+          <div class="detail-stat"><small>${isFive ? "饮食完成率" : "平均减重"}</small><b>${isFive ? D.fiveGood.dietRate + "%" : (p.weightLoss ? "-" + p.weightLoss : "—")}</b><span>${isFive ? "当前饮食打卡" : "kg / 人"}</span></div>
         </div>
         <div class="split-layout">
           <section class="panel"><div class="panel-head"><div><h3 class="panel-title">项目信息</h3></div></div><div class="panel-body"><div class="info-list">
@@ -531,11 +534,20 @@
         </div></div></section>
       `;
     } else if (projectTab === "students") {
-      content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">学员名单</h3><p class="panel-sub">${escape(camp.name)} · ${students.length} 位学员</p></div><button class="btn small" data-toast="原型演示：批量导入学员">导入学员</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>学员</th><th>来源医师</th><th>服务团队</th><th>完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead><tbody>${students.map(s => `<tr class="clickable" data-student="${s.id}"><td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td><td>${escape(s.sourceDoctor)}</td><td>${escape(s.team)}</td><td><b class="cell-main">${s.completion}%</b></td><td>${escape(s.weightChange)} kg</td><td>${statusTag(s.risk)}</td><td>${escape(s.lastCheckin)}</td></tr>`).join("")}</tbody></table></div></section>`;
+      if (isFive) {
+        const people = [...new Map(D.lifeCheckins.map(c => [c.name, c])).values()];
+        content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">参与员工</h3><p class="panel-sub">五好生活 · ${people.length} 位员工</p></div><a class="panel-link" href="#life-checkins">生活打卡 →</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>员工</th><th>部门</th><th>饮食</th><th>睡眠</th><th>运动</th><th>完成情况</th></tr></thead><tbody>${people.map(c => `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(c.name.slice(0, 1))}</span><b>${escape(c.name)}</b></span></td><td>${escape(c.dept)}</td><td>${escape(c.diet)}</td><td>${escape(c.sleep)}</td><td>${escape(c.exercise)}</td><td><span class="tag ${c.completion === "全部完成" ? "green" : "gold"}">${escape(c.completion)}</span></td></tr>`).join("")}</tbody></table></div></section>`;
+      } else {
+        content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">学员名单</h3><p class="panel-sub">${escape(camp.name)} · ${students.length} 位学员</p></div><button class="btn small" data-toast="原型演示：批量导入学员">导入学员</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>学员</th><th>来源医师</th><th>服务团队</th><th>完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead><tbody>${students.map(s => `<tr class="clickable" data-student="${s.id}"><td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td><td>${escape(s.sourceDoctor)}</td><td>${escape(s.team)}</td><td><b class="cell-main">${s.completion}%</b></td><td>${escape(s.weightChange)} kg</td><td>${statusTag(s.risk)}</td><td>${escape(s.lastCheckin)}</td></tr>`).join("")}</tbody></table></div></section>`;
+      }
     } else if (projectTab === "checkins") {
-      const ids = new Set(students.map(s => s.id));
-      const rows = D.checkins.filter(k => ids.has(k.studentId));
-      content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">最近打卡</h3><p class="panel-sub">体重 + 三餐 + 运动为完成；加餐不纳入完成统计</p></div><a class="panel-link" href="#checkins">打卡记录 →</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>日期</th><th>学员</th><th>体重</th><th>三餐</th><th>加餐</th><th>运动</th><th>完成</th><th>健管师批注</th><th>营养师批注</th></tr></thead><tbody>${rows.map(k => { const s = studentById(k.studentId); return `<tr class="clickable" data-checkin="${k.id}"><td>${escape(k.date)}</td><td>${escape(s.name)}</td><td>${k.weight} kg</td><td>${k.meals}/3</td><td>${k.snacks}</td><td>${k.exercise} 分钟</td><td>${k.complete ? '<span class="tag green">已完成</span>' : '<span class="tag red">未完成</span>'}</td><td>${escape(k.healthComment).slice(0, 18)}…</td><td>${escape(k.nutritionComment).slice(0, 18)}…</td></tr>`; }).join("")}</tbody></table></div></section>`;
+      if (isFive) {
+        content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">生活打卡</h3><p class="panel-sub">饮食 · 睡眠 · 运动</p></div><a class="panel-link" href="#life-checkins">全部记录 →</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>日期</th><th>员工</th><th>饮食</th><th>睡眠</th><th>运动</th><th>完成</th></tr></thead><tbody>${D.lifeCheckins.map(c => `<tr><td>${escape(c.date)}</td><td>${escape(c.name)}</td><td>${escape(c.diet)}</td><td>${escape(c.sleep)}</td><td>${escape(c.exercise)}</td><td><span class="tag ${c.completion === "全部完成" ? "green" : "gold"}">${escape(c.completion)}</span></td></tr>`).join("")}</tbody></table></div></section>`;
+      } else {
+        const ids = new Set(students.map(s => s.id));
+        const rows = D.checkins.filter(k => ids.has(k.studentId));
+        content = `<section class="panel"><div class="panel-head"><div><h3 class="panel-title">最近打卡</h3><p class="panel-sub">体重 + 三餐 + 运动为完成；加餐不纳入完成统计</p></div><a class="panel-link" href="#checkins">打卡记录 →</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>日期</th><th>学员</th><th>体重</th><th>三餐</th><th>加餐</th><th>运动</th><th>完成</th><th>健管师批注</th><th>营养师批注</th></tr></thead><tbody>${rows.map(k => { const s = studentById(k.studentId); return `<tr class="clickable" data-checkin="${k.id}"><td>${escape(k.date)}</td><td>${escape(s.name)}</td><td>${k.weight} kg</td><td>${k.meals}/3</td><td>${k.snacks}</td><td>${k.exercise} 分钟</td><td>${k.complete ? '<span class="tag green">已完成</span>' : '<span class="tag red">未完成</span>'}</td><td>${escape(k.healthComment).slice(0, 18)}…</td><td>${escape(k.nutritionComment).slice(0, 18)}…</td></tr>`; }).join("")}</tbody></table></div></section>`;
+      }
     } else {
       content = `<div class="detail-stats"><div class="detail-stat"><small>完成率</small><b>${p.completion}%</b><span>完成成员 / 参营学员</span></div><div class="detail-stat"><small>平均减重</small><b>${p.weightLoss ? "-" + p.weightLoss : "—"}</b><span>kg</span></div><div class="detail-stat"><small>打卡学员</small><b>${p.checkinUsers}</b><span>人</span></div><div class="detail-stat"><small>风险学员</small><b>${students.filter(s => s.risk !== "低").length}</b><span>人</span></div></div>
       <div class="split-layout"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">打卡完成率趋势</h3></div></div><div class="chart-wrap">${lineChart(D.chart.labels, D.chart.completion, { min: 60, max: 90, suffix: "%", color: "#2f8f83", id: "pd" + p.id })}</div></section><section class="panel"><div class="panel-head"><div><h3 class="panel-title">体重变化分布</h3></div></div><div class="panel-body metric-bars">${[["下降 ≥5%", 28, "28人"], ["下降 3–5%", 42, "42人"], ["下降 1–3%", 36, "36人"], ["基本持平", 12, "12人"]].map(([l, v, d]) => `<div class="metric-bar"><span>${l}</span><div class="bar"><i style="width:${v}%"></i></div><b>${d}</b></div>`).join("")}</div></section></div>`;

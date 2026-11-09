@@ -173,3 +173,20 @@ window.ADMIN_DATA = {
     checkinUsers: [82, 86, 80, 89, 92, 88, 94, 96, 91, 98, 101, 96, 99, 94]
   }
 };
+
+window.ADMIN_DATA.projects.forEach(p => { p.type = p.type || "减重营"; });
+window.ADMIN_DATA.projects.push({
+  id: "P005", name: "五好生活", enterprise: "全员健康福利", institutionId: "I003", type: "五好生活",
+  status: "进行中", start: "2026-09-01", end: "2027-08-31", enrolled: 286, target: 286,
+  completion: 82.4, manager: "王倩", campId: "C005", weightLoss: 0, checkinUsers: 248
+});
+window.ADMIN_DATA.camps.push({
+  id: "C005", projectId: "P005", name: "五好生活", start: "2026-09-01", end: "2027-08-31",
+  capacity: 286, status: "进行中", manager: "王倩", team: ["M005", "M010", "M007", "M008", "M009"]
+});
+window.ADMIN_DATA.checkinBoards.C005 = {
+  total: 286,
+  today: { date: "10-21", checked: 248, completed: 236, rate: 82.5 },
+  yesterday: { date: "10-20", checked: 244, completed: 232, rate: 81.1 },
+  trend: [72, 73, 75, 74, 77, 78, 76, 79, 80, 78, 81, 82, 82.5, 82.5]
+};
