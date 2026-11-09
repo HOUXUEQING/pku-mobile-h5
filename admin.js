@@ -1123,6 +1123,7 @@
     else if (view === "indicators") renderIndicators();
     else if (view === "accounts") renderAccounts();
     else if (view === "roles") renderRoles();
+    else if (view === "health-records" && window.AdminHealth) window.AdminHealth.records();
     else if (window.AdminFiveGood && window.AdminFiveGood[view]) window.AdminFiveGood[view]();
     else renderDashboard();
     window.scrollTo({ top: 0, behavior: "instant" });
