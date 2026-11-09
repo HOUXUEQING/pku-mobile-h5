@@ -115,7 +115,8 @@ Object.assign(window.ADMIN_DATA, {
     { id: "Q001", name: "五好生活服务满意度", questions: 12, projects: ["五好生活"], responses: 186, target: 286, status: "进行中" },
     { id: "Q002", name: "员工健康需求调研", questions: 18, projects: ["五好生活", "减重营"], responses: 324, target: 500, status: "进行中" },
     { id: "Q003", name: "减重营阶段反馈", questions: 9, projects: ["减重营"], responses: 108, target: 120, status: "已结束" },
-    { id: "Q004", name: "睡眠改善课程报名", questions: 6, projects: ["五好生活"], responses: 64, target: 100, status: "草稿" }
+    { id: "Q004", name: "睡眠改善课程报名", questions: 6, projects: ["五好生活"], responses: 64, target: 100, status: "草稿" },
+    { id: "Q005", name: "入营健康问卷", questions: 24, projects: ["减重营", "五好生活"], responses: 120, target: 120, status: "已结束" }
   ],
 
   assessmentLibrary: [
