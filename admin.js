@@ -105,7 +105,7 @@
     $("#topTitle").textContent = title;
     $("#breadcrumb").textContent = breadcrumb;
     const active = (location.hash.split("/")[0] || "#dashboard").slice(1);
-    const navMap = { project: "projects", student: "students" };
+    const navMap = { project: "projects", student: "students", member: "members", department: "departments" };
     const nav = navMap[active] || active || "dashboard";
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.nav === nav));
   }
@@ -148,7 +148,7 @@
     const boardMax = Math.min(100, Math.max(...boardTrend) + 5);
     const boardDateText = boardDay === "today" ? "今天" : "昨天";
     const html = `
-      ${pageHead("运营工作台", "OPERATIONS OVERVIEW", "", `<button class="btn primary" data-toast="原型演示：进入新建项目">${icon("plus")}新建项目</button>`)}
+      ${pageHead("运营工作台", "OPERATIONS OVERVIEW", "", `<a class="btn primary" href="#project/new">${icon("plus")}新建项目</a>`)}
       <div class="kpi-grid">
         ${kpi("project", "在营项目", activeProjects.length, "个", "另 1 个项目报名中", "#1e8fbf")}
         ${kpi("users", "参营学员", 165, "人", "当前在营项目去重人数", "#466c9e")}
@@ -166,7 +166,7 @@
           <div class="panel-head board-head">
             <div><h3 class="panel-title">营期打卡看板</h3></div>
             <select class="board-camp-select" id="boardCamp">
-              ${D.camps.map(c => `<option value="${c.id}"${c.id === boardCamp ? " selected" : ""}>${escape(projectById(c.projectId).name)} · ${escape(c.name)}</option>`).join("")}
+              ${D.camps.map(c => `<option value="${c.id}"${c.id === boardCamp ? " selected" : ""}>${escape(c.name)}</option>`).join("")}
             </select>
           </div>
           <div class="panel-body board-body">
@@ -297,7 +297,7 @@
   function renderMembers() {
     const roles = ["全部", ...new Set(D.members.map(m => m.role))];
     const html = `
-      ${pageHead("机构成员", "PEOPLE LIBRARY", "成员可属于不同机构、不同科室，并可同时服务多个企康项目", `<button class="btn primary" data-toast="原型演示：进入新增成员">${icon("plus")}新增成员</button>`)}
+      ${pageHead("机构成员", "PEOPLE LIBRARY", "成员可属于不同机构、不同科室，并可同时服务多个企康项目", `<a class="btn primary" href="#member/new">${icon("plus")}新增成员</a>`)}
       <div class="filter-bar">
         <label class="filter-search">${icon("search")}<input id="memberSearch" placeholder="搜索姓名、机构、科室或角色" /></label>
         <select class="filter-select" id="memberRole">${roles.map(r => `<option>${r}</option>`).join("")}</select>
@@ -334,6 +334,7 @@
     const m = memberById(id);
     openDrawer(`
       <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:14px">${avatar(m, "avatar-lg")}<div><p class="page-eyebrow">MEMBER PROFILE</p><h2 style="margin-bottom:3px">${escape(m.name)}</h2><p class="drawer-sub">${escape(m.title)} · ${escape(m.role)}</p><div class="tag-row" style="margin-top:7px">${roleTag(m.role)}<span class="tag">${escape(m.gender)}</span></div></div></div>
+      <div style="margin-bottom:13px"><a class="btn small" data-close-drawer href="#member/${m.id}/edit">编辑成员介绍</a></div>
       <div class="info-list">
         <div class="info-item"><small>所属机构</small><b>${escape(instById(m.institutionId).name)}</b></div>
         <div class="info-item"><small>所在科室</small><b>${escape(m.dept)}</b></div>
@@ -356,7 +357,7 @@
   function renderDepartments() {
     const cats = ["全部", "科室中心", "特色中心", "特色门诊"];
     const html = `
-      ${pageHead("科室管理", "CLINICAL DEPARTMENTS", "科室归属于具体机构，不同机构可存在同名但不同介绍的科室", `<button class="btn primary" data-toast="原型演示：进入新增科室">${icon("plus")}新增科室</button>`)}
+      ${pageHead("科室管理", "CLINICAL DEPARTMENTS", "科室归属于具体机构，不同机构可存在同名但不同介绍的科室", `<a class="btn primary" href="#department/new">${icon("plus")}新增科室</a>`)}
       <div class="filter-bar">
         <label class="filter-search">${icon("search")}<input id="deptSearch" placeholder="搜索科室、机构或负责人" /></label>
         <select class="filter-select" id="deptCategory">${cats.map(c => `<option>${c}</option>`).join("")}</select>
@@ -391,6 +392,7 @@
     const d = D.departments.find(x => x.id === id);
     openDrawer(`
       <p class="page-eyebrow">DEPARTMENT PROFILE</p><h2>${escape(d.name)}</h2><p class="drawer-sub">${escape(instById(d.institutionId).name)} · ${escape(d.category)}</p>
+      <div style="margin:12px 0 4px"><a class="btn small" data-close-drawer href="#department/${d.id}/edit">编辑科室</a></div>
       <div class="drawer-section"><div class="info-list"><div class="info-item"><small>学科带头人</small><b>${escape(d.leader)}</b></div><div class="info-item"><small>医生团队</small><b>${d.doctors} 人</b></div></div></div>
       <div class="drawer-section"><h3>科室介绍</h3><p style="margin-bottom:0;color:#5d7a8a;font-size:10px;line-height:1.9">${escape(d.intro)}</p></div>
       <div class="drawer-section"><h3>科室特色</h3><div class="people-list">${d.featureList.map((f, i) => `<div class="person-card"><span><b>${String(i + 1).padStart(2, "0")} ${escape(f)}</b><small>特色项目</small></span></div>`).join("")}</div></div>
@@ -412,7 +414,7 @@
 
   function renderProjects() {
     const html = `
-      ${pageHead("企康项目", "ENTERPRISE HEALTH PROGRAMS", "", `<button class="btn primary" data-toast="原型演示：进入新建项目">${icon("plus")}新建项目</button>`)}
+      ${pageHead("企康项目", "ENTERPRISE HEALTH PROGRAMS", "", `<a class="btn primary" href="#project/new">${icon("plus")}新建项目</a>`)}
       <div class="filter-bar"><span class="tag blue">全部项目 ${D.projects.length}</span>${["全部", "进行中", "报名中", "已结营"].map(s => `<button class="filter-chip${projectStatus === s ? " active" : ""}" data-project-status="${s}">${s}</button>`).join("")}</div>
       <div class="project-grid">
         ${D.projects.filter(p => projectStatus === "全部" || p.status === projectStatus).map(p => {
@@ -420,7 +422,7 @@
           return `
           <article class="project-card" data-project="${p.id}">
             <div class="project-card-top">
-              <div><p class="project-code">${escape(p.id)} · ${escape(info.camp.name)}</p><h3>${escape(p.name)}</h3><p class="enterprise">${escape(p.enterprise)} · ${escape(instById(p.institutionId).name)}</p></div>
+              <div><p class="project-code">${escape(p.id)}</p><h3>${escape(p.name)}</h3><p class="enterprise">${escape(p.enterprise)} · ${escape(instById(p.institutionId).name)}</p></div>
               ${statusTag(p.status)}
             </div>
             <div class="project-meta-grid">
@@ -431,7 +433,7 @@
               <div class="project-meta-item"><small>学员数量</small><b>${p.enrolled} <em>/ ${p.target} 人</em></b></div>
               <div class="project-meta-item"><small>打卡完成率</small><b>${p.status === "报名中" ? "—" : p.completion + "%"}</b></div>
             </div>
-            <div class="project-card-foot"><span>负责人 ${escape(p.manager)} · ${escape(info.camp.name)}</span><span>查看项目 →</span></div>
+            <div class="project-card-foot"><span>负责人 ${escape(p.manager)}</span><span>查看项目 →</span></div>
           </article>
         `; }).join("")}
       </div>
@@ -446,7 +448,9 @@
     if (!p) return renderProjects();
     const camp = campById(p.campId);
     const students = D.students.filter(s => s.projectId === p.id);
-    const teamMembers = camp.team.map(memberById);
+    const teamMembers = camp.team.map(memberById).filter(Boolean);
+    const supervisor = teamMembers.find(m => m.role === "运营督导");
+    const manager = teamMembers.find(m => m.role === "运营管理");
     const projTabs = [["overview", "概览"], ["team", "服务团队"], ["students", "学员"], ["checkins", "打卡"], ["data", "数据"]];
     let content = "";
     if (projectTab === "overview") {
@@ -460,14 +464,14 @@
         <div class="split-layout">
           <section class="panel"><div class="panel-head"><div><h3 class="panel-title">项目信息</h3></div></div><div class="panel-body"><div class="info-list">
             <div class="info-item"><small>企业客户</small><b>${escape(p.enterprise)}</b></div>
-            <div class="info-item"><small>服务主体机构</small><b>${escape(instById(p.institutionId).name)}</b></div>
             <div class="info-item"><small>项目周期</small><b>${escape(p.start)} — ${escape(p.end)}</b></div>
-            <div class="info-item"><small>项目负责人</small><b>${escape(p.manager)}</b></div>
-            <div class="info-item"><small>当前营期</small><b>${escape(camp.name)} · ${escape(camp.status)}</b></div>
-            <div class="info-item"><small>数据范围</small><b>按项目 / 营期授权</b></div>
+            <div class="info-item"><small>运营管理</small><b>${escape(manager ? manager.name : "—")}</b></div>
+            <div class="info-item"><small>运营督导</small><b>${escape(supervisor ? supervisor.name : "—")}</b></div>
+            <div class="info-item"><small>当前营期</small><b>${escape(camp.name)}</b></div>
+            <div class="info-item"><small>服务团队人员数量</small><b>${teamMembers.length} 人</b></div>
           </div></div></section>
-          <section class="panel"><div class="panel-head"><div><h3 class="panel-title">营期服务团队</h3><p class="panel-sub">团队分配到营期</p></div><button class="panel-link" data-project-tab="team">查看全部 →</button></div><div class="panel-body people-list">
-            ${teamMembers.slice(0, 6).map(m => `<div class="person-card">${avatar(m)}<span><b>${escape(m.name)}</b><small>${escape(m.role)}</small></span></div>`).join("")}
+          <section class="panel"><div class="panel-head"><div><h3 class="panel-title">营期服务团队</h3></div><button class="panel-link" data-project-tab="team">查看全部 →</button></div><div class="panel-body people-list">
+            ${teamMembers.slice(0, 6).map(m => `<div class="person-card">${avatar(m)}<span><b>${escape(m.name)}</b><small>${escape(m.role)} · ${escape(instById(m.institutionId).short)}</small></span></div>`).join("")}
           </div></section>
         </div>
         <div class="dash-bottom"><section class="panel"><div class="panel-head"><div><h3 class="panel-title">完成率趋势</h3><p class="panel-sub">近 14 天 · 按完成成员 / 参营学员</p></div></div><div class="chart-wrap">${lineChart(D.chart.labels, D.chart.completion, { min: 60, max: 90, suffix: "%", color: "#2f6bff", id: "p" + p.id })}</div></section>
@@ -480,7 +484,7 @@
         <section class="panel"><div class="panel-head"><div><h3 class="panel-title">营期服务团队</h3><p class="panel-sub">${escape(camp.start)} — ${escape(camp.end)} · 营期负责人 ${escape(camp.manager)}</p></div><button class="btn small" data-toast="原型演示：分配服务团队">分配成员</button></div><div class="panel-body"><div class="role-grid">
           ${groups.map(role => {
             const people = teamMembers.filter(m => m && (m.role === role || (role === "运营管家" && m.role === "运营管家")));
-            return `<div class="role-card" style="--role:#2f6bff;--role-soft:#e9f8ff"><div class="role-card-head"><span class="role-mark">${icon("users")}</span><div><h3>${role}</h3><span class="role-scope">${people.length} 人</span></div></div><div class="people-list" style="margin-top:8px">${people.length ? people.map(m => `<div class="person-card">${avatar(m)}<span><b>${escape(m.name)}</b><small>${escape(m.title)}</small></span></div>`).join("") : '<span class="drawer-sub" style="font-size:9px;color:#9aaab4">待分配</span>'}</div></div>`;
+            return `<div class="role-card" style="--role:#2f6bff;--role-soft:#e9f8ff"><div class="role-card-head"><span class="role-mark">${icon("users")}</span><div><h3>${role}</h3><span class="role-scope">${people.length} 人</span></div></div><div class="people-list" style="margin-top:8px">${people.length ? people.map(m => `<div class="person-card">${avatar(m)}<span><b>${escape(m.name)}</b><small>${escape(m.title)} · ${escape(instById(m.institutionId).short)}</small></span></div>`).join("") : '<span class="drawer-sub" style="font-size:9px;color:#9aaab4">待分配</span>'}</div></div>`;
           }).join("")}
         </div></div></section>
       `;
@@ -496,7 +500,7 @@
     }
     $("#viewRoot").innerHTML = `
       <button class="back-link" data-back="projects">${icon("back")}返回项目列表</button>
-      <div class="detail-head"><div><p class="page-eyebrow">PROGRAM DETAIL · ${escape(p.id)}</p><h2>${escape(p.name)}</h2><p>${escape(p.enterprise)} · ${escape(instById(p.institutionId).name)} · ${escape(camp.name)}</p></div><div class="detail-actions">${statusTag(p.status)}<button class="btn" data-toast="原型演示：编辑项目">${icon("edit")}编辑项目</button></div></div>
+      <div class="detail-head"><div><p class="page-eyebrow">PROGRAM DETAIL · ${escape(p.id)}</p><h2>${escape(p.name)}</h2><p>${escape(p.enterprise)} · ${escape(instById(p.institutionId).name)} · ${escape(camp.name)}</p></div><div class="detail-actions">${statusTag(p.status)}<a class="btn" href="#project/${p.id}/edit">${icon("edit")}编辑项目</a></div></div>
       <div class="tabs">${projTabs.map(([k, l]) => `<button class="tab${projectTab === k ? " active" : ""}" data-project-tab="${k}">${l}</button>`).join("")}</div>
       ${content}
     `;
@@ -686,6 +690,272 @@
   }
 
   /* ---------------------------------------------------------
+     Edit / create pages
+     --------------------------------------------------------- */
+
+  function field(label, control, full) {
+    return `<label class="field${full ? " full" : ""}"><span>${label}</span>${control}</label>`;
+  }
+
+  function institutionOptions(selected) {
+    return D.institutions.map(i => `<option value="${i.id}"${i.id === selected ? " selected" : ""}>${escape(i.name)}</option>`).join("");
+  }
+
+  function projectMemberGroups(selectedIds) {
+    const ids = new Set(selectedIds || []);
+    return D.institutions.map(inst => {
+      const people = D.members.filter(m => m.institutionId === inst.id);
+      if (!people.length) return "";
+      return `<div class="picker-hospital">
+        <div class="picker-hospital-head"><b>${escape(inst.name)}</b><span>${people.length} 人</span></div>
+        <div class="picker-members">
+          ${people.map(m => `<label class="picker-member${ids.has(m.id) ? " selected" : ""}">
+            <input type="checkbox" data-pick="${m.id}"${ids.has(m.id) ? " checked" : ""} />
+            ${avatar(m)}
+            <span class="picker-member-info"><b>${escape(m.name)}</b><small>${escape(m.role)} · ${escape(m.dept)}</small></span>
+          </label>`).join("")}
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  function renderProjectForm(id) {
+    const editing = !!id;
+    const p = editing ? projectById(id) : null;
+    const camp = editing ? campById(p.campId) : null;
+    const title = editing ? "编辑项目" : "新建项目";
+    const back = editing ? `#project/${p.id}` : "#projects";
+    const team = camp ? camp.team : [];
+    const supervisor = camp ? camp.team.map(memberById).find(m => m && m.role === "运营督导") : null;
+    const manager = camp ? camp.team.map(memberById).find(m => m && m.role === "运营管理") : null;
+    const selected = new Set(team);
+    const supervisors = D.members.filter(m => m.role === "运营督导");
+    const managers = D.members.filter(m => m.role === "运营管理");
+    const html = `
+      <button class="back-link" data-back="${editing ? "project/" + p.id : "projects"}">${icon("back")}${editing ? "返回项目详情" : "返回项目列表"}</button>
+      <div class="detail-head"><div><h2>${title}</h2></div></div>
+      <form class="entity-form" onsubmit="return false">
+        <div class="form-layout">
+          <div class="form-main">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">项目基本信息</h3></div>
+              <div class="panel-body form-grid">
+                ${field("项目名称", `<input value="${escape(p ? p.name : "")}" placeholder="请输入项目名称" />`, true)}
+                ${field("企业客户", `<input value="${escape(p ? p.enterprise : "")}" placeholder="请输入企业客户名称" />`)}
+                ${field("服务主体机构", `<select>${institutionOptions(p ? p.institutionId : "I001")}</select>`)}
+                ${field("项目状态", `<select>${["进行中", "报名中", "已结营"].map(s => `<option${p && p.status === s ? " selected" : ""}>${s}</option>`).join("")}</select>`)}
+                ${field("项目周期开始", `<input type="date" value="${escape(p ? p.start : "2026-11-20")}" />`)}
+                ${field("项目周期结束", `<input type="date" value="${escape(p ? p.end : "2027-02-20")}" />`)}
+                ${field("项目负责人", `<input value="${escape(p ? p.manager : "王倩")}" />`)}
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">营期信息</h3></div>
+              <div class="panel-body form-grid">
+                ${field("当前营期", `<input value="${escape(camp ? camp.name : "")}" placeholder="例如：中石油华北员工减重营" />`, true)}
+                ${field("计划学员数", `<input type="number" value="${p ? p.target : 60}" />`)}
+                ${field("营期开始", `<input type="date" value="${escape(camp ? camp.start : "2026-11-20")}" />`)}
+                ${field("营期结束", `<input type="date" value="${escape(camp ? camp.end : "2027-02-20")}" />`)}
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">运营团队</h3></div>
+              <div class="panel-body">
+                <div class="form-grid">
+                  ${field("运营督导", `<select>${supervisors.map(m => `<option value="${m.id}"${supervisor && supervisor.id === m.id ? " selected" : ""}>${escape(m.name)} · ${escape(instById(m.institutionId).short)}</option>`).join("")}</select>`)}
+                  ${field("运营管理", `<select>${managers.map(m => `<option value="${m.id}"${manager && manager.id === m.id ? " selected" : ""}>${escape(m.name)} · ${escape(instById(m.institutionId).short)}</option>`).join("")}</select>`)}
+                </div>
+                <div class="field full" style="margin-top:14px"><span>服务成员</span>
+                  <div class="member-picker" id="memberPicker">${projectMemberGroups(team)}</div>
+                </div>
+              </div>
+            </section>
+
+            <div class="form-actions">
+              <a class="btn" href="${back}">取消</a>
+              <button class="btn primary" type="button" data-save-form="project" data-back="${back}">保存项目</button>
+            </div>
+          </div>
+
+          <aside class="form-aside">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">已选服务成员</h3></div>
+              <div class="panel-body">
+                <div class="picker-summary"><span>服务成员</span><b id="pickerCount">${team.length} 人</b></div>
+                <div class="selected-member-list" id="selectedMembers"></div>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">项目摘要</h3></div>
+              <div class="panel-body">
+                <div class="info-list">
+                  <div class="info-item"><small>企业客户</small><b>${escape(p ? p.enterprise : "—")}</b></div>
+                  <div class="info-item"><small>当前营期</small><b>${escape(camp ? camp.name : "—")}</b></div>
+                  <div class="info-item"><small>项目状态</small><b>${escape(p ? p.status : "报名中")}</b></div>
+                  <div class="info-item"><small>计划学员</small><b>${p ? p.target : 60} 人</b></div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </form>
+    `;
+    $("#viewRoot").innerHTML = html;
+    setTop(title, `企康项目 / ${title}`);
+
+    const picker = $("#memberPicker");
+    const count = $("#pickerCount");
+    const selectedBox = $("#selectedMembers");
+    const updateSelected = () => {
+      const picked = $$("[data-pick]:checked", picker).map(input => memberById(input.dataset.pick)).filter(Boolean);
+      count.textContent = `${picked.length} 人`;
+      $$(".picker-member", picker).forEach(label => label.classList.toggle("selected", !!$("input:checked", label)));
+      selectedBox.innerHTML = picked.length ? picked.map(m => `<div class="selected-member">${avatar(m)}<span><b>${escape(m.name)}</b><small>${escape(instById(m.institutionId).short)} · ${escape(m.role)}</small></span></div>`).join("") : `<div class="empty">未选择</div>`;
+    };
+    if (picker) {
+      picker.addEventListener("change", updateSelected);
+      updateSelected();
+    }
+  }
+
+  function renderMemberForm(id) {
+    const editing = !!id;
+    const m = editing ? memberById(id) : null;
+    const title = editing ? "编辑成员介绍" : "新增成员";
+    const back = "#members";
+    const projects = new Set(m ? m.projects : []);
+    const html = `
+      <button class="back-link" data-back="members">${icon("back")}返回机构成员</button>
+      <div class="detail-head"><div><h2>${title}</h2></div></div>
+      <form class="entity-form" onsubmit="return false">
+        <div class="form-layout">
+          <div class="form-main">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">基本信息</h3></div>
+              <div class="panel-body form-grid">
+                ${field("姓名", `<input value="${escape(m ? m.name : "")}" placeholder="请输入姓名" />`)}
+                ${field("性别", `<select>${["男", "女"].map(g => `<option${m && m.gender === g ? " selected" : ""}>${g}</option>`).join("")}</select>`)}
+                ${field("手机号", `<input value="${escape(m ? m.phone : "")}" placeholder="请输入手机号" />`)}
+                ${field("所属机构", `<select>${institutionOptions(m ? m.institutionId : "I001")}</select>`)}
+                ${field("所在科室", `<input value="${escape(m ? m.dept : "")}" placeholder="请输入科室" />`)}
+                ${field("角色", `<select>${["医师", "健管师", "营养师", "康复师", "运营督导", "运营管理", "运营管家"].map(r => `<option${m && m.role === r ? " selected" : ""}>${r}</option>`).join("")}</select>`)}
+                ${field("职称", `<input value="${escape(m ? m.title : "")}" placeholder="请输入职称" />`)}
+                ${field("专业资质", `<input value="${escape(m ? m.qualification : "")}" placeholder="请输入专业资质" />`)}
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">成员介绍</h3></div>
+              <div class="panel-body form-grid">
+                ${field("成员介绍", `<textarea rows="6" placeholder="请输入成员介绍">${escape(m ? m.intro : "")}</textarea>`, true)}
+                ${field("擅长方向", `<input value="${escape(m ? m.specialty : "")}" placeholder="请输入擅长方向" />`, true)}
+                <div class="field full"><span>服务项目</span><div class="check-grid">${D.projects.map(p => `<label class="check-item"><input type="checkbox"${projects.has(p.id) ? " checked" : ""} /><span>${escape(p.name)}</span></label>`).join("")}</div></div>
+              </div>
+            </section>
+
+            <div class="form-actions">
+              <a class="btn" href="${back}">取消</a>
+              <button class="btn primary" type="button" data-save-form="member" data-back="${back}">保存成员</button>
+            </div>
+          </div>
+
+          <aside class="form-aside">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">成员头像</h3></div>
+              <div class="panel-body">
+                <div class="avatar-upload">${avatar(m || { name: "新" }, "avatar-xl")}<span>上传头像</span></div>
+                <div class="info-list" style="margin-top:14px">
+                  <div class="info-item"><small>所属机构</small><b>${escape(m ? instById(m.institutionId).name : "待选择")}</b></div>
+                  <div class="info-item"><small>角色</small><b>${escape(m ? m.role : "待选择")}</b></div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </form>
+    `;
+    $("#viewRoot").innerHTML = html;
+    setTop(title, `内容管理 / ${title}`);
+  }
+
+  function renderDepartmentForm(id) {
+    const editing = !!id;
+    const d = editing ? D.departments.find(x => x.id === id) : null;
+    const title = editing ? "编辑科室" : "新增科室";
+    const back = "#departments";
+    const institutionId = d ? d.institutionId : "I001";
+    const doctors = D.members.filter(m => m.institutionId === institutionId);
+    const selectedNames = new Set(d ? d.team : []);
+    const features = Array.from({ length: 4 }, (_, i) => d && d.featureList[i] ? d.featureList[i] : "");
+    const html = `
+      <button class="back-link" data-back="departments">${icon("back")}返回科室列表</button>
+      <div class="detail-head"><div><h2>${title}</h2></div></div>
+      <form class="entity-form" onsubmit="return false">
+        <div class="form-layout">
+          <div class="form-main">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">科室信息</h3></div>
+              <div class="panel-body form-grid">
+                ${field("科室名称", `<input value="${escape(d ? d.name : "")}" placeholder="请输入科室名称" />`)}
+                ${field("所属机构", `<select>${institutionOptions(institutionId)}</select>`)}
+                ${field("科室分类", `<select>${["科室中心", "特色中心", "特色门诊"].map(c => `<option${d && d.category === c ? " selected" : ""}>${c}</option>`).join("")}</select>`)}
+                ${field("学科带头人", `<input value="${escape(d ? d.leader : "")}" placeholder="请输入学科带头人" />`)}
+                ${field("医生数量", `<input type="number" value="${d ? d.doctors : 0}" />`)}
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">科室介绍</h3></div>
+              <div class="panel-body">
+                ${field("科室介绍", `<textarea rows="5" placeholder="请输入科室介绍">${escape(d ? d.intro : "")}</textarea>`, true)}
+                <div class="form-grid" style="margin-top:14px">
+                  ${features.map((f, i) => field(`科室特色 ${i + 1}`, `<input value="${escape(f)}" placeholder="请输入科室特色" />`)).join("")}
+                </div>
+                <button class="btn small" type="button" style="margin-top:10px" data-toast="原型演示：新增科室特色">${icon("plus")}新增特色</button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">医生团队</h3></div>
+              <div class="panel-body">
+                <div class="doctor-picker">
+                  ${doctors.map(m => `<label class="picker-member${selectedNames.has(m.name) ? " selected" : ""}">
+                    <input type="checkbox" data-doctor-pick="${m.id}"${selectedNames.has(m.name) ? " checked" : ""} />
+                    ${avatar(m)}
+                    <span class="picker-member-info"><b>${escape(m.name)}</b><small>${escape(m.title)} · ${escape(instById(m.institutionId).short)}</small></span>
+                  </label>`).join("")}
+                </div>
+              </div>
+            </section>
+
+            <div class="form-actions">
+              <a class="btn" href="${back}">取消</a>
+              <button class="btn primary" type="button" data-save-form="department" data-back="${back}">保存科室</button>
+            </div>
+          </div>
+
+          <aside class="form-aside">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">所属机构</h3></div>
+              <div class="panel-body">
+                <div class="info-list">
+                  <div class="info-item full"><small>机构</small><b>${escape(instById(institutionId).name)}</b></div>
+                  <div class="info-item"><small>科室分类</small><b>${escape(d ? d.category : "科室中心")}</b></div>
+                  <div class="info-item"><small>医生团队</small><b>${d ? d.team.length : 0} 人</b></div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </form>
+    `;
+    $("#viewRoot").innerHTML = html;
+    setTop(title, `内容管理 / ${title}`);
+  }
+
+  /* ---------------------------------------------------------
      Router
      --------------------------------------------------------- */
 
@@ -694,9 +964,21 @@
     const parts = raw.split("/");
     const view = parts[0];
     if (view === "project") {
+      if (parts[1] === "new") { renderProjectForm(null); return; }
+      if (parts[2] === "edit") { renderProjectForm(parts[1]); return; }
       if (lastProject !== parts[1]) { projectTab = "overview"; lastProject = parts[1]; }
       renderProjectDetail(parts[1]);
       return;
+    }
+    if (view === "member") {
+      if (parts[1] === "new") { renderMemberForm(null); return; }
+      if (parts[2] === "edit") { renderMemberForm(parts[1]); return; }
+      return renderMembers();
+    }
+    if (view === "department") {
+      if (parts[1] === "new") { renderDepartmentForm(null); return; }
+      if (parts[2] === "edit") { renderDepartmentForm(parts[1]); return; }
+      return renderDepartments();
     }
     if (view === "student") {
       if (lastStudent !== parts[1]) { studentTab = "profile"; lastStudent = parts[1]; }
@@ -721,6 +1003,17 @@
      --------------------------------------------------------- */
 
   document.addEventListener("click", event => {
+    const save = event.target.closest("[data-save-form]");
+    if (save) {
+      event.preventDefault();
+      showToast("已保存");
+      const target = save.dataset.back || "#projects";
+      setTimeout(() => { location.hash = target; }, 450);
+      return;
+    }
+
+    if (event.target.closest("[data-close-drawer]")) closeDrawer();
+
     const toast = event.target.closest("[data-toast]");
     if (toast) { event.preventDefault(); showToast(toast.dataset.toast); return; }
 

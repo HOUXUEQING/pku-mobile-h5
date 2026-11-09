@@ -50,10 +50,10 @@ window.ADMIN_DATA = {
   ],
 
   camps: [
-    { id: "C001", projectId: "P001", name: "第 1 营", start: "2026-09-01", end: "2026-11-30", capacity: 120, status: "进行中", manager: "孙敏", team: ["M005", "M010", "M006", "M012", "M007", "M008", "M009"] },
-    { id: "C002", projectId: "P002", name: "第 1 营", start: "2026-09-15", end: "2026-12-15", capacity: 50, status: "进行中", manager: "王倩", team: ["M005", "M010", "M001", "M007", "M008"] },
-    { id: "C003", projectId: "P003", name: "第 1 营", start: "2026-11-20", end: "2027-02-20", capacity: 60, status: "报名中", manager: "王倩", team: ["M005", "M010", "M012", "M007", "M008"] },
-    { id: "C004", projectId: "P004", name: "第 1 营", start: "2026-05-01", end: "2026-08-01", capacity: 32, status: "已结营", manager: "赵宁", team: ["M005", "M009", "M007", "M008"] }
+    { id: "C001", projectId: "P001", name: "中石油华北员工减重营", start: "2026-09-01", end: "2026-11-30", capacity: 120, status: "进行中", manager: "孙敏", team: ["M005", "M010", "M006", "M012", "M007", "M008", "M009"] },
+    { id: "C002", projectId: "P002", name: "金融街企业减重营", start: "2026-09-15", end: "2026-12-15", capacity: 50, status: "进行中", manager: "王倩", team: ["M005", "M010", "M001", "M007", "M008"] },
+    { id: "C003", projectId: "P003", name: "望京科技园减重营", start: "2026-11-20", end: "2027-02-20", capacity: 60, status: "报名中", manager: "王倩", team: ["M005", "M010", "M012", "M007", "M008"] },
+    { id: "C004", projectId: "P004", name: "康复医院员工减重营", start: "2026-05-01", end: "2026-08-01", capacity: 32, status: "已结营", manager: "赵宁", team: ["M005", "M009", "M007", "M008"] }
   ],
 
   students: [
