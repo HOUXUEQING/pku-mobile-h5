@@ -1239,6 +1239,8 @@
     else if (view === "business-parties" && window.AdminFinance) window.AdminFinance.business();
     else if (view === "providers" && window.AdminFinance) window.AdminFinance.providers();
     else if (view === "settlements" && window.AdminFinance) window.AdminFinance.settlements();
+    else if (view === "packages" && window.AdminCommerce) window.AdminCommerce.packages();
+    else if (view === "pricing" && window.AdminCommerce) window.AdminCommerce.pricing();
     else if (view === "life-checkins") { location.hash = "#checkins"; return; }
     else if (window.AdminFiveGood && window.AdminFiveGood[view]) window.AdminFiveGood[view]();
     else renderDashboard();
