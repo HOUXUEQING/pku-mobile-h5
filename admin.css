@@ -1381,3 +1381,9 @@ a.btn, a.panel-link, .back-link, .drawer-edit { text-decoration: none; }
   right: 54px;
   z-index: 3;
 }
+
+a, a:hover, a:focus, a:active,
+.btn, .btn:hover, .btn:focus, .btn:active { text-decoration: none !important; }
+.filter-bar > .btn { margin-left: auto; }
+.row-actions { display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.row-actions .panel-link { cursor: pointer; }

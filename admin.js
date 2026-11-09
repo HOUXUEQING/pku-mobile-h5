@@ -148,7 +148,7 @@
     const boardMax = Math.min(100, Math.max(...boardTrend) + 5);
     const boardDateText = boardDay === "today" ? "今天" : "昨天";
     const html = `
-      ${pageHead("运营工作台", "OPERATIONS OVERVIEW", "", `<a class="btn primary" href="#project/new">${icon("plus")}新建项目</a>`)}
+      ${pageHead("运营工作台", "OPERATIONS OVERVIEW", "", `<button class="btn primary" type="button" data-go="project/new">${icon("plus")}新建项目</button>`)}
       <div class="kpi-grid">
         ${kpi("project", "在营项目", activeProjects.length, "个", "另 1 个项目报名中", "#1e8fbf")}
         ${kpi("users", "参营学员", 165, "人", "当前在营项目去重人数", "#466c9e")}
@@ -238,6 +238,7 @@
         <label class="filter-search">${icon("search")}<input id="instSearch" placeholder="搜索机构名称、地区或类型" /></label>
         <select class="filter-select" id="instRegion"><option>全部地区</option>${[...new Set(D.institutions.map(i => i.region))].map(r => `<option>${r}</option>`).join("")}</select>
         <span class="tag blue">共 ${D.institutions.length} 家成员机构</span>
+        <a class="btn small primary" href="#institution/new">${icon("plus")}新增机构</a>
       </div>
       <section class="panel"><div class="table-wrap"><table class="data-table" id="instTable">
         <thead><tr><th>机构</th><th>地区 / 城市</th><th>机构类型</th><th>负责人</th><th>成员</th><th>科室</th><th>企康项目</th><th>状态</th><th></th></tr></thead>
@@ -249,7 +250,7 @@
           <td><b class="cell-main">${i.members}</b></td>
           <td>${i.departments}</td>
           <td>${i.projects ? `<span class="tag green">${i.projects} 个</span>` : '<span style="color:#a4b2ba">—</span>'}</td>
-          <td>${statusTag(i.status)}</td><td><span class="panel-link">查看详情 →</span></td>
+          <td>${statusTag(i.status)}</td><td><div class="row-actions"><a class="panel-link" href="#institution/${i.id}/edit" data-edit-inst="${i.id}">编辑</a><span class="panel-link" data-inst="${i.id}">详情 →</span></div></td>
         </tr>`).join("")}</tbody>
       </table></div></section>
     `;
@@ -1110,6 +1111,12 @@
 
     const student = event.target.closest("[data-student]");
     if (student) { location.hash = "student/" + student.dataset.student; return; }
+
+    const go = event.target.closest("[data-go]");
+    if (go) { location.hash = go.dataset.go; return; }
+
+    const editInst = event.target.closest("[data-edit-inst]");
+    if (editInst) { event.stopPropagation(); location.hash = "institution/" + editInst.dataset.editInst + "/edit"; return; }
 
     const inst = event.target.closest("[data-inst]");
     if (inst) { institutionDrawer(inst.dataset.inst); return; }
