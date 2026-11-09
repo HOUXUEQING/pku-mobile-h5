@@ -225,14 +225,24 @@ delete window.ADMIN_DATA.fiveGood.enterprise;
 Object.assign(window.ADMIN_DATA, {
   recipeTemplates: [
     { id: "RT001", name: "标准早餐", meal: "早餐", kcal: 595, protein: 34, carbs: 98, fat: 8, dishes: ["藜麦糙米饭", "全麦吐司", "希腊酸奶碗"], tags: ["均衡", "高蛋白"], owner: "标准", status: "启用" },
-    { id: "RT002", name: "减脂午餐", meal: "中餐", kcal: 520, protein: 38, carbs: 62, fat: 14, dishes: ["糙米鸡胸彩蔬饭", "西兰花", "无糖酸奶"], tags: ["减脂", "低脂"], owner: "标准", status: "启用" },
-    { id: "RT003", name: "均衡晚餐", meal: "晚餐", kcal: 510, protein: 32, carbs: 55, fat: 16, dishes: ["清蒸鲈鱼豆腐", "西兰花", "糙米"], tags: ["均衡"], owner: "标准", status: "启用" },
-    { id: "RT004", name: "轻食加餐", meal: "加餐", kcal: 180, protein: 9, carbs: 18, fat: 7, dishes: ["无糖酸奶坚果杯", "蓝莓", "杏仁"], tags: ["低糖", "高蛋白"], owner: "标准", status: "启用" },
+    { id: "RT002", name: "减脂午餐", meal: "中餐", kcal: 520, protein: 38, carbs: 62, fat: 14, dishes: ["糙米", "鸡胸肉", "西兰花"], tags: ["减脂", "低脂"], owner: "标准", status: "启用" },
+    { id: "RT003", name: "均衡晚餐", meal: "晚餐", kcal: 510, protein: 32, carbs: 55, fat: 16, dishes: ["三文鱼", "西兰花", "北豆腐"], tags: ["均衡"], owner: "标准", status: "启用" },
+    { id: "RT004", name: "轻食加餐", meal: "加餐", kcal: 180, protein: 9, carbs: 18, fat: 7, dishes: ["无糖酸奶", "蓝莓", "杏仁"], tags: ["低糖", "高蛋白"], owner: "标准", status: "启用" },
     { id: "RT005", name: "高蛋白早餐", meal: "早餐", kcal: 460, protein: 32, carbs: 42, fat: 16, dishes: ["水煮蛋", "全麦吐司", "牛油果沙拉"], tags: ["高蛋白", "饱腹"], owner: "标准", status: "启用" },
     { id: "RT006", name: "低GI午餐", meal: "中餐", kcal: 560, protein: 30, carbs: 72, fat: 15, dishes: ["藜麦糙米饭", "鸡胸肉", "西兰花"], tags: ["低GI"], owner: "标准", status: "启用" },
-    { id: "RT007", name: "我的早餐", meal: "早餐", kcal: 430, protein: 26, carbs: 48, fat: 13, dishes: ["燕麦牛奶粥", "水煮蛋", "苹果酸奶杯"], tags: ["我的搭配"], owner: "我的", status: "草稿" },
-    { id: "RT008", name: "我的午餐", meal: "中餐", kcal: 540, protein: 34, carbs: 65, fat: 15, dishes: ["藜麦糙米饭", "鸡胸肉", "牛油果沙拉"], tags: ["我的搭配"], owner: "我的", status: "草稿" },
-    { id: "RT009", name: "我的加餐", meal: "加餐", kcal: 165, protein: 7, carbs: 22, fat: 4, dishes: ["香蕉酸奶杯"], tags: ["我的搭配"], owner: "我的", status: "草稿" }
+    { id: "RT010", name: "高纤早餐", meal: "早餐", kcal: 380, protein: 18, carbs: 58, fat: 9, dishes: ["燕麦片", "蓝莓", "无糖酸奶"], tags: ["高纤维", "控糖"], owner: "标准", status: "启用" },
+    { id: "RT011", name: "低脂午餐", meal: "中餐", kcal: 490, protein: 36, carbs: 58, fat: 10, dishes: ["鸡胸肉", "西兰花", "糙米"], tags: ["低脂", "减脂"], owner: "标准", status: "启用" },
+    { id: "RT012", name: "控糖午餐", meal: "中餐", kcal: 530, protein: 32, carbs: 54, fat: 18, dishes: ["三文鱼", "西兰花", "北豆腐"], tags: ["控糖", "低GI"], owner: "标准", status: "启用" },
+    { id: "RT013", name: "高蛋白晚餐", meal: "晚餐", kcal: 500, protein: 38, carbs: 40, fat: 17, dishes: ["鸡胸肉", "北豆腐", "西兰花"], tags: ["高蛋白", "低脂"], owner: "标准", status: "启用" },
+    { id: "RT014", name: "低脂晚餐", meal: "晚餐", kcal: 450, protein: 29, carbs: 48, fat: 12, dishes: ["三文鱼", "西兰花", "北豆腐"], tags: ["低脂"], owner: "标准", status: "启用" },
+    { id: "RT015", name: "高纤维加餐", meal: "加餐", kcal: 170, protein: 8, carbs: 20, fat: 6, dishes: ["蓝莓", "杏仁", "无糖酸奶"], tags: ["高纤维"], owner: "标准", status: "启用" },
+    { id: "RT016", name: "控糖加餐", meal: "加餐", kcal: 160, protein: 11, carbs: 12, fat: 7, dishes: ["水煮蛋", "杏仁", "无糖酸奶"], tags: ["控糖", "高蛋白"], owner: "标准", status: "启用" },
+    { id: "RT007", name: "低脂人群早餐", meal: "早餐", kcal: 430, protein: 26, carbs: 48, fat: 10, dishes: ["燕麦片", "无糖酸奶", "蓝莓"], tags: ["低脂", "我的搭配"], owner: "我的", status: "启用" },
+    { id: "RT008", name: "控糖人群早餐", meal: "早餐", kcal: 410, protein: 23, carbs: 39, fat: 15, dishes: ["鸡蛋", "牛油果", "全麦吐司"], tags: ["控糖", "低GI"], owner: "我的", status: "启用" },
+    { id: "RT009", name: "低脂人群午餐", meal: "中餐", kcal: 520, protein: 35, carbs: 56, fat: 12, dishes: ["鸡胸肉", "西兰花", "糙米"], tags: ["低脂", "我的搭配"], owner: "我的", status: "启用" },
+    { id: "RT017", name: "控糖人群午餐", meal: "中餐", kcal: 540, protein: 33, carbs: 52, fat: 18, dishes: ["三文鱼", "北豆腐", "西兰花"], tags: ["控糖", "低GI"], owner: "我的", status: "启用" },
+    { id: "RT018", name: "控盐人群晚餐", meal: "晚餐", kcal: 460, protein: 30, carbs: 46, fat: 14, dishes: ["三文鱼", "西兰花", "北豆腐"], tags: ["控盐", "低脂"], owner: "我的", status: "启用" },
+    { id: "RT019", name: "高蛋白人群加餐", meal: "加餐", kcal: 175, protein: 14, carbs: 12, fat: 7, dishes: ["水煮蛋", "无糖酸奶", "杏仁"], tags: ["高蛋白", "我的搭配"], owner: "我的", status: "启用" }
   ]
 });
 

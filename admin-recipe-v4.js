@@ -44,7 +44,7 @@
     const mealList = list.filter(t => t.meal === meal);
     const html = `
       ${pageHead("食谱库", `<button class="btn primary" data-new-template="1">${icon("plus")}新建模版</button>`)}
-      <div class="recipe-mode-tabs">${["标准模版库", "我的食谱模版"].map(m => `<button class="${mode === m ? "active" : ""}" data-recipe-mode="${m}">${m}<b>${D.recipeTemplates.filter(t => t.owner === (m === "标准模版库" ? "标准" : "我的")).length}</b></button>`).join("")}</div>
+      <div class="recipe-mode-tabs">${["标准模版库", "我的食谱库"].map(m => `<button class="${mode === m ? "active" : ""}" data-recipe-mode="${m}">${m}<b>${D.recipeTemplates.filter(t => t.owner === (m === "标准模版库" ? "标准" : "我的")).length}</b></button>`).join("")}</div>
       <div class="template-count-grid">${meals.map(m => `<button class="template-count ${meal === m ? "active" : ""}" data-template-meal="${m}"><span>${m}</span><b>${list.filter(t => t.meal === m).length}</b><small>个模版</small></button>`).join("")}</div>
       <div class="recipe-template-grid">${mealList.map(t => `<article class="recipe-template-card" data-view-template="${t.id}">
         <div class="recipe-template-top"><div>${tag(t.meal, t.meal === "早餐" ? "gold" : t.meal === "中餐" ? "blue" : t.meal === "晚餐" ? "green" : "slate")}${tag(t.owner === "我的" ? "我的模版" : "标准模版", t.owner === "我的" ? "green" : "blue")}</div>${tag(t.status, t.status === "启用" ? "green" : "gold")}</div>
@@ -53,7 +53,7 @@
         <div class="recipe-template-meta"><div><small>热量</small><b>${t.kcal} kcal</b></div><div><small>蛋白质</small><b>${t.protein}g</b></div><div><small>碳水</small><b>${t.carbs}g</b></div><div><small>脂肪</small><b>${t.fat}g</b></div></div>
         <div class="recipe-template-foot"><span>点击查看详情</span><button class="panel-link" data-edit-template="${t.id}">编辑模版 →</button></div>
       </article>`).join("")}</div>
-      ${mealList.length ? "" : `<div class="panel"><div class="empty">暂无${esc(meal)}${mode === "我的食谱模版" ? "的自定义模版" : "标准模版"}</div></div>`}
+      ${mealList.length ? "" : `<div class="panel"><div class="empty">暂无${esc(meal)}${mode === "我的食谱库" ? "的自定义模版" : "标准模版"}</div></div>`}
     `;
     $("#viewRoot").innerHTML = html;
     setTop("食谱库", "项目工作区 / 食谱库", "recipes");
@@ -70,7 +70,7 @@
   function openTemplateDetail(id) {
     const t = D.recipeTemplates.find(x => x.id === id); if (!t) return;
     openDrawer(`
-      <p class="page-eyebrow">RECIPE TEMPLATE</p><h2>${esc(t.name)}</h2><p class="drawer-sub">${esc(t.meal)} · ${esc(t.owner === "我的" ? "我的食谱模版" : "标准模版库")}</p>
+      <p class="page-eyebrow">RECIPE TEMPLATE</p><h2>${esc(t.name)}</h2><p class="drawer-sub">${esc(t.meal)} · ${esc(t.owner === "我的" ? "我的食谱库" : "标准模版库")}</p>
       <div class="template-detail-hero"><div><span>${esc(t.meal)}</span><b>${t.kcal} kcal</b><small>${esc(t.tags.join(" · "))}</small></div><div class="template-detail-macros"><div><b>${t.protein}g</b><small>蛋白质</small></div><div><b>${t.carbs}g</b><small>碳水</small></div><div><b>${t.fat}g</b><small>脂肪</small></div></div></div>
       <div class="drawer-section"><h3>食材清单</h3><div class="template-ingredient-list">${t.dishes.map(d => { const f = D.foods.find(x => x.name === d); return `<div class="template-ingredient"><span class="food-thumb">${emoji(f ? f.category : "食材")}</span><span><b>${esc(d)}</b><small>${f ? `${esc(f.category)} · ${f.kcal} kcal · 蛋白 ${f.protein}g` : "来自食品库"}</small></span></div>`; }).join("")}</div></div>
       <div class="drawer-section"><div class="info-list"><div class="info-item"><small>模版类型</small><b>${esc(t.owner)}</b></div><div class="info-item"><small>状态</small><b>${esc(t.status)}</b></div></div></div>
@@ -84,7 +84,7 @@
     const selected = t ? t.dishes : [];
     const title = t ? "编辑食谱模版" : "新建食谱模版";
     openDrawer(`
-      <p class="page-eyebrow">RECIPE TEMPLATE EDITOR</p><h2>${title}</h2><p class="drawer-sub">标准模版 / 我的食谱模版</p>
+      <p class="page-eyebrow">RECIPE TEMPLATE EDITOR</p><h2>${title}</h2><p class="drawer-sub">标准模版 / 我的食谱库</p>
       <div class="drawer-section"><div class="publish-form">
         <label class="field"><span>模版名称</span><input id="templateName" value="${esc(t ? t.name : "")}" placeholder="例如：减脂午餐" /></label>
         <label class="field"><span>餐次</span><select id="templateMeal">${meals.map(m => `<option${t && t.meal === m ? " selected" : ""}>${m}</option>`).join("")}</select></label>

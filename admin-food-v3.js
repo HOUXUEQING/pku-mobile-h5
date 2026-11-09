@@ -135,7 +135,7 @@
       const n = nutrition();
       D.recipeTemplates.unshift({
         id: "RT" + Date.now(),
-        name: "我的" + configMeal + "搭配",
+        name: configMeal === "早餐" ? "低脂人群早餐" : configMeal === "午餐" ? "控糖人群午餐" : configMeal === "晚餐" ? "控盐人群晚餐" : "高蛋白人群加餐",
         meal: configMeal,
         kcal: n.kcal,
         protein: n.protein,
