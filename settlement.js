@@ -376,6 +376,11 @@
   function render() {
     const parts = getRoute();
     let base = parts[0] || "工作台";
+    if (base === "系统管理") {
+      toast("结算系统管理已下线，相关角色请在账号管理与角色权限中维护");
+      location.hash = "#/工作台";
+      return;
+    }
     if (!canAccess(base)) {
       toast("当前角色无权访问「" + base + "」，已返回工作台");
       base = "工作台";

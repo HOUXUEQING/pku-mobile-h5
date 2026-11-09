@@ -138,7 +138,55 @@
     const navMap = { project: "projects", student: "students", member: "members", department: "departments", institution: "institutions" };
     const nav = navMap[active] || active || "dashboard";
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.nav === nav));
-    collapseNavGroups();
+    syncAreaWithRoute();
+  }
+
+  const areaDefaults = {
+    "概览": "dashboard", "企康项目": "projects", "内容管理": "recipes", "交易管理": "mall",
+    "财务结算": "财务结算/工作台", "合作方管理": "students", "健康管理": "health-records", "基础管理": "institutions"
+  };
+  let activeArea = "概览";
+
+  function syncAreaWithRoute() {
+    const active = document.querySelector(".nav-item.active");
+    const group = active ? active.closest(".nav-group") : null;
+    const area = group && group.querySelector("p") ? group.querySelector("p").innerText : activeArea;
+    showArea(area, false);
+  }
+
+  function showArea(area, navigate) {
+    if (!area) area = "概览";
+    activeArea = area;
+    $$(".nav-group").forEach(g => {
+      const name = g.querySelector("p") ? g.querySelector("p").innerText : "";
+      g.classList.toggle("area-active", name === area);
+    });
+    $$(".area-tile").forEach(t => t.classList.toggle("active", t.dataset.area === area));
+    const title = $("#areaTitle");
+    const count = $("#areaCount");
+    const group = $$(".nav-group").find(g => g.querySelector("p") && g.querySelector("p").innerText === area);
+    const links = group ? $$(".nav-item", group) : [];
+    if (title) title.textContent = area;
+    if (count) count.textContent = links.length + " 项";
+    const search = $("#navSearch");
+    if (search) { search.value = ""; $$(".nav-item", group || document).forEach(a => a.style.display = ""); }
+    if (navigate && areaDefaults[area]) location.hash = "#" + areaDefaults[area];
+  }
+
+  function setupAreaNav() {
+    $$(".area-tile").forEach(tile => tile.addEventListener("click", () => showArea(tile.dataset.area, true)));
+    const search = $("#navSearch");
+    if (search) search.addEventListener("input", () => {
+      const q = search.value.trim();
+      const group = $$(".nav-group").find(g => g.classList.contains("area-active"));
+      const links = group ? $$(".nav-item", group) : [];
+      links.forEach(a => a.style.display = !q || a.innerText.includes(q) ? "" : "none");
+      const count = $("#areaCount");
+      if (count) count.textContent = links.filter(a => a.style.display !== "none").length + " / " + links.length + " 项";
+    });
+    const active = document.querySelector(".nav-item.active");
+    const group = active ? active.closest(".nav-group") : null;
+    showArea(group && group.querySelector("p") ? group.querySelector("p").innerText : "概览", false);
   }
 
   function collapseNavGroups() {
@@ -841,7 +889,7 @@
     const html = `
       ${pageHead("账号管理", "OPERATIONS ACCOUNTS", "按角色、项目与营期授权数据范围，不按机构隔离", `<button class="btn primary" data-toast="原型演示：新增账号">${icon("plus")}新增账号</button>`)}
       <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="accountSearch" placeholder="搜索姓名、手机号或角色" /></label></div>
-      <section class="panel"><div class="table-wrap"><table class="data-table" id="accountTable"><thead><tr><th>账号</th><th>手机号</th><th>角色</th><th>数据范围</th><th>负责项目</th><th>状态</th><th>最近登录</th></tr></thead><tbody>${D.accounts.map(a => `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(a.name.slice(0, 1))}</span><span><b>${escape(a.name)}</b><small>${escape(a.id)}</small></span></span></td><td>${escape(a.phone)}</td><td>${roleTag(a.role)}</td><td><span class="cell-main">${escape(a.scope)}</span></td><td><div class="tag-row">${a.projects.length ? a.projects.map(p => `<span class="tag">${escape(projectById(p).name)}</span>`).join("") : '<span class="tag slate">全部项目</span>'}</div></td><td>${statusTag(a.status)}</td><td>${escape(a.lastLogin)}</td></tr>`).join("")}</tbody></table></div></section>
+      <section class="panel"><div class="table-wrap"><table class="data-table" id="accountTable"><thead><tr><th>账号</th><th>手机号</th><th>角色</th><th>结算角色</th><th>数据范围</th><th>负责项目</th><th>状态</th><th>最近登录</th></tr></thead><tbody>${D.accounts.map(a => { const settleRole = a.role === "super" ? "全量" : a.role === "supervisor" ? "对账 / 差异" : a.role === "operation" ? "对账只读" : a.role === "finance" ? "结算 / 开票" : "仅查看"; return `<tr><td><span class="person-cell"><span class="avatar avatar-sm">${escape(a.name.slice(0, 1))}</span><span><b>${escape(a.name)}</b><small>${escape(a.id)}</small></span></span></td><td>${escape(a.phone)}</td><td>${roleTag(a.role)}</td><td><span class="tag blue">${settleRole}</span></td><td><span class="cell-main">${escape(a.scope)}</span></td><td><div class="tag-row">${a.projects.length ? a.projects.map(p => `<span class="tag">${escape(projectById(p).name)}</span>`).join("") : '<span class="tag slate">全部项目</span>'}</div></td><td>${statusTag(a.status)}</td><td>${escape(a.lastLogin)}</td></tr>`; }).join("")}</tbody></table></div></section>
     `;
     $("#viewRoot").innerHTML = html;
     setTop("账号管理", "基础管理 / 账号管理");
@@ -1220,12 +1268,12 @@
      --------------------------------------------------------- */
 
   function renderSettlementEmbed(sub) {
-    const allowed = ["工作台", "企业合约", "企业资金账户", "员工额度账户", "机构合约", "消费明细", "异常消费池", "机构对账", "差错工单", "机构结算单", "打款管理", "企业账单", "发票管理", "结余处理", "报表看板", "审计日志", "系统管理"];
+    const allowed = ["工作台", "企业合约", "企业资金账户", "员工额度账户", "机构合约", "消费明细", "异常消费池", "机构对账", "差错工单", "机构结算单", "打款管理", "企业账单", "发票管理", "结余处理", "报表看板", "审计日志"];
     const page = allowed.includes(sub) ? sub : "工作台";
     $("#topTitle").textContent = "企康结算 · " + page;
     $("#breadcrumb").textContent = "财务结算 / " + page;
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === page));
-    collapseNavGroups();
+    syncAreaWithRoute();
     $("#viewRoot").innerHTML = `<iframe class="settlement-frame" title="企康结算 · ${escape(page)}" src="./settlement.html?embed=1#/${encodeURIComponent(page)}"></iframe>`;
   }
 
@@ -1348,10 +1396,10 @@
     $("#topTitle").textContent = "企康结算 · " + page;
     $("#breadcrumb").textContent = "财务结算 / " + page;
     $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === page));
-    collapseNavGroups();
+    syncAreaWithRoute();
     try { history.replaceState(null, "", "#财务结算/" + page); } catch (e) {}
   });
-  setupNavAccordion();
+  setupAreaNav();
   window.addEventListener("hashchange", renderRoute);
   renderRoute();
 })();
