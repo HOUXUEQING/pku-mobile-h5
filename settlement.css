@@ -247,3 +247,20 @@ tbody tr:hover td { background: #fbfdff; }
 [data-role-hidden="true"] { display: none !important; }
 @media (max-width: 1380px) { .view { padding-left: 20px; padding-right: 20px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } .workbench-grid { grid-template-columns: repeat(2, 1fr); } .workbench-main { grid-template-columns: 1fr; } .detail-cards { grid-template-columns: repeat(2, 1fr); } .detail-split { grid-template-columns: 1fr; } }
 @media (max-width: 980px) { .sidebar { width: 195px; } .main { width: calc(100% - 195px); margin-left: 195px; } .topbar { padding: 0 16px; } .top-date, .top-user { display: none; } .filter-panel { gap: 7px; } .field { flex: 1; min-width: 120px; } .filter-actions { margin-left: 0; } .report-grid, .role-cards { grid-template-columns: 1fr; } }
+
+/* Embedded inside the main admin shell */
+html.embed .sidebar, html.embed .topbar { display: none !important; }
+html.embed .main { width: 100% !important; margin-left: 0 !important; }
+html.embed .view { padding: 15px 17px 24px; }
+html.embed .page { max-width: none; }
+
+html.embed .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+html.embed .workbench-grid { grid-template-columns: repeat(5, 1fr); }
+html.embed .workbench-main { grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr); }
+html.embed .detail-cards { grid-template-columns: repeat(4, 1fr); }
+html.embed .detail-split { grid-template-columns: minmax(0,1.3fr) minmax(0,.7fr); }
+@media (max-width: 1000px) {
+  html.embed .kpi-grid, html.embed .detail-cards { grid-template-columns: repeat(2, 1fr); }
+  html.embed .workbench-grid { grid-template-columns: repeat(2, 1fr); }
+  html.embed .workbench-main, html.embed .detail-split { grid-template-columns: 1fr; }
+}

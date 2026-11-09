@@ -384,6 +384,7 @@
     }
     currentBase = base;
     setActive(base);
+    try { if (window.parent !== window) window.parent.postMessage({ type: "settlement-route", route: base }, "*"); } catch (e) {}
     $("#viewRoot").innerHTML = skeleton();
     const token = ++renderToken;
     setTimeout(() => {

@@ -1196,10 +1196,20 @@
      Router
      --------------------------------------------------------- */
 
+  function renderSettlementEmbed(sub) {
+    const allowed = ["工作台", "企业合约", "企业资金账户", "员工额度账户", "机构合约", "消费明细", "异常消费池", "机构对账", "差错工单", "机构结算单", "打款管理", "企业账单", "发票管理", "结余处理", "报表看板", "审计日志", "系统管理"];
+    const page = allowed.includes(sub) ? sub : "工作台";
+    $("#topTitle").textContent = "企康结算 · " + page;
+    $("#breadcrumb").textContent = "财务结算 / " + page;
+    $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === page));
+    $("#viewRoot").innerHTML = `<iframe class="settlement-frame" title="企康结算 · ${escape(page)}" src="./settlement.html?embed=1#/${encodeURIComponent(page)}"></iframe>`;
+  }
+
   function renderRoute() {
-    const raw = location.hash.replace(/^#/, "") || "dashboard";
+    const raw = decodeURIComponent(location.hash.replace(/^#\/?/, "")) || "dashboard";
     const parts = raw.split("/");
     const view = parts[0];
+    if (view === "财务结算") { renderSettlementEmbed(parts.slice(1).join("/")); return; }
     if (view === "project") {
       if (parts[1] === "new") { renderProjectForm(null); return; }
       if (parts[2] === "edit") { renderProjectForm(parts[1]); return; }
@@ -1307,6 +1317,15 @@
     if (event.key === "Escape") closeDrawer();
   });
 
+  window.addEventListener("message", event => {
+    if (event.origin !== location.origin || !event.data || event.data.type !== "settlement-route") return;
+    const page = event.data.route;
+    if (!page) return;
+    $("#topTitle").textContent = "企康结算 · " + page;
+    $("#breadcrumb").textContent = "财务结算 / " + page;
+    $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === page));
+    try { history.replaceState(null, "", "#财务结算/" + page); } catch (e) {}
+  });
   window.addEventListener("hashchange", renderRoute);
   renderRoute();
 })();

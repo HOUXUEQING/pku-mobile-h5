@@ -2128,3 +2128,9 @@ body {
 .nav-group { margin-bottom: 2px; }
 
 .nav-item { min-height: 21px; height: 21px; }
+
+.settlement-menu-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+.settlement-menu-group > p { grid-column: 1 / -1; }
+.settlement-menu-group .nav-item { height: 23px; min-height: 23px; padding: 0 5px; gap: 4px; font-size: 8px; }
+.settlement-menu-group .nav-item .ic { width: 11px; height: 11px; }
+.settlement-frame { display: block; width: 100%; height: calc(100vh - 91px); min-height: 720px; background: #f4f8fe; border: 0; border-radius: 10px; }
