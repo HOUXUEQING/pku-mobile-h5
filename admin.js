@@ -901,15 +901,28 @@
   }
 
   function renderRoles() {
+    const settleRoles = [
+      { name: "超级管理员", key: "settle-super", color: "#315d78", icon: "settings", scope: "全平台财务数据", desc: "拥有结算全流程权限，可处理对账争议并完成最终确认。", permissions: ["对账管理", "差异处理", "结算确认", "开票管理", "报表查看"] },
+      { name: "运营督导", key: "settle-supervisor", color: "#466c9e", icon: "chart", scope: "运营项目与结算差异", desc: "负责项目侧对账差异跟进，结算与开票保持只读。", permissions: ["对账只读", "差异处理", "结算只读", "开票只读", "报表查看"] },
+      { name: "财务管理员", key: "settle-finance", color: "#b4772c", icon: "project", scope: "全平台财务结算", desc: "负责对账复核、结算确认、开票和打款申请。", permissions: ["对账管理", "差异处理", "结算确认", "开票管理", "报表查看"] },
+      { name: "业务方", key: "settle-business", color: "#6e8296", icon: "users", scope: "本业务方结算数据", desc: "仅查看本业务方结算和报表，开票需要平台协助。", permissions: ["对账只读", "差异只读", "结算只读", "开票受限", "仅本业务方报表"] }
+    ];
     const html = `
-      ${pageHead("角色权限", "ROLE & DATA SCOPE", "数据按角色所赋予的项目、营期权限隔离，不按机构隔离", `<span class="tag blue">7 个角色</span>`)}
+      ${pageHead("角色权限", "ROLE & DATA SCOPE", "平台角色与结算角色分开维护，数据按项目、营期和业务方隔离", `<span class="tag blue">11 个角色</span>`)}
+      <div class="role-section-head"><div><h3>平台角色</h3><p>负责项目、内容、运营和健康管理</p></div><span class="tag blue">7 个角色</span></div>
       <div class="role-grid">
         ${D.roles.map(r => `<article class="role-card" style="--role:${r.key === "super" ? "#315d78" : r.key === "supervisor" ? "#466c9e" : r.key === "operation" ? "#1e8fbf" : r.key === "doctor" ? "#8a6d3b" : r.key === "health" ? "#2f8f83" : r.key === "nutrition" ? "#8b5cf6" : "#6e8296"};--role-soft:#f1f8fb">
           <div class="role-card-head"><span class="role-mark">${icon(r.key === "super" ? "settings" : r.key === "supervisor" ? "chart" : r.key === "operation" ? "project" : "users")}</span><div><h3>${escape(r.name)}</h3><span class="role-scope">${escape(r.scope)}</span></div></div>
           <p>${escape(r.desc)}</p><div class="permission-tags">${r.permissions.map(p => `<span>${escape(p)}</span>`).join("")}</div>
         </article>`).join("")}
       </div>
-      <section class="panel role-settlement-panel"><div class="panel-head"><div><h3 class="panel-title">结算角色权限</h3><p class="panel-sub">对账、差异处理、结算与开票的操作权限</p></div><span class="tag blue">财务结算</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>角色</th><th>对账管理</th><th>差异处理</th><th>结算确认</th><th>开票管理</th><th>报表查看</th></tr></thead><tbody><tr><td><b class="cell-main">超级管理员</b></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td></tr><tr><td><b class="cell-main">运营督导</b></td><td><span class="tag blue">只读</span></td><td><span class="tag green">可操作</span></td><td><span class="tag blue">只读</span></td><td><span class="tag blue">只读</span></td><td><span class="tag green">可查看</span></td></tr><tr><td><b class="cell-main">财务管理员</b></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td><td><span class="tag green">可操作</span></td></tr><tr><td><b class="cell-main">业务方</b></td><td><span class="tag blue">只读</span></td><td><span class="tag blue">只读</span></td><td><span class="tag blue">只读</span></td><td><span class="tag gold">受限</span></td><td><span class="tag blue">仅本业务方</span></td></tr></tbody></table></div></section>
+      <div class="role-section-head settlement"><div><h3>结算角色</h3><p>对账、差异处理、结算确认、开票与报表权限</p></div><span class="tag purple">4 个角色</span></div>
+      <div class="role-grid">
+        ${settleRoles.map(r => `<article class="role-card settlement-card" style="--role:${r.color};--role-soft:#f5f8fc">
+          <div class="role-card-head"><span class="role-mark">${icon(r.icon)}</span><div><h3>${escape(r.name)}</h3><span class="role-scope">${escape(r.scope)}</span></div></div>
+          <p>${escape(r.desc)}</p><div class="permission-tags">${r.permissions.map(p => `<span>${escape(p)}</span>`).join("")}</div>
+        </article>`).join("")}
+      </div>
     `;
     $("#viewRoot").innerHTML = html;
     setTop("角色权限", "基础管理 / 角色权限");

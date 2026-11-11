@@ -2343,3 +2343,10 @@ body {
 .cover-tip { display: grid; gap: 4px; padding: 9px; color: #99a9ba; font-size: 7px; line-height: 1.5; background: #fff; border: 1px solid #eaf1fa; border-radius: 6px; }
 .cover-tip b { color: #7087a1; font-size: 7px; }
 .cover-tip span { display: block; }
+
+.role-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin: 4px 0 9px; }
+.role-section-head h3 { margin: 0; color: #294662; font-size: 14px; }
+.role-section-head p { margin: 3px 0 0; color: #93a4b7; font-size: 8px; }
+.role-section-head.settlement { margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9f1fa; }
+.role-card.settlement-card { border-top: 2px solid var(--role); }
+.role-card.settlement-card .role-mark { color: var(--role); }
