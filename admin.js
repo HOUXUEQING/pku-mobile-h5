@@ -1268,6 +1268,14 @@
      --------------------------------------------------------- */
 
   function renderSettlementEmbed(sub) {
+    if ((sub || "") === "资金台账" && window.AdminFunds) {
+      $("#topTitle").textContent = "资金台账";
+      $("#breadcrumb").textContent = "财务结算 / 资金台账";
+      $$(".nav-item").forEach(item => item.classList.toggle("active", item.dataset.settlement === "资金台账"));
+      syncAreaWithRoute();
+      window.AdminFunds.render();
+      return;
+    }
     const allowed = ["工作台", "企业合约", "企业资金账户", "员工额度账户", "机构合约", "消费明细", "异常消费池", "机构对账", "差错工单", "机构结算单", "打款管理", "企业账单", "发票管理", "结余处理", "报表看板", "审计日志"];
     const page = allowed.includes(sub) ? sub : "工作台";
     $("#topTitle").textContent = "企康结算 · " + page;
