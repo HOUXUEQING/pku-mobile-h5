@@ -701,11 +701,13 @@
         <select class="filter-select" id="studentStatus"><option>全部状态</option><option>在营</option><option>待入营</option><option>已完成</option></select>
         <span class="tag blue">客户 ${D.students.length} 人</span>
       </div>
+      ${window.AdminBenefits ? window.AdminBenefits.summaryHTML() : ""}
       <section class="panel"><div class="table-wrap"><table class="data-table" id="studentTable">
-        <thead><tr><th>客户</th><th>项目 / 营期</th><th>来源医师</th><th>服务团队</th><th>打卡完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead>
+        <thead><tr><th>客户</th><th>项目 / 营期</th><th>企康权益</th><th>个人企康资金</th><th>来源医师</th><th>服务团队</th><th>打卡完成率</th><th>体重变化</th><th>风险</th><th>最近打卡</th></tr></thead>
         <tbody>${D.students.map(s => `<tr class="clickable" data-student="${s.id}">
           <td><span class="person-cell"><span class="avatar avatar-sm">${escape(s.name.slice(0, 1))}</span><span><b>${escape(s.name)}</b><small>${escape(s.phone)}</small></span></span></td>
           <td><span class="cell-main">${escape(projectById(s.projectId).name)}</span><span class="cell-sub">${escape(campById(s.campId).name)}</span></td>
+          <td>${window.AdminBenefits ? window.AdminBenefits.rightsCell(s) : "—"}</td><td>${window.AdminBenefits ? window.AdminBenefits.fundCell(s) : "—"}</td>
           <td>${escape(s.sourceDoctor)}</td><td>${escape(s.team)}</td>
           <td><b class="cell-main">${s.completion}%</b></td><td>${escape(s.weightChange)} kg</td><td>${statusTag(s.risk)}</td><td>${escape(s.lastCheckin)}</td>
         </tr>`).join("")}</tbody>

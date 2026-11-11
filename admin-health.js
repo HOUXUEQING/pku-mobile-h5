@@ -192,6 +192,7 @@
             <div><div class="health-hero-title"><span class="tag ${riskTone(selected.risk)}">${selected.risk}风险</span><span class="tag blue">年度体检 + 五高筛查</span></div><h2>${escape(selected.name)}</h2><p>${escape(selected.dept)} · ${selected.age} 岁 · 健管师 ${escape(selected.manager)} · 最近联系 ${escape(selected.lastContact)}</p><div class="health-tags">${selected.tags.map(t => `<span>${escape(t)}</span>`).join("")}</div></div>
             <div class="health-score"><b>${selected.score}</b><small>风险分</small><span class="tag ${riskTone(selected.risk)}">${selected.risk}风险</span></div>
           </div>
+          ${window.AdminBenefits ? window.AdminBenefits.profileHTML(selected) : ""}
           <div class="health-metrics">${metricCard("血压", selected.metrics.bp)}${metricCard("空腹血糖", selected.metrics.glucose)}${metricCard("LDL-C", selected.metrics.ldl)}${metricCard("BMI", selected.metrics.bmi)}${metricCard("尿酸", selected.metrics.uric)}${metricCard("睡眠", selected.metrics.sleep)}${metricCard("情绪", selected.metrics.mood)}${metricCard("步数", selected.metrics.steps)}</div>
           <div class="health-grid">
             <section class="panel health-exam"><div class="panel-head"><div><h3 class="panel-title">最近体检</h3></div><span class="tag">${escape(selected.exam.date)}</span></div><div class="panel-body"><p class="health-summary">多项代谢指标异常，已纳入五高一重共管，建议尽快完成专科复诊。</p><div class="health-tags">${selected.exam.tags.map(t => `<span class="tag">${escape(t)}</span>`).join("")}</div></div></section>

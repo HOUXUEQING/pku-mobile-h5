@@ -2414,3 +2414,49 @@ body {
 .recipe-product-picker .recipe-product-item b { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 9px; line-height: 1.35; }
 .recipe-product-picker .recipe-product-item small { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 7px; line-height: 1.35; }
 .recipe-product-picker .recipe-product-item .recipe-option-thumb { flex: 0 0 25px; }
+
+.benefit-overview { margin-bottom: 11px; }
+.benefit-overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 13px 13px; }
+.benefit-kpi { display: grid; gap: 3px; padding: 11px 12px; background: linear-gradient(135deg,#f3f8ff,#fbfdff); border: 1px solid #e5effb; border-radius: 8px; }
+.benefit-kpi small { color: #8297ac; font-size: 7px; }
+.benefit-kpi b { color: #2f5c8c; font-size: 19px; }
+.benefit-kpi b em { margin-left: 2px; font-size: 8px; font-style: normal; font-weight: 400; }
+.benefit-kpi span { color: #9babbc; font-size: 7px; }
+.benefit-kpi.green { background: linear-gradient(135deg,#effaf6,#fbfefd); border-color: #dff3eb; }
+.benefit-kpi.green b { color: #178e7a; }
+.benefit-kpi.purple { background: linear-gradient(135deg,#f7f3ff,#fdfbff); border-color: #ebe3fb; }
+.benefit-kpi.purple b { color: #7655c3; }
+.benefit-kpi.gold { background: linear-gradient(135deg,#fff9ee,#fffdf8); border-color: #f6e9d2; }
+.benefit-kpi.gold b { color: #ad7528; }
+.benefit-right-tags { display: flex; flex-wrap: wrap; gap: 3px; max-width: 180px; }
+.benefit-right-tags span { padding: 3px 5px; color: #52708d; font-size: 6px; background: #f1f7ff; border: 1px solid #e4effb; border-radius: 3px; white-space: nowrap; }
+.benefit-right-tags b { color: #2f6bff; font-size: 7px; }
+.benefit-right-tags i { align-self: center; color: #9aabbb; font-size: 6px; font-style: normal; }
+.benefit-fund-cell { display: grid; gap: 2px; min-width: 105px; }
+.benefit-fund-cell b { color: #237c69; font-size: 10px; }
+.benefit-fund-cell span { color: #9aaabc; font-size: 6px; }
+.benefit-mini-bar { height: 3px; margin-top: 2px; overflow: hidden; background: #e6f1ed; border-radius: 3px; }
+.benefit-mini-bar i { display: block; height: 100%; background: #28aa91; border-radius: 3px; }
+.benefit-profile { margin: 10px 0; overflow: hidden; }
+.benefit-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid #edf3fa; }
+.benefit-rights-box, .benefit-fund-box { padding: 13px; }
+.benefit-rights-box { border-right: 1px solid #edf3fa; }
+.benefit-subhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.benefit-subhead h4 { margin: 0; color: #385775; font-size: 10px; }
+.benefit-subhead span { color: #9babbc; font-size: 7px; }
+.benefit-right-list { display: grid; gap: 5px; }
+.benefit-right-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 8px; background: #f8fbff; border: 1px solid #edf3fb; border-radius: 5px; }
+.benefit-right-row div { display: grid; gap: 2px; }
+.benefit-right-row b { color: #49647f; font-size: 8px; }
+.benefit-right-row small { color: #9aaabc; font-size: 6px; }
+.benefit-right-row strong { color: #2f6bff; font-size: 14px; }
+.benefit-right-row strong em { margin-left: 1px; color: #8fa4b8; font-size: 6px; font-style: normal; font-weight: 400; }
+.benefit-fund-box { background: linear-gradient(150deg,#f7fcfa,#fff); }
+.benefit-fund-number { color: #197d69; font-size: 27px; font-weight: 700; }
+.benefit-fund-number small { margin-left: 5px; color: #91a5b6; font-size: 7px; font-weight: 400; }
+.benefit-fund-line { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 3px; color: #94a7b8; font-size: 6px; }
+.benefit-fund-progress { height: 5px; margin: 9px 0 5px; overflow: hidden; background: #e6f2ee; border-radius: 5px; }
+.benefit-fund-progress i { display: block; height: 100%; background: linear-gradient(90deg,#27ad94,#7cd5c0); border-radius: 5px; }
+.benefit-fund-hint { color: #9babbc; font-size: 6px; line-height: 1.6; }
+@media (max-width: 1120px) { .benefit-overview-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .benefit-profile-grid { grid-template-columns: 1fr; } .benefit-rights-box { border-right: 0; border-bottom: 1px solid #edf3fa; } }
