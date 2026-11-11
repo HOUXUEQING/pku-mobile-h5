@@ -13,16 +13,16 @@
   let libraryMode = "标准推荐";
 
   const recipes = [
-    { id: "R001", owner: "平台", name: "控糖早餐", audience: "控糖", meal: "早餐", advice: "燕麦片 + 水煮蛋 + 无糖酸奶，先吃蛋白质再吃主食。", note: "少喝果汁，避免甜面包。", products: ["健康厨房基础食材包", "电子体脂秤", "便携运动水杯 500ml"], status: "已发布", scopeType: "指定项目", project: "五好生活", students: [] },
-    { id: "R002", owner: "平台", name: "减脂午餐", audience: "减脂", meal: "中餐", advice: "糙米饭半碗 + 鸡胸肉 + 西兰花，少油少盐。", note: "先吃蔬菜和蛋白质，主食最后吃。", products: ["健康厨房基础食材包", "专业计数跳绳", "电子体脂秤"], status: "已发布", scopeType: "指定学员", project: "中石油华北员工减重健康营", students: ["林悦", "陈嘉禾"] },
-    { id: "R003", owner: "平台", name: "高蛋白早餐", audience: "增肌", meal: "早餐", advice: "全麦吐司 + 鸡蛋 + 牛油果沙拉，搭配一杯牛奶。", note: "训练日可加一份酸奶。", products: ["乳清蛋白粉", "健康厨房基础食材包", "电子体脂秤"], status: "已发布", scopeType: "全项目", project: "", students: [] },
-    { id: "R004", owner: "平台", name: "轻食晚餐", audience: "减脂", meal: "晚餐", advice: "三文鱼 + 北豆腐 + 西兰花，晚餐七分饱。", note: "避免夜间高糖水果。", products: ["健康厨房基础食材包", "便携运动水杯 500ml"], status: "已发布", scopeType: "全项目", project: "", students: [] },
-    { id: "R005", owner: "平台", name: "控尿酸加餐", audience: "高尿酸", meal: "加餐", advice: "无糖酸奶 + 蓝莓 + 少量杏仁，避免浓肉汤。", note: "多喝水，少饮酒。", products: ["健康厨房基础食材包", "便携运动水杯 500ml"], status: "已发布", scopeType: "指定项目", project: "金融街企业减重健康营", students: [] },
-    { id: "R006", owner: "平台", name: "高纤维早餐", audience: "通用", meal: "早餐", advice: "燕麦粥 + 苹果 + 水煮蛋，补充膳食纤维。", note: "肠胃敏感时减少燕麦量。", products: ["健康厨房基础食材包", "电子体脂秤"], status: "草稿", scopeType: "全项目", project: "", students: [] },
-    { id: "R007", owner: "平台", name: "均衡午餐", audience: "通用", meal: "中餐", advice: "藜麦糙米饭 + 鸡胸肉 + 时蔬，保证一荤两素。", note: "外卖少选油炸和勾芡。", products: ["健康厨房基础食材包", "专业计数跳绳"], status: "已发布", scopeType: "指定项目", project: "望京科技园减重健康营", students: [] },
-    { id: "R008", owner: "平台", name: "控盐晚餐", audience: "控盐", meal: "晚餐", advice: "清蒸鱼 + 豆腐 + 绿叶菜，少放酱油和盐。", note: "避免腌制食品。", products: ["健康厨房基础食材包", "便携运动水杯 500ml"], status: "已发布", scopeType: "指定学员", project: "五好生活", students: ["周雯", "徐一鸣", "吴倩"] },
-    { id: "R101", owner: "我的", name: "我的控糖早餐", audience: "控糖", meal: "早餐", advice: "无糖豆浆 + 鸡蛋 + 半根玉米，简单方便。", note: "不要加糖。", products: ["健康厨房基础食材包", "电子体脂秤"], status: "已发布", scopeType: "指定学员", project: "五好生活", students: ["林悦", "周雯"] },
-    { id: "R102", owner: "我的", name: "我的训练后加餐", audience: "增肌", meal: "加餐", advice: "乳清蛋白粉 + 香蕉 + 少量坚果。", note: "训练后 30 分钟内补充。", products: ["乳清蛋白粉", "便携运动水杯 500ml"], status: "草稿", scopeType: "全项目", project: "", students: [] }
+    { id: "R001", owner: "平台", name: "控糖早餐", audience: "控糖", meal: "早餐", advice: "燕麦片 + 水煮蛋 + 无糖酸奶，先吃蛋白质再吃主食。", note: "少喝果汁，避免甜面包。", products: ["即食燕麦片 400g", "无糖酸奶 200g×4", "鸡蛋 10 枚"], status: "已发布", scopeType: "指定项目", project: "五好生活", students: [] },
+    { id: "R002", owner: "平台", name: "减脂午餐", audience: "减脂", meal: "中餐", advice: "糙米饭半碗 + 鸡胸肉 + 西兰花，少油少盐。", note: "先吃蔬菜和蛋白质，主食最后吃。", products: ["糙米 1kg", "鸡胸肉 500g", "西兰花 300g", "藜麦糙米饭"], status: "已发布", scopeType: "指定学员", project: "中石油华北员工减重健康营", students: ["林悦", "陈嘉禾"] },
+    { id: "R003", owner: "平台", name: "高蛋白早餐", audience: "增肌", meal: "早餐", advice: "全麦吐司 + 鸡蛋 + 牛油果沙拉，搭配一杯牛奶。", note: "训练日可加一份酸奶。", products: ["全麦吐司 400g", "鸡蛋 10 枚", "牛油果沙拉", "低脂牛奶 250ml×12"], status: "已发布", scopeType: "全项目", project: "", students: [] },
+    { id: "R004", owner: "平台", name: "轻食晚餐", audience: "减脂", meal: "晚餐", advice: "三文鱼 + 北豆腐 + 西兰花，晚餐七分饱。", note: "避免夜间高糖水果。", products: ["三文鱼 200g", "北豆腐 400g", "西兰花 300g"], status: "已发布", scopeType: "全项目", project: "", students: [] },
+    { id: "R005", owner: "平台", name: "控尿酸加餐", audience: "高尿酸", meal: "加餐", advice: "无糖酸奶 + 蓝莓 + 少量杏仁，避免浓肉汤。", note: "多喝水，少饮酒。", products: ["无糖酸奶 200g×4", "蓝莓 125g", "原味杏仁 150g"], status: "已发布", scopeType: "指定项目", project: "金融街企业减重健康营", students: [] },
+    { id: "R006", owner: "平台", name: "高纤维早餐", audience: "通用", meal: "早餐", advice: "燕麦粥 + 苹果 + 水煮蛋，补充膳食纤维。", note: "肠胃敏感时减少燕麦量。", products: ["即食燕麦片 400g", "苹果酸奶杯", "鸡蛋 10 枚"], status: "草稿", scopeType: "全项目", project: "", students: [] },
+    { id: "R007", owner: "平台", name: "均衡午餐", audience: "通用", meal: "中餐", advice: "藜麦糙米饭 + 鸡胸肉 + 时蔬，保证一荤两素。", note: "外卖少选油炸和勾芡。", products: ["藜麦糙米饭", "鸡胸肉 500g", "西兰花 300g"], status: "已发布", scopeType: "指定项目", project: "望京科技园减重健康营", students: [] },
+    { id: "R008", owner: "平台", name: "控盐晚餐", audience: "控盐", meal: "晚餐", advice: "清蒸鱼 + 豆腐 + 绿叶菜，少放酱油和盐。", note: "避免腌制食品。", products: ["三文鱼 200g", "北豆腐 400g", "西兰花 300g"], status: "已发布", scopeType: "指定学员", project: "五好生活", students: ["周雯", "徐一鸣", "吴倩"] },
+    { id: "R101", owner: "我的", name: "我的控糖早餐", audience: "控糖", meal: "早餐", advice: "无糖豆浆 + 鸡蛋 + 半根玉米，简单方便。", note: "不要加糖。", products: ["无糖酸奶 200g×4", "鸡蛋 10 枚", "甜玉米 2 根"], status: "已发布", scopeType: "指定学员", project: "五好生活", students: ["林悦", "周雯"] },
+    { id: "R102", owner: "我的", name: "我的训练后加餐", audience: "增肌", meal: "加餐", advice: "乳清蛋白粉 + 香蕉 + 少量坚果。", note: "训练后 30 分钟内补充。", products: ["乳清蛋白粉", "香蕉 1kg", "原味杏仁 150g"], status: "草稿", scopeType: "全项目", project: "", students: [] }
   ];
   const audiences = ["全部", ...new Set(recipes.map(r => r.audience))];
 
