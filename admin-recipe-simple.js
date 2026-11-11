@@ -69,7 +69,11 @@
     return "物";
   }
   function productOptions(selected) {
-    return (D.mallCatalog || []).map(p => `<label class="ingredient-item recipe-product-item"><input type="checkbox" data-recipe-product="${esc(p.name)}"${selected.includes(p.name) ? " checked" : ""}/><i class="recipe-option-thumb ${productTone(p)}">${productMark(p)}</i><span><b>${esc(p.name)}</b><small>${esc(p.kind || "商城商品")} · ${esc(p.category || p.subCategory || "未分类")} · ${esc(typeof p.price === "number" && p.price ? "¥" + p.price : p.priceType || "权益商品")}</small></span></label>`).join("");
+    const catalog = (D.mallCatalog || []).slice().sort((a, b) => {
+      const weight = p => selected.includes(p.name) ? -1 : p.category === "健康食品" ? 0 : p.kind === "实物商品" || p.kind === "实物" ? 1 : 2;
+      return weight(a) - weight(b);
+    });
+    return catalog.map(p => `<label class="ingredient-item recipe-product-item"><input type="checkbox" data-recipe-product="${esc(p.name)}"${selected.includes(p.name) ? " checked" : ""}/><i class="recipe-option-thumb ${productTone(p)}">${productMark(p)}</i><span><b>${esc(p.name)}</b><small>${esc(p.kind || "商城商品")} · ${esc(p.category || p.subCategory || "未分类")} · ${esc(typeof p.price === "number" && p.price ? "¥" + p.price : p.priceType || "权益商品")}</small></span></label>`).join("");
   }
   function catalogProduct(name) {
     return (D.mallCatalog || []).find(p => p.name === name);
