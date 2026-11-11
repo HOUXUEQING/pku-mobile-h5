@@ -2203,3 +2203,24 @@ body {
 
 .order-verify { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; color: #8b9bb0; font-size: 7px; }
 .order-verify select { height: 23px; padding: 0 6px; color: #526a86; font-size: 7px; background: #fff; border: 1px solid #e3ebf6; border-radius: 4px; }
+
+.simple-recipe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+.simple-recipe-card { padding: 15px; background: #fff; border: 1px solid #e7eef9; border-top: 2px solid #6aa7ff; border-radius: 13px; box-shadow: 0 5px 18px rgba(36,77,145,.03); }
+.simple-recipe-card:nth-child(3n+2) { border-top-color: #52c7b0; }
+.simple-recipe-card:nth-child(3n+3) { border-top-color: #e7a8ce; }
+.simple-recipe-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.simple-recipe-top > div { display: flex; gap: 4px; }
+.simple-recipe-card h3 { margin: 10px 0 6px; color: #263f64; font-size: 18px; }
+.simple-recipe-advice { min-height: 38px; margin: 0; color: #405a78; font-size: 10px; line-height: 1.75; }
+.simple-recipe-note { min-height: 22px; margin: 6px 0 10px; color: #9a7a4d; font-size: 8px; line-height: 1.6; }
+.simple-recipe-products { display: grid; gap: 4px; padding: 8px; background: #f8faff; border-radius: 7px; }
+.simple-recipe-products a { display: flex; justify-content: space-between; padding: 4px 5px; color: #55708a; font-size: 8px; background: #fff; border: 1px solid #e8eff9; border-radius: 4px; text-decoration: none; }
+.simple-recipe-products a span { color: #2f6bff; }
+.simple-recipe-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 9px; color: #9aa8bc; font-size: 8px; }
+@media (max-width: 1200px) { .simple-recipe-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .simple-recipe-grid { grid-template-columns: 1fr; } }
+
+.product-fund { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin: 5px 0 3px; padding: 5px 7px; color: #6d5c96; font-size: 7px; background: #faf7ff; border: 1px solid #ebe3fb; border-radius: 4px; }
+.product-fund span { font-weight: 600; }
+.product-fund b { color: #7f63cc; font-size: 8px; }
+.product-fund em { color: #9b8ab8; font-size: 7px; font-style: normal; }

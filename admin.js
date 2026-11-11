@@ -1318,6 +1318,7 @@
     else if (view === "indicators") renderIndicators();
     else if (view === "accounts") renderAccounts();
     else if (view === "roles") renderRoles();
+    else if (view === "activities" && window.AdminActivity) window.AdminActivity.render();
     else if (view === "health-records" && window.AdminHealth) window.AdminHealth.records();
     else if (view === "business-parties" && window.AdminFinance) window.AdminFinance.business();
     else if (view === "providers" && window.AdminFinance) window.AdminFinance.providers();
@@ -1400,6 +1401,7 @@
     try { history.replaceState(null, "", "#财务结算/" + page); } catch (e) {}
   });
   setupAreaNav();
-  window.addEventListener("hashchange", renderRoute);
+  window.addEventListener("hashchange", () => { renderRoute(); setTimeout(syncAreaWithRoute, 0); });
   renderRoute();
+  setTimeout(syncAreaWithRoute, 0);
 })();
