@@ -29,7 +29,7 @@
   }
   function setTop() {
     $("#topTitle").textContent = "活动管理";
-    $("#breadcrumb").textContent = "内容管理 / 活动管理";
+    $("#breadcrumb").textContent = "活动管理";
     $$(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.nav === "activities"));
   }
   function open(html) {

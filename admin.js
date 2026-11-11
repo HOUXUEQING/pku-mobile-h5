@@ -142,8 +142,8 @@
   }
 
   const areaDefaults = {
-    "概览": "dashboard", "企康项目": "projects", "内容管理": "recipes", "交易管理": "mall",
-    "财务结算": "财务结算/工作台", "合作方管理": "students", "健康管理": "health-records", "基础管理": "institutions"
+    "概览": "dashboard", "企康项目": "projects", "内容管理": "recipes", "活动管理": "activities",
+    "交易管理": "mall", "财务结算": "财务结算/工作台", "合作方管理": "students", "健康管理": "health-records", "基础管理": "institutions"
   };
   let activeArea = "概览";
 
