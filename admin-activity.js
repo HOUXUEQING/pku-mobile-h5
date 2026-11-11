@@ -57,8 +57,15 @@
     { id: "AO-2026-00801", activityId: "活动-2026-008", name: "王琳", enterprise: "公开报名", source: "个人自费", publicFund: 0, equity: 0, selfPay: 199, status: "已核销", date: "2026-11-08 11:05" }
   ];
   const settlements = [];
+  const coverOptions = [["blue", "健康蓝"], ["green", "运动绿"], ["orange", "活力橙"], ["purple", "营养紫"]];
+  activities.forEach((a, i) => {
+    a.cover = a.cover || coverOptions[i % coverOptions.length][0];
+    a.coverImage = a.coverImage || "";
+    a.description = a.description || "围绕企业员工健康需求开展的活动，完成报名、核销后按活动结算规则与承办方结算。";
+  });
 
   function activityName(id) { return activities.find(a => a.id === id)?.name || id; }
+  function coverLabel(key) { return coverOptions.find(x => x[0] === key)?.[1] || "健康蓝"; }
   function getBudget(a) { return a.budgetId ? budgets[a.budgetId] : null; }
   function getEquity(a) { return a.equityId ? equities[a.equityId] : null; }
   function statusTone(s) { return s === "报名中" || s === "进行中" || s === "已核销" || s === "已结算" ? "green" : s === "待审核" || s === "待支付" ? "gold" : s === "已结束" || s === "已取消" ? "slate" : "blue"; }
@@ -87,7 +94,7 @@
   function renderConfig() {
     const list = activities.filter(a => (mode === "项目活动" ? a.mode === "项目活动" : a.mode === "公开活动") && (status === "全部状态" || a.status === status) && (!query || (a.name + a.project + a.type).includes(query)));
     return `<div class="filter-bar"><div class="recipe-mode-tabs"><button class="${mode === "项目活动" ? "active" : ""}" data-activity-mode="项目活动">项目活动<b>${activities.filter(a => a.mode === "项目活动").length}</b></button><button class="${mode === "公开活动" ? "active" : ""}" data-activity-mode="公开活动">公开活动<b>${activities.filter(a => a.mode === "公开活动").length}</b></button></div><label class="filter-search"><svg class="ic"><use href="#i-search"/></svg><input id="activitySearch" value="${esc(query)}" placeholder="搜索活动、项目或类型" /></label><select class="filter-select" id="activityStatus"><option>全部状态</option>${[...new Set(activities.map(a => a.status))].map(s => `<option${status === s ? " selected" : ""}>${s}</option>`).join("")}</select></div>
-      <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>活动</th><th>模式</th><th>所属项目</th><th>活动时间</th><th>报名 / 上限</th><th>支付来源</th><th>预算 / 权益</th><th>状态</th><th></th></tr></thead><tbody>${list.map(a => { const b = getBudget(a); const e = getEquity(a); return `<tr><td><b class="cell-main">${esc(a.name)}</b><span class="cell-sub">${esc(a.id)} · ${esc(a.type)}</span></td><td>${tag(a.mode, a.mode === "项目活动" ? "blue" : "purple")}</td><td>${esc(a.project)}</td><td>${esc(a.start)} — ${esc(a.end)}<span class="cell-sub">报名截止 ${esc(a.signupEnd)}</span></td><td><b class="cell-main">${a.joined}</b> / ${a.capacity}</td><td>${tag(a.source, a.source === "企业公共资金" ? "green" : a.source === "员工活动权益" ? "purple" : "gold")}</td><td>${b ? `<b class="cell-main">${moneyInt(b.total)}</b><span class="cell-sub">可用 ${moneyInt(b.total - b.reserved - b.used)}</span>` : e ? `<b class="cell-main">${e.name}</b><span class="cell-sub">剩余 ${e.total - e.used - e.frozen} 次</span>` : "个人自费"}</td><td>${tag(a.status, statusTone(a.status))}</td><td><button class="panel-link" data-activity-view="${a.id}">查看 →</button></td></tr>`; }).join("")}</tbody></table></div></section>`;
+      <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>活动</th><th>模式</th><th>所属项目</th><th>活动时间</th><th>报名 / 上限</th><th>支付来源</th><th>预算 / 权益</th><th>状态</th><th></th></tr></thead><tbody>${list.map(a => { const b = getBudget(a); const e = getEquity(a); return `<tr><td><span class="activity-name-cell"><span class="activity-cover-thumb ${esc(a.cover)}"${a.coverImage ? ` style="background-image:url('${esc(a.coverImage)}');background-size:cover;background-position:center"` : ""}>${a.coverImage ? "" : esc(coverLabel(a.cover).slice(0, 1))}</span><span><b class="cell-main">${esc(a.name)}</b><span class="cell-sub">${esc(a.id)} · ${esc(a.type)}</span></span></span></td><td>${tag(a.mode, a.mode === "项目活动" ? "blue" : "purple")}</td><td>${esc(a.project)}</td><td>${esc(a.start)} — ${esc(a.end)}<span class="cell-sub">报名截止 ${esc(a.signupEnd)}</span></td><td><b class="cell-main">${a.joined}</b> / ${a.capacity}</td><td>${tag(a.source, a.source === "企业公共资金" ? "green" : a.source === "员工活动权益" ? "purple" : "gold")}</td><td>${b ? `<b class="cell-main">${moneyInt(b.total)}</b><span class="cell-sub">可用 ${moneyInt(b.total - b.reserved - b.used)}</span>` : e ? `<b class="cell-main">${e.name}</b><span class="cell-sub">剩余 ${e.total - e.used - e.frozen} 次</span>` : "个人自费"}</td><td>${tag(a.status, statusTone(a.status))}</td><td><button class="panel-link" data-activity-view="${a.id}">查看 →</button></td></tr>`; }).join("")}</tbody></table></div></section>`;
   }
   function renderOrders() {
     const list = orders.filter(o => !query || (o.id + o.name + activityName(o.activityId)).includes(query));
@@ -112,7 +119,7 @@
   }
   function renderSettlement() {
     const rows = settlementData();
-    return `<div class="activity-note"><b>活动结算只汇总已核销订单</b><span>结算单分列企业公共资金、员工权益、个人自费；扣平台服务费后计算应付承办方金额。差异进入 <a href="#财务结算/差错工单">差错工单 →</a></span></div>
+    return `<div class="activity-note"><b>活动结算只做活动维度汇总</b><span>结算单、财务复核、打款和差错工单统一在财务结算处理，本页不重复维护一套付款流程。差异进入 <a href="#财务结算/差错工单">差错工单 →</a>，<a href="#财务结算/机构结算单">财务结算 →</a></span></div>
       <div class="kpi-grid four">${kpi("check", "已核销订单", orders.filter(o => o.status === "已核销").length, "笔", "可进入结算", "#2f6bff")}${kpi("project", "活动公共资金", moneyInt(rows.reduce((n, r) => n + r.publicFund, 0)), "元", "已核销汇总", "#16a394")}${kpi("heart", "个人自费", moneyInt(rows.reduce((n, r) => n + r.selfPay, 0)), "元", "已核销汇总", "#8b5cf6")}${kpi("chart", "应付承办方", moneyInt(rows.reduce((n, r) => n + r.payable, 0)), "元", "扣除平台服务费", "#e8a13c")}</div>
       <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>活动</th><th>已核销</th><th>企业公共资金</th><th>员工权益</th><th>个人自费</th><th>平台服务费</th><th>应付承办方</th><th>结算状态</th><th></th></tr></thead><tbody>${rows.map(r => { const st = settlements.find(s => s.activityId === r.a.id); return `<tr><td><b class="cell-main">${esc(r.a.name)}</b><span class="cell-sub">${esc(r.a.id)}</span></td><td>${r.done.length} 笔</td><td>${money(r.publicFund)}</td><td>${r.equity ? r.equity + " 次" : "—"}</td><td>${money(r.selfPay)}</td><td>${money(r.fee)}</td><td><b class="money">${money(r.payable)}</b></td><td>${tag(st ? st.status : "待生成", st ? "green" : "gold")}</td><td>${st ? `<button class="panel-link" data-settlement-view="${st.id}">查看</button>` : `<button class="panel-link" data-settlement-create="${r.a.id}">生成结算单 →</button>`}</td></tr>`; }).join("")}</tbody></table></div></section>`;
   }
@@ -160,16 +167,22 @@
     if (!a) return;
     const b = getBudget(a); const e = getEquity(a);
     open(`<p class="page-eyebrow">ACTIVITY DETAIL</p><h2>${esc(a.name)}</h2><p class="drawer-sub">${esc(a.id)} · ${esc(a.mode)} · ${esc(a.status)}</p>
+      <div class="activity-detail-cover ${esc(a.cover)}"${a.coverImage ? ` style="background-image:linear-gradient(180deg,rgba(8,29,55,.05),rgba(8,29,55,.72)),url('${esc(a.coverImage)}');background-size:cover;background-position:center"` : ""}><span>${esc(a.type)}</span><b>${esc(a.name)}</b><small>${esc(a.project)}</small></div>
+      <div class="drawer-section"><h3>活动简介</h3><p class="activity-detail-desc">${esc(a.description)}</p></div>
       <div class="drawer-section"><div class="info-list"><div class="info-item"><small>所属项目</small><b>${esc(a.project)}</b></div><div class="info-item"><small>活动时间</small><b>${esc(a.start)} — ${esc(a.end)}</b></div><div class="info-item"><small>报名 / 上限</small><b>${a.joined} / ${a.capacity}</b></div><div class="info-item"><small>支付来源</small><b>${esc(a.source)}</b></div></div></div>
       <div class="drawer-section"><h3>资金依据</h3><div class="info-list">${b ? `<div class="info-item"><small>活动公共预算</small><b>${esc(a.budgetId)}</b></div><div class="info-item"><small>预算总额 / 可用</small><b>${moneyInt(b.total)} / ${moneyInt(b.total - b.used - b.reserved)}</b></div>` : e ? `<div class="info-item"><small>员工活动权益</small><b>${esc(e.name)}</b></div><div class="info-item"><small>权益剩余</small><b>${e.total - e.used - e.frozen} 次</b></div>` : `<div class="info-item"><small>支付方式</small><b>个人自费</b></div>`}</div><div class="notice" style="margin-top:7px">报名预占，核销后进入结算；公开活动不允许使用企业公共资金或员工权益。</div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><button class="btn primary" data-activity-edit="${a.id}">编辑活动</button></div>`);
     $("[data-activity-edit]")?.addEventListener("click", () => editActivity(a));
   }
   function editActivity(a) {
-    const activity = a || { name: "", mode: mode, type: "健康讲座", project: "五好生活", start: "2026-12-01", end: "2026-12-01", signupEnd: "2026-11-28", capacity: 100, price: 0, source: "企业公共资金", budgetId: "预算-中石油-01", equityId: "", status: "草稿" };
+    const activity = a || { name: "", mode: mode, type: "健康讲座", project: "五好生活", start: "2026-12-01", end: "2026-12-01", signupEnd: "2026-11-28", capacity: 100, price: 0, source: "企业公共资金", budgetId: "预算-中石油-01", equityId: "", status: "草稿", cover: "blue", coverImage: "", description: "" };
     const publicMode = activity.mode === "公开活动";
+    let coverImageData = activity.coverImage || "";
     open(`<p class="page-eyebrow">ACTIVITY EDITOR</p><h2>${a ? "编辑活动" : "新建活动"}</h2><p class="drawer-sub">基础配置 · 资金依据 · 报名与核销规则</p>
-      <div class="drawer-section"><div class="publish-form"><label class="field"><span>活动名称</span><input id="activityName" value="${esc(activity.name)}" /></label><label class="field"><span>活动模式</span><select id="activityMode"><option${activity.mode === "项目活动" ? " selected" : ""}>项目活动</option><option${activity.mode === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>活动类型</span><input id="activityType" value="${esc(activity.type)}" /></label><label class="field"><span>所属项目</span><select id="activityProject"><option>五好生活</option>${D.projects.map(p => `<option${activity.project === p.name ? " selected" : ""}>${esc(p.name)}</option>`).join("")}<option${activity.project === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>开始日期</span><input id="activityStart" type="date" value="${esc(activity.start)}" /></label><label class="field"><span>结束日期</span><input id="activityEnd" type="date" value="${esc(activity.end)}" /></label><label class="field"><span>报名截止</span><input id="activitySignup" type="date" value="${esc(activity.signupEnd)}" /></label><label class="field"><span>人数上限</span><input id="activityCapacity" type="number" value="${activity.capacity}" /></label><label class="field"><span>报名价格</span><input id="activityPrice" type="number" value="${activity.price}" /></label></div></div>
+      <div class="drawer-section"><div class="publish-form"><label class="field"><span>活动名称</span><input id="activityName" value="${esc(activity.name)}" /></label><label class="field"><span>活动模式</span><select id="activityMode"><option${activity.mode === "项目活动" ? " selected" : ""}>项目活动</option><option${activity.mode === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>活动类型</span><input id="activityType" value="${esc(activity.type)}" /></label><label class="field"><span>所属项目</span><select id="activityProject"><option>五好生活</option>${D.projects.map(p => `<option${activity.project === p.name ? " selected" : ""}>${esc(p.name)}</option>`).join("")}<option${activity.project === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>开始日期</span><input id="activityStart" type="date" value="${esc(activity.start)}" /></label><label class="field"><span>结束日期</span><input id="activityEnd" type="date" value="${esc(activity.end)}" /></label><label class="field"><span>报名截止</span><input id="activitySignup" type="date" value="${esc(activity.signupEnd)}" /></label><label class="field"><span>人数上限</span><input id="activityCapacity" type="number" value="${activity.capacity}" /></label><label class="field"><span>报名价格</span><input id="activityPrice" type="number" value="${activity.price}" /></label>
+        <label class="field full"><span>活动简介</span><textarea id="activityDescription" rows="3">${esc(activity.description)}</textarea></label>
+        <div class="field full"><span>活动封面</span><div class="activity-cover-editor"><select id="activityCover">${coverOptions.map(([k, v]) => `<option value="${k}"${activity.cover === k ? " selected" : ""}>${v}</option>`).join("")}</select><div class="activity-cover-preview ${esc(activity.cover || "blue")}"${coverImageData ? ` style="background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.54)),url('${esc(coverImageData)}');background-size:cover;background-position:center"` : ""}><span>${esc(activity.type)}</span><b>${esc(activity.name || "活动名称")}</b></div><label class="activity-cover-upload">上传封面<input type="file" id="activityCoverFile" accept="image/*" /></label></div></div>
+      </div></div>
       <div class="drawer-section"><h3>资金依据</h3><div class="publish-form"><label class="field"><span>支付来源</span><select id="activitySource"><option${activity.source === "企业公共资金" ? " selected" : ""}>企业公共资金</option><option${activity.source === "员工活动权益" ? " selected" : ""}>员工活动权益</option><option${activity.source === "个人自费" ? " selected" : ""}>个人自费</option></select></label><label class="field"><span>活动公共预算</span><select id="activityBudget"><option value="">不绑定</option>${Object.entries(budgets).map(([id, b]) => `<option value="${id}"${activity.budgetId === id ? " selected" : ""}>${id} · 可用 ${moneyInt(b.total - b.used - b.reserved)}</option>`).join("")}</select></label><label class="field"><span>员工活动权益</span><select id="activityEquity"><option value="">不绑定</option>${Object.entries(equities).map(([id, e]) => `<option value="${id}"${activity.equityId === id ? " selected" : ""}>${id} · 剩余 ${e.total - e.used - e.frozen} 次</option>`).join("")}</select></label><label class="field"><span>状态</span><select id="activityStatusEdit">${["草稿", "报名中", "进行中", "已结束", "已取消"].map(s => `<option${activity.status === s ? " selected" : ""}>${s}</option>`).join("")}</select></label></div><div class="notice" style="margin-top:7px">公开活动保存时强制改为个人自费，不能绑定企业公共预算或员工权益。</div></div>
       <div class="drawer-section"><h3>核销规则</h3><div class="publish-form"><label class="field"><span>核销方式</span><select><option>名单勾选</option><option>扫码核销</option></select></label><label class="field"><span>未核销处理</span><select><option>释放预占，不进入结算</option><option>活动结束自动关闭</option></select></label></div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn primary" data-activity-save="${a ? a.id : ""}">保存活动</button></div>`);
@@ -185,23 +198,40 @@
     };
     modeSelect.addEventListener("change", syncPublic);
     if (publicMode) syncPublic();
+    const coverSelect = $("#activityCover");
+    const coverPreview = $(".activity-cover-preview");
+    coverSelect?.addEventListener("change", () => { if (coverPreview) coverPreview.className = "activity-cover-preview " + coverSelect.value; });
+    $("#activityCoverFile")?.addEventListener("change", e => {
+      const file = e.target.files && e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        coverImageData = String(reader.result || "");
+        if (coverPreview) coverPreview.style.cssText = `background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.54)),url('${coverImageData}');background-size:cover;background-position:center`;
+      };
+      reader.readAsDataURL(file);
+    });
     $("[data-activity-save]")?.addEventListener("click", () => {
       const isPublic = modeSelect.value === "公开活动";
       if (isPublic && sourceSelect.value !== "个人自费") { toast("公开活动只能个人自费"); return; }
+      const payload = { name: $("#activityName").value.trim() || "未命名活动", mode: modeSelect.value, type: $("#activityType").value, project: $("#activityProject").value, start: $("#activityStart").value, end: $("#activityEnd").value, signupEnd: $("#activitySignup").value, capacity: Number($("#activityCapacity").value || 0), price: Number($("#activityPrice").value || 0), source: isPublic ? "个人自费" : sourceSelect.value, budgetId: $("#activityBudget").value, equityId: $("#activityEquity").value, status: $("#activityStatusEdit").value, cover: coverSelect?.value || "blue", coverImage: coverImageData, description: $("#activityDescription").value.trim() };
+      if (a) Object.assign(a, payload);
+      else activities.unshift({ id: "活动-2026-" + String(activities.length + 1).padStart(3, "0"), joined: 0, ...payload });
       toast(a ? "活动已更新" : "活动已创建");
       $("#drawer").classList.remove("open"); $("#drawerBackdrop").classList.remove("open");
+      render(sectionToKey[section] || "config");
     });
   }
   function createSettlement(activityId) {
     const r = settlementData().find(x => x.a.id === activityId); if (!r) return;
-    const s = { id: "AS-2026-" + String(settlements.length + 1).padStart(3, "0"), activityId, publicFund: r.publicFund, equity: r.equity, selfPay: r.selfPay, fee: r.fee, payable: r.payable, count: r.done.length, status: "待承办方确认" };
-    settlements.push(s); toast("活动结算单已生成"); render();
+    const no = String(settlements.length + 1).padStart(3, "0");
+    const s = { id: "AS-2026-" + no, financeNo: "JS-2026-" + no, activityId, publicFund: r.publicFund, equity: r.equity, selfPay: r.selfPay, fee: r.fee, payable: r.payable, count: r.done.length, status: "待财务复核" };
+    settlements.push(s); toast("活动结算单已生成并提交财务结算"); render();
   }
   function viewSettlement(s) {
     if (!s) return;
     open(`<p class="page-eyebrow">ACTIVITY SETTLEMENT</p><h2>${esc(s.id)}</h2><p class="drawer-sub">${esc(activityName(s.activityId))} · ${esc(s.status)}</p>
-      <div class="drawer-section"><h3>金额构成</h3><div class="info-list"><div class="info-item"><small>已核销订单</small><b>${s.count} 笔</b></div><div class="info-item"><small>企业公共资金</small><b>${money(s.publicFund)}</b></div><div class="info-item"><small>员工活动权益</small><b>${s.equity ? s.equity + " 次" : "—"}</b></div><div class="info-item"><small>个人自费</small><b>${money(s.selfPay)}</b></div><div class="info-item"><small>平台服务费</small><b>-${money(s.fee)}</b></div><div class="info-item"><small>应付承办方</small><b class="money">${money(s.payable)}</b></div></div></div>
-      <div class="drawer-section"><h3>结算依据</h3><div class="notice">本结算单仅汇总已核销活动订单。核销明细与结算金额差异进入差错工单。</div></div>
+      <div class="drawer-section"><h3>金额构成</h3><div class="info-list"><div class="info-item"><small>财务结算单号</small><b>${esc(s.financeNo || "—")}</b></div><div class="info-item"><small>已核销订单</small><b>${s.count} 笔</b></div><div class="info-item"><small>企业公共资金</small><b>${money(s.publicFund)}</b></div><div class="info-item"><small>员工活动权益</small><b>${s.equity ? s.equity + " 次" : "—"}</b></div><div class="info-item"><small>个人自费</small><b>${money(s.selfPay)}</b></div><div class="info-item"><small>平台服务费</small><b>-${money(s.fee)}</b></div><div class="info-item"><small>应付承办方</small><b class="money">${money(s.payable)}</b></div></div></div>
+      <div class="drawer-section"><h3>结算依据</h3><div class="notice">本页仅做活动维度汇总。正式结算单、财务复核、打款和差错工单统一在财务结算处理，不在此页重复发起打款。</div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><button class="btn primary" data-submit-message="已提交复核">提交财务复核</button></div>`);
   }
   window.AdminActivity = { render };
