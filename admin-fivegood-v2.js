@@ -102,13 +102,12 @@
       if (!p.downstreamSettle) p.downstreamSettle = Math.max(12, Math.round(base * 0.82));
       p.kind = p.kind === "服务" ? "服务项目" : p.kind === "实物" ? "实物商品" : (p.kind || "实物商品");
       if (["M-G05", "M-G06", "M-G07"].includes(p.id)) {
-        p.kind = "个人企康资金";
-        p.major = "企康资金商品";
-        p.priceType = "积分+自费";
+        p.priceType = "个人企康资金";
+        p.fundRatio = 70;
+        p.fundCap = 200;
       }
-      p.fundEnabled = p.kind === "个人企康资金" ? "支持" : "不支持";
-      p.fundRatio = p.fundRatio ?? (p.kind === "个人企康资金" ? 70 : 0);
-      p.fundCap = p.fundCap ?? (p.kind === "个人企康资金" ? 200 : 0);
+      p.fundRatio = p.fundRatio ?? (p.priceType === "个人企康资金" ? 70 : 0);
+      p.fundCap = p.fundCap ?? (p.priceType === "个人企康资金" ? 200 : 0);
     });
     const majorItems = catalog.filter(p => mallKind === "全部" || p.major === mallKind);
     const categories = ["全部", ...new Set(majorItems.map(p => p.category))];
@@ -116,13 +115,13 @@
     const subCategories = ["全部", ...new Set(catItems.map(p => p.subCategory))];
     const list = catItems.filter(p => mallSubCat === "全部" || p.subCategory === mallSubCat);
     const html = `
-      ${head("商城", "PUBLIC MODULE / MALL", `<button class="btn" data-new-supplement="1">${icon("plus")}新增营养补剂</button><button class="btn primary" data-new-module="mall">${icon("plus")}新增商品</button>`)}
-      <div class="kpi-grid four">${kpi("project", "服务项目", catalog.filter(p => p.kind === "服务项目").length, "项", "可预约履约", "#2f6bff")}${kpi("check", "实物商品", catalog.filter(p => p.kind === "实物商品").length, "件", "积分 / 补差兑换", "#16a394")}${kpi("chart", "个人企康资金", catalog.filter(p => p.kind === "个人企康资金").length, "件", "按比例支付", "#8b5cf6")}${kpi("users", "本月兑换", 469, "单", "服务 + 商品", "#e8a13c")}</div>
+      ${head("商城", "PUBLIC MODULE / MALL", `<button class="btn primary" data-new-module="mall">${icon("plus")}新增商品</button>`)}
+      <div class="kpi-grid four">${kpi("project", "服务项目", catalog.filter(p => p.kind === "服务项目").length, "项", "可预约履约", "#2f6bff")}${kpi("check", "实物商品", catalog.filter(p => p.kind === "实物商品").length, "件", "积分 / 补差兑换", "#16a394")}${kpi("chart", "个人企康资金价格", catalog.filter(p => p.priceType === "个人企康资金").length, "件", "按比例支付", "#8b5cf6")}${kpi("users", "本月兑换", 469, "单", "服务 + 商品", "#e8a13c")}</div>
       <div class="filter-bar"><label class="filter-search">${icon("search")}<input id="mallSearch" placeholder="搜索商品、服务、大类或小类" /></label><span class="tag blue">公共模块 · 全项目</span></div>
-      <div class="mall-tabs">${["全部", "服务目录", "实物商品", "企康资金商品"].map(k => `<button class="${mallKind === k ? "active" : ""}" data-mall-kind="${k}">${k}</button>`).join("")}</div>
+      <div class="mall-tabs">${["全部", "服务目录", "实物商品"].map(k => `<button class="${mallKind === k ? "active" : ""}" data-mall-kind="${k}">${k}</button>`).join("")}</div>
       <div class="mall-cats">${categories.map(c => `<button class="${mallCat === c ? "active" : ""}" data-mall-cat="${c}">${c}</button>`).join("")}</div>
       ${mallCat !== "全部" ? `<div class="mall-subcats"><span>小类</span>${subCategories.map(c => `<button class="${mallSubCat === c ? "active" : ""}" data-mall-subcat="${c}">${c}</button>`).join("")}</div>` : ""}
-      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务项目" ? "blue" : p.kind === "个人企康资金" ? "purple" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span></div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-supply"><span>供应商：${esc(p.supplierName)}</span><span>上游 ${mallMoney(p.upstreamSettle)} / 下游 ${mallMoney(p.downstreamSettle)}</span></div>${p.kind === "个人企康资金" ? `<div class="product-fund"><span>个人企康资金</span><b>${p.fundRatio}%</b><em>单笔上限 ${mallMoney(p.fundCap)}</em></div>` : ""}<div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
+      <div class="product-grid catalog-grid">${list.map(p => `<article class="product-card catalog-card"><div class="product-thumb"><span>${esc(p.major)}</span>${tag(p.status)}</div><div class="product-body"><div class="tag-row"><span class="tag ${p.kind === "服务项目" ? "blue" : "green"}">${esc(p.kind)}</span><span class="tag">${esc(p.category)}</span><span class="tag">${esc(p.subCategory)}</span>${p.priceType === "个人企康资金" ? `<span class="tag purple">个人企康资金</span>` : ""}</div><h3>${esc(p.name)}</h3><p class="product-desc">${esc(p.desc)}</p><div class="product-supply"><span>供应商：${esc(p.supplierName)}</span><span>上游 ${mallMoney(p.upstreamSettle)} / 下游 ${mallMoney(p.downstreamSettle)}</span></div>${p.priceType === "个人企康资金" ? `<div class="product-fund"><span>个人企康资金</span><b>${p.fundRatio}%</b><em>单笔上限 ${mallMoney(p.fundCap)}</em></div>` : ""}<div class="product-price">${mallPrice(p)}</div><div class="product-card-foot"><span>库存 ${esc(p.stock)} · 已兑 ${p.sales}</span><button class="panel-link" data-edit-module="mall" data-id="${p.id}">编辑 →</button></div></div></article>`).join("")}</div>`;
     $("#viewRoot").innerHTML = html;
     setTop("商城", "交易管理 / 商城", "mall");
     $$("[data-mall-kind]").forEach(b => b.addEventListener("click", () => { mallKind = b.dataset.mallKind; mallCat = "全部"; mallSubCat = "全部"; renderMall(); }));
@@ -146,9 +145,9 @@
 
   const moduleConfig = {
     mall: { label: "商品", data: () => D.mallCatalog, fields: [
-      ["kind", "商品类型", "select", ["实物商品", "服务项目", "个人企康资金"]], ["major", "大类", "select", ["实物商品", "服务目录", "企康资金商品"]],
+      ["kind", "商品类型", "select", ["实物商品", "服务项目"]], ["major", "大类", "select", ["实物商品", "服务目录"]],
       ["category", "中类", "text"], ["subCategory", "小类", "text"], ["name", "商品名称", "text"],
-      ["priceType", "价格类型", "select", ["企业权益", "个人补差", "积分兑换", "积分+自费"]], ["price", "价格 / 企业价", "number"], ["points", "所需积分", "number"], ["personalPay", "个人自费金额（元）", "number"],
+      ["priceType", "价格类型", "select", ["企业权益", "个人补差", "积分兑换", "积分+自费", "个人企康资金"]], ["price", "价格 / 企业价", "number"], ["points", "所需积分", "number"], ["personalPay", "个人自费金额（元）", "number"],
       ["supplierName", "供应商来源", "text"], ["upstreamSettle", "上游结算价", "number"], ["downstreamSettle", "下游结算价", "number"],
       ["fundRatio", "个人企康资金支付比例（%）", "number"], ["fundCap", "单笔最高支付（元）", "number"],
       ["stock", "库存", "text"], ["fulfillment", "履约方式", "text"], ["desc", "商品说明", "textarea", null, true]
@@ -196,13 +195,12 @@
     const cfg = moduleConfig[module]; if (!cfg) return;
     const isEdit = !!id;
     const item = isEdit ? cfg.data().find(x => x.id === id) : (preset || null);
-    const isSupplement = !isEdit && preset && preset.category === "营养补剂";
-    const title = isEdit ? "编辑商品" : isSupplement ? "新增营养补剂" : `新建${cfg.label}`;
+    const title = isEdit ? "编辑商品" : `新建${cfg.label}`;
     const projects = item && item.projects ? item.projects : [];
     const selectedIngredients = item && item.ingredients ? item.ingredients.split("、") : [];
     const recipeExtra = module === "recipe" ? `<div class="field full"><span>食材（搜索食品库并勾选）</span><input id="ingredientSearch" placeholder="搜索食品名称或分类" /><div class="ingredient-picker" id="ingredientPicker">${D.foods.map(f => `<label class="ingredient-item"><input type="checkbox" data-ingredient="${esc(f.name)}"${selectedIngredients.includes(f.name) ? " checked" : ""}/><span><b>${esc(f.name)}</b><small>${esc(f.category)} · ${f.kcal} kcal/100g</small></span></label>`).join("")}</div><div class="ingredient-count" id="ingredientCount">已选 ${selectedIngredients.length} 项食材</div></div>` : "";
     const exerciseExtra = module === "exercise" ? `<div class="field full"><span>图文 / 视频素材</span><div class="media-upload-grid"><label class="media-upload"><input type="file" accept="image/*" multiple /><b>上传图文</b><small>JPG / PNG，支持多图</small></label><label class="media-upload"><input type="file" accept="video/*" /><b>上传视频</b><small>MP4 / MOV，建议 60 秒内</small></label></div></div>` : "";
-    const mallExtra = module === "mall" ? `<div class="field full"><span>商品类型与字段联动</span><div class="payment-config-note">实物商品只显示库存；服务项目不显示库存；商品类型选择 <b>个人企康资金</b> 后才显示支付比例和单笔上限。价格类型选择“积分+自费”时，再显示积分和个人自费字段。</div></div>` : "";
+    const mallExtra = module === "mall" ? `<div class="field full"><span>商品类型与字段联动</span><div class="payment-config-note">商品类型只决定库存和履约字段：实物商品显示库存，服务项目不显示库存。价格类型选择 <b>个人企康资金</b> 后才显示支付比例和单笔上限；选择积分或积分+自费时，才显示积分和个人自费字段。</div></div>` : "";
     const fields = cfg.fields.map(([key, label, type, options, full]) => {
       const value = item ? item[key] : "";
       let control;
@@ -224,16 +222,17 @@
         const kind = kindSelect?.value || "实物商品";
         const priceType = priceSelect?.value || "";
         if (majorSelect) {
-          const majors = kind === "服务项目" ? ["服务目录"] : kind === "个人企康资金" ? ["企康资金商品"] : ["实物商品"];
+          const majors = kind === "服务项目" ? ["服务目录"] : ["实物商品"];
           const current = majorSelect.value;
           majorSelect.innerHTML = majors.map(m => `<option${m === current ? " selected" : ""}>${m}</option>`).join("");
           if (!majors.includes(current)) majorSelect.selectedIndex = 0;
         }
+        const personalFund = priceType === "个人企康资金";
         setVisible("stock", kind === "实物商品");
-        setVisible("fundRatio", kind === "个人企康资金");
-        setVisible("fundCap", kind === "个人企康资金");
+        setVisible("fundRatio", personalFund);
+        setVisible("fundCap", personalFund);
         setVisible("points", priceType.includes("积分"));
-        setVisible("personalPay", priceType.includes("个人补差") || priceType.includes("积分+自费"));
+        setVisible("personalPay", priceType.includes("个人补差") || priceType.includes("积分+自费") || personalFund);
       };
       kindSelect?.addEventListener("change", syncMallFields);
       priceSelect?.addEventListener("change", syncMallFields);
@@ -254,8 +253,6 @@
   }
 
   document.addEventListener("click", event => {
-    const addSupp = event.target.closest("[data-new-supplement]");
-    if (addSupp) { event.preventDefault(); openEditor("mall", "", { kind: "个人企康资金", major: "企康资金商品", category: "营养补剂", subCategory: "蛋白补充", priceType: "积分+自费", fundRatio: 70, fundCap: 200, fulfillment: "快递发货", status: "上架", supplierName: "营养品供应链" }); return; }
     const add = event.target.closest("[data-new-module]");
     if (add) { event.preventDefault(); openEditor(add.dataset.newModule, ""); return; }
     const edit = event.target.closest("[data-edit-module]");
