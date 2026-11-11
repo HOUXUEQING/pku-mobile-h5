@@ -349,6 +349,7 @@
   }
 
   function renderCell(col, row) {
+    if (col.html && typeof col.render === "function") return col.render(row);
     const v = typeof col.render === "function" ? col.render(row) : row[col.key];
     if (col.type === "status") return badge(v);
     if (col.type === "money") return `<span class="money ${col.green ? "green" : ""} ${col.red ? "red" : ""}">${money(v)}</span>`;
@@ -572,10 +573,15 @@
     "消费明细": {
       title: "消费明细", desc: "订单核销消费与无订单直付消费，均以服务完成后的消费明细作为结算依据", pageSize: 6,
       filters: [{ key: "keyword", label: "员工 / 机构 / 订单 / 消费单号", placeholder: "搜索消费或关联订单", wide: true }, { key: "source", label: "消费来源", type: "select", options: () => [...new Set(consumptions.map(c => c.source))] }, { key: "match", label: "关联状态", type: "select", options: () => [...new Set(consumptions.map(c => c.match))] }, { key: "settleStatus", label: "结算状态", type: "select", options: () => [...new Set(consumptions.map(c => c.settleStatus))] }],
-      actions: [{ label: "导出消费明细", type: "export" }, { label: "重新校验", fields: [["校验批次", "batch", "2026-11-09"], ["校验范围", "scope", "", "select", ["当日全部", "仅待校验", "异常重试"]]] }],
+      actions: [
+        { label: "无订单直付", primary: true, desc: "员工未经过线上订单，直接在机构使用健康额度；保存后生成无订单直付消费明细。", fields: [["员工", "employee"], ["所属企业", "enterprise"], ["服务机构", "institution"], ["服务项目", "service"], ["消费金额", "amount", "", "number"], ["消费时间", "date", "2026-11-11 14:30"]] },
+        { label: "线下补录", desc: "补录机构线下消费；订单号选填，未关联订单时进入无订单直付类型。", fields: [["消费单号", "consumptionNo"], ["员工", "employee"], ["服务机构", "institution"], ["服务项目", "service"], ["消费金额", "amount", "", "number"], ["关联订单号（选填）", "orderNo"], ["补录原因", "reason"]] },
+        { label: "导出消费明细", type: "export" },
+        { label: "重新校验", fields: [["校验批次", "batch", "2026-11-09"], ["校验范围", "scope", "", "select", ["当日全部", "仅待校验", "异常重试"]]] }
+      ],
       columns: [
         { key: "id", label: "消费单号", type: "main", sub: "date" },
-        { key: "orderNo", label: "关联订单", render: r => r.orderNo ? `<span class="cell-main">${esc(r.orderItem || r.service)}</span><span class="cell-sub">订单号 ${esc(r.orderNo)}</span>` : `<span class="status slate">无订单直付</span>` },
+        { key: "orderNo", label: "关联订单", html: true, render: r => r.orderNo ? `<span class="cell-main">${esc(r.orderItem || r.service)}</span><span class="cell-sub">订单号 ${esc(r.orderNo)}</span>` : `<span class="status slate">无订单直付</span>` },
         { key: "source", label: "消费来源" },
         { key: "employee", label: "员工" }, { key: "institution", label: "机构" }, { key: "service", label: "服务" },
         { key: "amount", label: "消费金额", type: "money" },
