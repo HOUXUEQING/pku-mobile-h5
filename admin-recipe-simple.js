@@ -55,8 +55,21 @@
     const t = $("#toast"); t.textContent = text; t.classList.add("show");
     clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2000);
   }
+  function productTone(p) {
+    if (!p) return "unmapped";
+    const kind = p.kind || "";
+    if (kind === "服务项目" || kind === "服务") return "blue";
+    return "green";
+  }
+  function productMark(p) {
+    if (!p) return "?";
+    const category = p.category || "";
+    if (category.includes("食品") || p.subCategory === "营养补充") return "食";
+    if (p.kind === "服务项目" || p.kind === "服务") return "服";
+    return "物";
+  }
   function productOptions(selected) {
-    return (D.mallCatalog || []).map(p => `<label class="ingredient-item"><input type="checkbox" data-recipe-product="${esc(p.name)}"${selected.includes(p.name) ? " checked" : ""}/><span><b>${esc(p.name)}</b><small>${esc(p.kind || "商城商品")} · ${esc(p.category || p.subCategory || "未分类")} · ${esc(typeof p.price === "number" && p.price ? "¥" + p.price : p.priceType || "权益商品")}</small></span></label>`).join("");
+    return (D.mallCatalog || []).map(p => `<label class="ingredient-item recipe-product-item"><input type="checkbox" data-recipe-product="${esc(p.name)}"${selected.includes(p.name) ? " checked" : ""}/><i class="recipe-option-thumb ${productTone(p)}">${productMark(p)}</i><span><b>${esc(p.name)}</b><small>${esc(p.kind || "商城商品")} · ${esc(p.category || p.subCategory || "未分类")} · ${esc(typeof p.price === "number" && p.price ? "¥" + p.price : p.priceType || "权益商品")}</small></span></label>`).join("");
   }
   function catalogProduct(name) {
     return (D.mallCatalog || []).find(p => p.name === name);
@@ -70,7 +83,8 @@
   }
   function productDetailCard(name) {
     const p = catalogProduct(name);
-    return `<div class="recipe-detail-product">${p ? `<span class="recipe-product-thumb ${p.kind === "服务项目" ? "blue" : "green"}">${p.kind === "服务项目" ? "服" : "物"}</span>` : `<span class="recipe-product-thumb unmapped">?</span>`}<div class="recipe-product-main"><b>${esc(name)}</b><small>${p ? esc(p.category || p.subCategory || "商城商品") + " · " + esc(productPriceText(p)) : "商城暂未找到该商品，请编辑食谱重新关联"}</small></div>${p ? `<a href="#mall">去商城 →</a>` : `<span class="tag gold">待关联</span>`}</div>`;
+    if (!p) return `<div class="recipe-product-card unmatched"><div class="recipe-product-visual unmapped">?</div><div class="recipe-product-content"><b>${esc(name)}</b><small>商城暂未找到该商品，请重新关联</small><span class="tag gold">待关联</span></div></div>`;
+    return `<div class="recipe-product-card"><div class="recipe-product-visual ${productTone(p)}">${productMark(p)}<small>${esc(p.kind || "商品")}</small></div><div class="recipe-product-content"><b>${esc(p.name)}</b><small>${esc(p.category || "未分类")}${p.subCategory ? " · " + esc(p.subCategory) : ""}</small><div class="recipe-product-meta"><strong>${esc(productPriceText(p))}</strong>${p.priceType === "个人企康资金" ? `<em>企康 ${p.fundRatio || 70}%</em>` : ""}</div><span>${p.status || "上架"}</span></div><a class="recipe-product-go" href="#mall">去商城 →</a></div>`;
   }
   function openRecipeDetail(r) {
     if (!r) return;
@@ -153,7 +167,7 @@
       <div class="kpi-grid four">${kpi("check", libraryMode === "我的食谱库" ? "我的食谱" : "已发布推荐", ownerRecipes.filter(r => r.status === "已发布").length, "条", libraryMode === "我的食谱库" ? "我的食谱库" : "平台标准推荐", "#2f6bff")}${kpi("users", "适用人群", audiences.length - 1, "类", "减脂 / 控糖 / 高尿酸等", "#16a394")}${kpi("project", "指定发布", ownerRecipes.filter(r => r.scopeType !== "全项目").length, "条", "指定项目或学员", "#8b5cf6")}${kpi("edit", "草稿", ownerRecipes.filter(r => r.status === "草稿").length, "条", "待完善", "#e8a13c")}</div>
       <div class="recipe-library-tabs"><button class="${libraryMode === "标准推荐" ? "active" : ""}" data-recipe-library="标准推荐">标准推荐<b>${recipes.filter(r => r.owner === "平台").length}</b></button><button class="${libraryMode === "我的食谱库" ? "active" : ""}" data-recipe-library="我的食谱库">我的食谱库<b>${recipes.filter(r => r.owner === "我的").length}</b></button></div>
       <div class="recipe-mode-tabs">${audiences.map(a => `<button class="${audience === a ? "active" : ""}" data-simple-audience="${a}">${a}</button>`).join("")}</div>
-      <div class="simple-recipe-grid">${list.map(r => `<article class="simple-recipe-card"><div class="simple-recipe-top"><div>${tag(r.meal, r.meal === "早餐" ? "gold" : r.meal === "中餐" ? "blue" : r.meal === "晚餐" ? "green" : "slate")}${tag(r.audience)}</div>${tag(r.status, r.status === "已发布" ? "green" : "gold")}</div><h3>${esc(r.name)}</h3><p class="simple-recipe-scope">${tag(scopeText(r), r.scopeType === "指定学员" ? "purple" : r.scopeType === "指定项目" ? "blue" : "slate")}</p><p class="simple-recipe-advice">${esc(r.advice)}</p><p class="simple-recipe-note">${esc(r.note)}</p><div class="simple-recipe-products">${r.products.map(p => `<a href="#mall">${esc(p)}<span>去商城 →</span></a>`).join("")}</div><div class="simple-recipe-foot"><span>${r.products.length} 个推荐商品</span><div class="simple-recipe-actions"><button class="panel-link" data-simple-recipe-view="${r.id}">详情</button><button class="panel-link" data-simple-recipe-edit="${r.id}">编辑 →</button></div></div></article>`).join("")}</div>
+      <div class="simple-recipe-grid">${list.map(r => `<article class="simple-recipe-card"><div class="simple-recipe-top"><div>${tag(r.meal, r.meal === "早餐" ? "gold" : r.meal === "中餐" ? "blue" : r.meal === "晚餐" ? "green" : "slate")}${tag(r.audience)}</div>${tag(r.status, r.status === "已发布" ? "green" : "gold")}</div><h3>${esc(r.name)}</h3><p class="simple-recipe-scope">${tag(scopeText(r), r.scopeType === "指定学员" ? "purple" : r.scopeType === "指定项目" ? "blue" : "slate")}</p><p class="simple-recipe-advice">${esc(r.advice)}</p><p class="simple-recipe-note">${esc(r.note)}</p><div class="simple-recipe-products">${r.products.map(p => { const item = catalogProduct(p); return `<a class="simple-product-chip" href="#mall"><span class="simple-product-chip-icon ${productTone(item)}">${productMark(item)}</span><span class="simple-product-chip-copy"><b>${esc(p)}</b><small>${item ? esc(productPriceText(item)) : "待关联"}</small></span><em>›</em></a>`; }).join("")}</div><div class="simple-recipe-foot"><span>${r.products.length} 个推荐商品</span><div class="simple-recipe-actions"><button class="panel-link" data-simple-recipe-view="${r.id}">详情</button><button class="panel-link" data-simple-recipe-edit="${r.id}">编辑 →</button></div></div></article>`).join("")}</div>
     </div>`;
     setTop();
     $$("[data-recipe-library]").forEach(b => b.addEventListener("click", () => { libraryMode = b.dataset.recipeLibrary; audience = "全部"; render(); }));
