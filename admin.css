@@ -2364,3 +2364,10 @@ body {
 .recipe-product-main b { overflow: hidden; color: #405a77; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .recipe-product-main small { color: #96a7b9; font-size: 7px; }
 .recipe-detail-product > a { color: #2f6bff; font-size: 8px; white-space: nowrap; text-decoration: none; }
+
+.recipe-product-search { display: flex; width: 100%; margin: 2px 0 7px; box-sizing: border-box; }
+.recipe-product-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; color: #93a5b8; font-size: 7px; }
+.recipe-product-toolbar span:first-child { color: #55708e; font-weight: 600; }
+.recipe-product-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; max-height: 230px; overflow-y: auto; padding: 6px; background: #f8fbff; border: 1px solid #e9f1fa; border-radius: 7px; }
+.recipe-product-picker .ingredient-item { background: #fff; border: 1px solid #edf3fb; }
+.recipe-product-empty { padding: 14px; color: #9eafc1; font-size: 8px; text-align: center; background: #fafcff; border: 1px dashed #dfeaf7; border-radius: 6px; }

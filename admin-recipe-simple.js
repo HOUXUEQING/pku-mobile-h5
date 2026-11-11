@@ -56,7 +56,7 @@
     clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2000);
   }
   function productOptions(selected) {
-    return D.mallCatalog.filter(p => p.kind === "实物商品" || p.kind === "实物").map(p => `<label class="ingredient-item"><input type="checkbox" data-recipe-product="${esc(p.name)}"${selected.includes(p.name) ? " checked" : ""}/><span><b>${esc(p.name)}</b><small>${esc(p.category || p.subCategory || "商城商品")} · ${esc(typeof p.price === "number" ? "¥" + p.price : p.price)}</small></span></label>`).join("");
+    return (D.mallCatalog || []).map(p => `<label class="ingredient-item"><input type="checkbox" data-recipe-product="${esc(p.name)}"${selected.includes(p.name) ? " checked" : ""}/><span><b>${esc(p.name)}</b><small>${esc(p.kind || "商城商品")} · ${esc(p.category || p.subCategory || "未分类")} · ${esc(typeof p.price === "number" && p.price ? "¥" + p.price : p.priceType || "权益商品")}</small></span></label>`).join("");
   }
   function catalogProduct(name) {
     return (D.mallCatalog || []).find(p => p.name === name);
@@ -99,8 +99,26 @@
         <label class="field"><span>指定项目</span><select id="recipeProject"><option value="">不指定</option>${projects.map(p => `<option${r.project === p.name ? " selected" : ""}>${esc(p.name)}</option>`).join("")}</select></label>
         <div class="field full"><span>指定学员（可多选）</span><div class="student-picker">${studentOptions(r.students || [])}</div></div>
       </div></div>
-      <div class="drawer-section"><h3>关联商城商品</h3><div class="ingredient-picker">${productOptions(r.products)}</div></div>
+      <div class="drawer-section"><h3>关联商城商品</h3><label class="filter-search recipe-product-search"><svg class="ic"><use href="#i-search"/></svg><input id="recipeProductSearch" placeholder="搜索商品名称、类型或分类" /></label><div class="recipe-product-toolbar"><span id="recipeProductCount">已选 ${r.products.length} 个商品</span><span>可搜索全部商城商品</span></div><div class="ingredient-picker recipe-product-picker" id="recipeProductPicker">${productOptions(r.products)}</div><div class="recipe-product-empty" id="recipeProductEmpty" style="display:none">没有匹配的商城商品</div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn primary" data-simple-recipe-save="${recipe ? recipe.id : ""}">保存</button></div>`);
+    const productSearch = $("#recipeProductSearch");
+    const productCount = $("#recipeProductCount");
+    const productEmpty = $("#recipeProductEmpty");
+    const updateProductCount = () => {
+      if (productCount) productCount.textContent = `已选 ${$$("[data-recipe-product]:checked").length} 个商品`;
+    };
+    $$("[data-recipe-product]").forEach(input => input.addEventListener("change", updateProductCount));
+    productSearch?.addEventListener("input", () => {
+      const q = productSearch.value.trim().toLowerCase();
+      let visible = 0;
+      $$("[data-recipe-product]").forEach(input => {
+        const label = input.closest(".ingredient-item");
+        const match = !q || label.innerText.toLowerCase().includes(q);
+        if (label) label.style.display = match ? "" : "none";
+        if (match) visible += 1;
+      });
+      if (productEmpty) productEmpty.style.display = visible ? "none" : "block";
+    });
     const save = $("[data-simple-recipe-save]");
     if (save) save.addEventListener("click", () => {
       const name = $("#simpleRecipeName").value.trim();
