@@ -190,7 +190,7 @@
     open(`<p class="page-eyebrow">ACTIVITY EDITOR</p><h2>${a ? "编辑活动" : "新建活动"}</h2><p class="drawer-sub">基础配置 · 资金依据 · 报名与核销规则</p>
       <div class="drawer-section"><div class="publish-form"><label class="field"><span>活动名称</span><input id="activityName" value="${esc(activity.name)}" /></label><label class="field"><span>活动模式</span><select id="activityMode"><option${activity.mode === "项目活动" ? " selected" : ""}>项目活动</option><option${activity.mode === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>活动类型</span><input id="activityType" value="${esc(activity.type)}" /></label><label class="field"><span>所属项目</span><select id="activityProject"><option>五好生活</option>${D.projects.map(p => `<option${activity.project === p.name ? " selected" : ""}>${esc(p.name)}</option>`).join("")}<option${activity.project === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>开始日期</span><input id="activityStart" type="date" value="${esc(activity.start)}" /></label><label class="field"><span>结束日期</span><input id="activityEnd" type="date" value="${esc(activity.end)}" /></label><label class="field"><span>报名截止</span><input id="activitySignup" type="date" value="${esc(activity.signupEnd)}" /></label><label class="field"><span>人数上限</span><input id="activityCapacity" type="number" value="${activity.capacity}" /></label><label class="field"><span>报名价格</span><input id="activityPrice" type="number" value="${activity.price}" /></label>
         <label class="field full"><span>活动简介</span><textarea id="activityDescription" rows="3">${esc(activity.description)}</textarea></label>
-        <div class="field full"><span>活动封面</span><div class="activity-cover-editor"><select id="activityCover">${coverOptions.map(([k, v]) => `<option value="${k}"${activity.cover === k ? " selected" : ""}>${v}</option>`).join("")}</select><div class="activity-cover-preview ${esc(activity.cover || "blue")}"${coverImageData ? ` style="background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.54)),url('${esc(coverImageData)}');background-size:cover;background-position:center"` : ""}><span>${esc(activity.type)}</span><b>${esc(activity.name || "活动名称")}</b></div><label class="activity-cover-upload">上传封面<input type="file" id="activityCoverFile" accept="image/*" /></label></div></div>
+        <div class="field full"><span>活动封面</span><div class="activity-cover-editor"><div class="activity-cover-preview ${esc(activity.cover || "blue")}"${coverImageData ? ` style="background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.7)),url('${esc(coverImageData)}');background-size:cover;background-position:center"` : ""}><div class="activity-cover-badge">${esc(coverLabel(activity.cover))}</div><div class="activity-cover-copy"><span>${esc(activity.type)}</span><b>${esc(activity.name || "活动名称")}</b><small>${esc(activity.project || "活动项目")}</small></div><div class="activity-cover-actions"><label class="cover-action"><span id="activityCoverUploadText">${coverImageData ? "更换封面" : "上传封面"}</span><input type="file" id="activityCoverFile" accept="image/*" /></label><button type="button" class="cover-action danger" id="activityCoverClear"${coverImageData ? "" : " style=\"display:none\""}>移除</button></div></div><div class="activity-cover-side"><label class="cover-side-label"><span>封面主题</span><select id="activityCover">${coverOptions.map(([k, v]) => `<option value="${k}"${activity.cover === k ? " selected" : ""}>${v}</option>`).join("")}</select></label><div class="cover-tip"><b>推荐尺寸</b><span>16:9，建议 1280 × 720px</span><span>支持 JPG / PNG，单张不超过 5MB</span></div></div></div></div>
       </div></div>
       <div class="drawer-section"><h3>活动详情</h3><div class="publish-form">
         <label class="field full"><span>活动亮点</span><input id="activityHighlights" value="${esc(activity.highlights || "")}" placeholder="用逗号分隔，例如：专家授课,现场互动,健康礼包" /></label>
@@ -217,15 +217,31 @@
     if (publicMode) syncPublic();
     const coverSelect = $("#activityCover");
     const coverPreview = $(".activity-cover-preview");
-    coverSelect?.addEventListener("change", () => { if (coverPreview) coverPreview.className = "activity-cover-preview " + coverSelect.value; });
+    const coverClear = $("#activityCoverClear");
+    const coverUploadText = $("#activityCoverUploadText");
+    const setCoverState = hasImage => {
+      if (coverUploadText) coverUploadText.textContent = hasImage ? "更换封面" : "上传封面";
+      if (coverClear) coverClear.style.display = hasImage ? "" : "none";
+    };
+    coverSelect?.addEventListener("change", () => {
+      if (coverPreview) coverPreview.className = "activity-cover-preview " + coverSelect.value;
+      const badge = $(".activity-cover-badge");
+      if (badge) badge.textContent = coverLabel(coverSelect.value);
+    });
     $("#activityCoverFile")?.addEventListener("change", e => {
       const file = e.target.files && e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = () => {
         coverImageData = String(reader.result || "");
-        if (coverPreview) coverPreview.style.cssText = `background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.54)),url('${coverImageData}');background-size:cover;background-position:center`;
+        if (coverPreview) coverPreview.style.cssText = `background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.7)),url('${coverImageData}');background-size:cover;background-position:center`;
+        setCoverState(true);
       };
       reader.readAsDataURL(file);
+    });
+    coverClear?.addEventListener("click", () => {
+      coverImageData = "";
+      if (coverPreview) { coverPreview.style.cssText = ""; coverPreview.className = "activity-cover-preview " + (coverSelect?.value || "blue"); }
+      setCoverState(false);
     });
     const gallery = $("#activityDetailGallery");
     const videoPreview = $("#activityDetailVideoPreview");

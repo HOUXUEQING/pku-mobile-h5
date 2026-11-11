@@ -2323,3 +2323,23 @@ body {
 .activity-edit-video video { width: 150px; height: 86px; object-fit: cover; background: #0d1d2c; border-radius: 6px; }
 .activity-edit-video button { padding: 0; color: #d85b68; font-size: 7px; background: transparent; border: 0; cursor: pointer; }
 .activity-media-empty { display: flex; min-height: 86px; align-items: center; padding: 0 8px; color: #a7b5c5; font-size: 7px; }
+
+.activity-cover-editor { display: grid; grid-template-columns: minmax(0, 1fr) 190px; align-items: stretch; gap: 12px; padding: 10px; background: #f8fbff; border: 1px solid #e9f1fb; border-radius: 9px; }
+.activity-cover-preview { position: relative; display: flex; width: auto; height: 154px; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 12px; overflow: hidden; color: #fff; border-radius: 8px; box-sizing: border-box; }
+.activity-cover-preview::after { position: absolute; right: -32px; top: -45px; width: 160px; height: 160px; content: ""; background: rgba(255,255,255,.14); border-radius: 50%; }
+.activity-cover-badge { position: absolute; top: 9px; left: 9px; z-index: 2; padding: 3px 7px; color: #fff; font-size: 7px; background: rgba(10,32,58,.24); border: 1px solid rgba(255,255,255,.28); border-radius: 4px; }
+.activity-cover-copy { position: relative; z-index: 1; display: grid; gap: 3px; max-width: 72%; }
+.activity-cover-copy span { font-size: 7px; opacity: .8; }
+.activity-cover-copy b { font-size: 20px; line-height: 1.25; }
+.activity-cover-copy small { color: rgba(255,255,255,.78); font-size: 8px; }
+.activity-cover-actions { position: absolute; right: 9px; bottom: 9px; z-index: 2; display: flex; gap: 5px; }
+.cover-action { display: inline-flex; align-items: center; justify-content: center; min-width: 58px; height: 25px; padding: 0 9px; color: #fff; font-size: 7px; background: rgba(11,31,55,.38); border: 1px solid rgba(255,255,255,.42); border-radius: 4px; cursor: pointer; backdrop-filter: blur(4px); }
+.cover-action:hover { background: rgba(11,31,55,.65); }
+.cover-action.danger { color: #ffe9ec; border-color: rgba(255,200,207,.55); }
+.cover-action input { display: none; }
+.activity-cover-side { display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.cover-side-label { display: grid; gap: 5px; color: #6f849c; font-size: 8px; }
+.cover-side-label select { width: 100%; }
+.cover-tip { display: grid; gap: 4px; padding: 9px; color: #99a9ba; font-size: 7px; line-height: 1.5; background: #fff; border: 1px solid #eaf1fa; border-radius: 6px; }
+.cover-tip b { color: #7087a1; font-size: 7px; }
+.cover-tip span { display: block; }
