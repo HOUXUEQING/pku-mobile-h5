@@ -2350,3 +2350,17 @@ body {
 .role-section-head.settlement { margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9f1fa; }
 .role-card.settlement-card { border-top: 2px solid var(--role); }
 .role-card.settlement-card .role-mark { color: var(--role); }
+
+.simple-recipe-actions { display: flex; align-items: center; gap: 9px; }
+.recipe-detail-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.recipe-detail-note { margin: 7px 0 0; color: #a18155; font-size: 8px; line-height: 1.7; }
+.recipe-detail-products { display: grid; gap: 6px; }
+.recipe-detail-product { display: flex; align-items: center; gap: 8px; padding: 8px; background: #f8fbff; border: 1px solid #eaf1fa; border-radius: 7px; }
+.recipe-product-thumb { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; color: #fff; font-size: 10px; border-radius: 6px; }
+.recipe-product-thumb.green { background: linear-gradient(135deg,#31b59d,#7ddac3); }
+.recipe-product-thumb.blue { background: linear-gradient(135deg,#4b86ef,#91bdfa); }
+.recipe-product-thumb.unmapped { color: #9eacbd; background: #eef3fa; }
+.recipe-product-main { display: grid; flex: 1; gap: 3px; min-width: 0; }
+.recipe-product-main b { overflow: hidden; color: #405a77; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.recipe-product-main small { color: #96a7b9; font-size: 7px; }
+.recipe-detail-product > a { color: #2f6bff; font-size: 8px; white-space: nowrap; text-decoration: none; }
