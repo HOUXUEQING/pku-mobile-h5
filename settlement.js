@@ -384,7 +384,7 @@
 
   function openConsumptionDrawer(c) {
     const orderBlock = c.orderNo
-      ? `<div class="drawer-section"><h3>关联订单</h3><div class="info-list"><div class="info-item"><small>订单号</small><b>${esc(c.orderNo)}</b></div><div class="info-item"><small>订单明细</small><b>${esc(c.orderItem)}</b></div><div class="info-item"><small>关联状态</small><b>${badge(c.match)}</b></div></div><button class="btn small" data-open-order="${esc(c.orderNo)}">查看订单 →</button></div>`
+      ? `<div class="drawer-section"><h3>关联订单</h3><div class="info-list"><div class="info-item"><small>订单</small><b>${esc(c.orderItem || c.service)}</b></div><div class="info-item"><small>订单号</small><b>${esc(c.orderNo)}</b></div><div class="info-item"><small>关联状态</small><b>${badge(c.match)}</b></div></div><button class="btn small" data-open-order="${esc(c.orderNo)}">查看订单 →</button></div>`
       : `<div class="drawer-section"><h3>关联订单</h3><div class="notice"><b>无订单直付消费</b>：员工未经过线上订单，直接在机构使用健康额度。该消费仍进入额度校验与机构结算，不按订单结算。</div></div>`;
     openDrawer(c.id, "消费明细 · 服务完成后核销", `<div class="drawer-section"><div class="info-list"><div class="info-item"><small>员工</small><b>${esc(c.employee)}</b></div><div class="info-item"><small>机构</small><b>${esc(c.institution)}</b></div><div class="info-item"><small>服务项目</small><b>${esc(c.service)}</b></div><div class="info-item"><small>消费金额</small><b>${money(c.amount)}</b></div><div class="info-item"><small>消费时间</small><b>${esc(c.date)}</b></div><div class="info-item"><small>消费来源</small><b>${esc(c.source)}</b></div><div class="info-item"><small>校验状态</small><b>${badge(c.verify)}</b></div><div class="info-item"><small>结算状态</small><b>${badge(c.settleStatus)}</b></div></div></div>${orderBlock}<div class="drawer-section"><h3>处理</h3><div class="row-actions"><button class="btn small" data-submit-message="已提交校验">重新校验</button><button class="btn small" data-submit-message="已发起退款">退款</button><button class="btn small danger" data-submit-message="已发起冲正">冲正</button></div></div>`, drawerActions("关闭", "已记录查看日志"));
   }
@@ -575,7 +575,7 @@
       actions: [{ label: "导出消费明细", type: "export" }, { label: "重新校验", fields: [["校验批次", "batch", "2026-11-09"], ["校验范围", "scope", "", "select", ["当日全部", "仅待校验", "异常重试"]]] }],
       columns: [
         { key: "id", label: "消费单号", type: "main", sub: "date" },
-        { key: "orderNo", label: "关联订单", render: r => r.orderNo ? `<span class="cell-main">${esc(r.orderNo)}</span><span class="cell-sub">${esc(r.orderItem)}</span>` : `<span class="status slate">无订单直付</span>` },
+        { key: "orderNo", label: "关联订单", render: r => r.orderNo ? `<span class="cell-main">${esc(r.orderItem || r.service)}</span><span class="cell-sub">订单号 ${esc(r.orderNo)}</span>` : `<span class="status slate">无订单直付</span>` },
         { key: "source", label: "消费来源" },
         { key: "employee", label: "员工" }, { key: "institution", label: "机构" }, { key: "service", label: "服务" },
         { key: "amount", label: "消费金额", type: "money" },
