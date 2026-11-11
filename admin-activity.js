@@ -62,6 +62,12 @@
     a.cover = a.cover || coverOptions[i % coverOptions.length][0];
     a.coverImage = a.coverImage || "";
     a.description = a.description || "围绕企业员工健康需求开展的活动，完成报名、核销后按活动结算规则与承办方结算。";
+    a.highlights = a.highlights || "专家授课,现场互动,健康礼包";
+    a.agenda = a.agenda || "09:00 签到\n09:30 主题分享\n10:30 互动答疑\n11:00 活动结束";
+    a.speakers = a.speakers || "北大医疗健康管理中心专家团队";
+    a.notice = a.notice || "请提前 10 分钟签到；活动名额有限，报名后请按时参加。";
+    a.detailImages = a.detailImages || [];
+    a.detailVideo = a.detailVideo || "";
   });
 
   function activityName(id) { return activities.find(a => a.id === id)?.name || id; }
@@ -168,20 +174,31 @@
     const b = getBudget(a); const e = getEquity(a);
     open(`<p class="page-eyebrow">ACTIVITY DETAIL</p><h2>${esc(a.name)}</h2><p class="drawer-sub">${esc(a.id)} · ${esc(a.mode)} · ${esc(a.status)}</p>
       <div class="activity-detail-cover ${esc(a.cover)}"${a.coverImage ? ` style="background-image:linear-gradient(180deg,rgba(8,29,55,.05),rgba(8,29,55,.72)),url('${esc(a.coverImage)}');background-size:cover;background-position:center"` : ""}><span>${esc(a.type)}</span><b>${esc(a.name)}</b><small>${esc(a.project)}</small></div>
-      <div class="drawer-section"><h3>活动简介</h3><p class="activity-detail-desc">${esc(a.description)}</p></div>
+      <div class="drawer-section"><h3>活动简介</h3><p class="activity-detail-desc">${esc(a.description)}</p>${a.highlights ? `<div class="activity-highlights">${a.highlights.split(",").filter(Boolean).map(h => `<span>${esc(h)}</span>`).join("")}</div>` : ""}</div>
+      <div class="drawer-section"><h3>活动详情</h3>${a.detailImages && a.detailImages.length ? `<div class="activity-detail-gallery">${a.detailImages.map(src => `<img src="${esc(src)}" alt="活动图片" />`).join("")}</div>` : ""}${a.detailVideo ? `<video class="activity-detail-video" src="${esc(a.detailVideo)}" controls></video>` : ""}<div class="activity-detail-copy"><div><small>活动议程</small><p>${esc(a.agenda || "—").replace(/\n/g, "<br/>")}</p></div><div><small>嘉宾 / 讲师</small><p>${esc(a.speakers || "—")}</p></div><div><small>参与须知</small><p>${esc(a.notice || "—")}</p></div></div></div>
       <div class="drawer-section"><div class="info-list"><div class="info-item"><small>所属项目</small><b>${esc(a.project)}</b></div><div class="info-item"><small>活动时间</small><b>${esc(a.start)} — ${esc(a.end)}</b></div><div class="info-item"><small>报名 / 上限</small><b>${a.joined} / ${a.capacity}</b></div><div class="info-item"><small>支付来源</small><b>${esc(a.source)}</b></div></div></div>
       <div class="drawer-section"><h3>资金依据</h3><div class="info-list">${b ? `<div class="info-item"><small>活动公共预算</small><b>${esc(a.budgetId)}</b></div><div class="info-item"><small>预算总额 / 可用</small><b>${moneyInt(b.total)} / ${moneyInt(b.total - b.used - b.reserved)}</b></div>` : e ? `<div class="info-item"><small>员工活动权益</small><b>${esc(e.name)}</b></div><div class="info-item"><small>权益剩余</small><b>${e.total - e.used - e.frozen} 次</b></div>` : `<div class="info-item"><small>支付方式</small><b>个人自费</b></div>`}</div><div class="notice" style="margin-top:7px">报名预占，核销后进入结算；公开活动不允许使用企业公共资金或员工权益。</div></div>
       <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><button class="btn primary" data-activity-edit="${a.id}">编辑活动</button></div>`);
     $("[data-activity-edit]")?.addEventListener("click", () => editActivity(a));
   }
   function editActivity(a) {
-    const activity = a || { name: "", mode: mode, type: "健康讲座", project: "五好生活", start: "2026-12-01", end: "2026-12-01", signupEnd: "2026-11-28", capacity: 100, price: 0, source: "企业公共资金", budgetId: "预算-中石油-01", equityId: "", status: "草稿", cover: "blue", coverImage: "", description: "" };
+    const activity = a || { name: "", mode: mode, type: "健康讲座", project: "五好生活", start: "2026-12-01", end: "2026-12-01", signupEnd: "2026-11-28", capacity: 100, price: 0, source: "企业公共资金", budgetId: "预算-中石油-01", equityId: "", status: "草稿", cover: "blue", coverImage: "", description: "", highlights: "", agenda: "", speakers: "", notice: "", detailImages: [], detailVideo: "" };
     const publicMode = activity.mode === "公开活动";
     let coverImageData = activity.coverImage || "";
+    let detailImagesData = Array.isArray(activity.detailImages) ? activity.detailImages.slice() : [];
+    let detailVideoData = activity.detailVideo || "";
     open(`<p class="page-eyebrow">ACTIVITY EDITOR</p><h2>${a ? "编辑活动" : "新建活动"}</h2><p class="drawer-sub">基础配置 · 资金依据 · 报名与核销规则</p>
       <div class="drawer-section"><div class="publish-form"><label class="field"><span>活动名称</span><input id="activityName" value="${esc(activity.name)}" /></label><label class="field"><span>活动模式</span><select id="activityMode"><option${activity.mode === "项目活动" ? " selected" : ""}>项目活动</option><option${activity.mode === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>活动类型</span><input id="activityType" value="${esc(activity.type)}" /></label><label class="field"><span>所属项目</span><select id="activityProject"><option>五好生活</option>${D.projects.map(p => `<option${activity.project === p.name ? " selected" : ""}>${esc(p.name)}</option>`).join("")}<option${activity.project === "公开活动" ? " selected" : ""}>公开活动</option></select></label><label class="field"><span>开始日期</span><input id="activityStart" type="date" value="${esc(activity.start)}" /></label><label class="field"><span>结束日期</span><input id="activityEnd" type="date" value="${esc(activity.end)}" /></label><label class="field"><span>报名截止</span><input id="activitySignup" type="date" value="${esc(activity.signupEnd)}" /></label><label class="field"><span>人数上限</span><input id="activityCapacity" type="number" value="${activity.capacity}" /></label><label class="field"><span>报名价格</span><input id="activityPrice" type="number" value="${activity.price}" /></label>
         <label class="field full"><span>活动简介</span><textarea id="activityDescription" rows="3">${esc(activity.description)}</textarea></label>
         <div class="field full"><span>活动封面</span><div class="activity-cover-editor"><select id="activityCover">${coverOptions.map(([k, v]) => `<option value="${k}"${activity.cover === k ? " selected" : ""}>${v}</option>`).join("")}</select><div class="activity-cover-preview ${esc(activity.cover || "blue")}"${coverImageData ? ` style="background-image:linear-gradient(180deg,rgba(8,29,55,.04),rgba(8,29,55,.54)),url('${esc(coverImageData)}');background-size:cover;background-position:center"` : ""}><span>${esc(activity.type)}</span><b>${esc(activity.name || "活动名称")}</b></div><label class="activity-cover-upload">上传封面<input type="file" id="activityCoverFile" accept="image/*" /></label></div></div>
+      </div></div>
+      <div class="drawer-section"><h3>活动详情</h3><div class="publish-form">
+        <label class="field full"><span>活动亮点</span><input id="activityHighlights" value="${esc(activity.highlights || "")}" placeholder="用逗号分隔，例如：专家授课,现场互动,健康礼包" /></label>
+        <label class="field full"><span>活动议程</span><textarea id="activityAgenda" rows="4" placeholder="每行一个环节">${esc(activity.agenda || "")}</textarea></label>
+        <label class="field"><span>嘉宾 / 讲师</span><input id="activitySpeakers" value="${esc(activity.speakers || "")}" /></label>
+        <div class="field"><span>活动详情图片</span><input id="activityDetailImageFile" type="file" accept="image/*" multiple /><div class="activity-edit-gallery" id="activityDetailGallery"></div></div>
+        <div class="field full"><span>活动详情视频</span><input id="activityDetailVideoFile" type="file" accept="video/*" /><div class="activity-edit-video" id="activityDetailVideoPreview"></div></div>
+        <label class="field full"><span>参与须知</span><textarea id="activityNotice" rows="3" placeholder="报名、签到、取消规则等">${esc(activity.notice || "")}</textarea></label>
       </div></div>
       <div class="drawer-section"><h3>资金依据</h3><div class="publish-form"><label class="field"><span>支付来源</span><select id="activitySource"><option${activity.source === "企业公共资金" ? " selected" : ""}>企业公共资金</option><option${activity.source === "员工活动权益" ? " selected" : ""}>员工活动权益</option><option${activity.source === "个人自费" ? " selected" : ""}>个人自费</option></select></label><label class="field"><span>活动公共预算</span><select id="activityBudget"><option value="">不绑定</option>${Object.entries(budgets).map(([id, b]) => `<option value="${id}"${activity.budgetId === id ? " selected" : ""}>${id} · 可用 ${moneyInt(b.total - b.used - b.reserved)}</option>`).join("")}</select></label><label class="field"><span>员工活动权益</span><select id="activityEquity"><option value="">不绑定</option>${Object.entries(equities).map(([id, e]) => `<option value="${id}"${activity.equityId === id ? " selected" : ""}>${id} · 剩余 ${e.total - e.used - e.frozen} 次</option>`).join("")}</select></label><label class="field"><span>状态</span><select id="activityStatusEdit">${["草稿", "报名中", "进行中", "已结束", "已取消"].map(s => `<option${activity.status === s ? " selected" : ""}>${s}</option>`).join("")}</select></label></div><div class="notice" style="margin-top:7px">公开活动保存时强制改为个人自费，不能绑定企业公共预算或员工权益。</div></div>
       <div class="drawer-section"><h3>核销规则</h3><div class="publish-form"><label class="field"><span>核销方式</span><select><option>名单勾选</option><option>扫码核销</option></select></label><label class="field"><span>未核销处理</span><select><option>释放预占，不进入结算</option><option>活动结束自动关闭</option></select></label></div></div>
@@ -210,10 +227,34 @@
       };
       reader.readAsDataURL(file);
     });
+    const gallery = $("#activityDetailGallery");
+    const videoPreview = $("#activityDetailVideoPreview");
+    const renderDetailMedia = () => {
+      if (gallery) {
+        gallery.innerHTML = detailImagesData.length ? detailImagesData.map((src, i) => `<div class="activity-edit-media"><img src="${esc(src)}" alt="详情图片" /><button type="button" data-remove-detail-image="${i}">×</button></div>`).join("") : `<span class="activity-media-empty">暂无详情图片</span>`;
+      }
+      if (videoPreview) videoPreview.innerHTML = detailVideoData ? `<video src="${esc(detailVideoData)}" controls></video><button type="button" data-remove-detail-video>移除视频</button>` : `<span class="activity-media-empty">暂无详情视频</span>`;
+      gallery?.querySelectorAll("[data-remove-detail-image]").forEach(b => b.addEventListener("click", () => { detailImagesData.splice(Number(b.dataset.removeDetailImage), 1); renderDetailMedia(); }));
+      videoPreview?.querySelector("[data-remove-detail-video]")?.addEventListener("click", () => { detailVideoData = ""; renderDetailMedia(); });
+    };
+    renderDetailMedia();
+    $("#activityDetailImageFile")?.addEventListener("change", e => {
+      Array.from(e.target.files || []).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = () => { detailImagesData.push(String(reader.result || "")); renderDetailMedia(); };
+        reader.readAsDataURL(file);
+      });
+    });
+    $("#activityDetailVideoFile")?.addEventListener("change", e => {
+      const file = e.target.files && e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => { detailVideoData = String(reader.result || ""); renderDetailMedia(); };
+      reader.readAsDataURL(file);
+    });
     $("[data-activity-save]")?.addEventListener("click", () => {
       const isPublic = modeSelect.value === "公开活动";
       if (isPublic && sourceSelect.value !== "个人自费") { toast("公开活动只能个人自费"); return; }
-      const payload = { name: $("#activityName").value.trim() || "未命名活动", mode: modeSelect.value, type: $("#activityType").value, project: $("#activityProject").value, start: $("#activityStart").value, end: $("#activityEnd").value, signupEnd: $("#activitySignup").value, capacity: Number($("#activityCapacity").value || 0), price: Number($("#activityPrice").value || 0), source: isPublic ? "个人自费" : sourceSelect.value, budgetId: $("#activityBudget").value, equityId: $("#activityEquity").value, status: $("#activityStatusEdit").value, cover: coverSelect?.value || "blue", coverImage: coverImageData, description: $("#activityDescription").value.trim() };
+      const payload = { name: $("#activityName").value.trim() || "未命名活动", mode: modeSelect.value, type: $("#activityType").value, project: $("#activityProject").value, start: $("#activityStart").value, end: $("#activityEnd").value, signupEnd: $("#activitySignup").value, capacity: Number($("#activityCapacity").value || 0), price: Number($("#activityPrice").value || 0), source: isPublic ? "个人自费" : sourceSelect.value, budgetId: $("#activityBudget").value, equityId: $("#activityEquity").value, status: $("#activityStatusEdit").value, cover: coverSelect?.value || "blue", coverImage: coverImageData, description: $("#activityDescription").value.trim(), highlights: $("#activityHighlights").value.trim(), agenda: $("#activityAgenda").value.trim(), speakers: $("#activitySpeakers").value.trim(), notice: $("#activityNotice").value.trim(), detailImages: detailImagesData.slice(), detailVideo: detailVideoData };
       if (a) Object.assign(a, payload);
       else activities.unshift({ id: "活动-2026-" + String(activities.length + 1).padStart(3, "0"), joined: 0, ...payload });
       toast(a ? "活动已更新" : "活动已创建");
