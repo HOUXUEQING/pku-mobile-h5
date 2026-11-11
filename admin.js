@@ -142,7 +142,7 @@
   }
 
   const areaDefaults = {
-    "概览": "dashboard", "企康项目": "projects", "内容管理": "recipes", "活动管理": "activities",
+    "概览": "dashboard", "企康项目": "projects", "内容管理": "recipes", "活动管理": "activities/config",
     "交易管理": "mall", "财务结算": "财务结算/工作台", "合作方管理": "students", "健康管理": "health-records", "基础管理": "institutions"
   };
   let activeArea = "概览";
@@ -1318,7 +1318,8 @@
     else if (view === "indicators") renderIndicators();
     else if (view === "accounts") renderAccounts();
     else if (view === "roles") renderRoles();
-    else if (view === "activities" && window.AdminActivity) window.AdminActivity.render();
+    else if (raw.startsWith("activities/") && window.AdminActivity) window.AdminActivity.render(parts[1] || "config");
+    else if (view === "activities" && window.AdminActivity) window.AdminActivity.render("config");
     else if (view === "health-records" && window.AdminHealth) window.AdminHealth.records();
     else if (view === "business-parties" && window.AdminFinance) window.AdminFinance.business();
     else if (view === "providers" && window.AdminFinance) window.AdminFinance.providers();

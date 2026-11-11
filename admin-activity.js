@@ -10,6 +10,14 @@
   const money = n => "¥" + Number(n || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const moneyInt = n => "¥" + Number(n || 0).toLocaleString("zh-CN");
   let section = "活动配置";
+  const sectionToKey = { "活动配置": "config", "报名订单": "orders", "核销台": "checkin", "活动结算": "settlement" };
+  const keyToSection = { config: "活动配置", orders: "报名订单", checkin: "核销台", settlement: "活动结算" };
+  const sectionDesc = {
+    "活动配置": "活动基础信息、参与范围与资金依据",
+    "报名订单": "报名即生成活动订单，记录支付来源与支付明细",
+    "核销台": "服务完成并核销后，企业预算和员工权益才正式扣减",
+    "活动结算": "只汇总已核销订单，分列三类资金并计算应付承办方"
+  };
   let mode = "项目活动";
   let status = "全部状态";
   let query = "";
@@ -55,12 +63,13 @@
   function getEquity(a) { return a.equityId ? equities[a.equityId] : null; }
   function statusTone(s) { return s === "报名中" || s === "进行中" || s === "已核销" || s === "已结算" ? "green" : s === "待审核" || s === "待支付" ? "gold" : s === "已结束" || s === "已取消" ? "slate" : "blue"; }
   function pageHead() {
-    return `<div class="page-head"><div><p class="page-eyebrow">ACTIVITY MANAGEMENT</p><h2>活动管理</h2><p class="checkin-sub">活动配置、报名订单、核销与结算；公开活动只能个人自费</p></div><div class="page-actions">${section === "活动配置" ? `<button class="btn primary" data-activity-new>${icon("plus")}新建活动</button>` : `<button class="btn" data-activity-export>${icon("download")}导出</button>`}</div></div>`;
+    return `<div class="page-head"><div><p class="page-eyebrow">ACTIVITY MANAGEMENT</p><h2>${section}</h2><p class="checkin-sub">${sectionDesc[section]}</p></div><div class="page-actions">${section === "活动配置" ? `<button class="btn primary" data-activity-new>${icon("plus")}新建活动</button>` : `<button class="btn" data-activity-export>${icon("download")}导出</button>`}</div></div>`;
   }
   function setTop() {
-    $("#topTitle").textContent = "活动管理";
-    $("#breadcrumb").textContent = "活动管理";
-    $$(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.nav === "activities"));
+    $("#topTitle").textContent = section;
+    $("#breadcrumb").textContent = "活动管理 / " + section;
+    const nav = "activities-" + (sectionToKey[section] || "config");
+    $$(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.nav === nav));
   }
   function open(html) {
     $("#drawerBody").innerHTML = html;
@@ -107,10 +116,10 @@
       <div class="kpi-grid four">${kpi("check", "已核销订单", orders.filter(o => o.status === "已核销").length, "笔", "可进入结算", "#2f6bff")}${kpi("project", "活动公共资金", moneyInt(rows.reduce((n, r) => n + r.publicFund, 0)), "元", "已核销汇总", "#16a394")}${kpi("heart", "个人自费", moneyInt(rows.reduce((n, r) => n + r.selfPay, 0)), "元", "已核销汇总", "#8b5cf6")}${kpi("chart", "应付承办方", moneyInt(rows.reduce((n, r) => n + r.payable, 0)), "元", "扣除平台服务费", "#e8a13c")}</div>
       <section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>活动</th><th>已核销</th><th>企业公共资金</th><th>员工权益</th><th>个人自费</th><th>平台服务费</th><th>应付承办方</th><th>结算状态</th><th></th></tr></thead><tbody>${rows.map(r => { const st = settlements.find(s => s.activityId === r.a.id); return `<tr><td><b class="cell-main">${esc(r.a.name)}</b><span class="cell-sub">${esc(r.a.id)}</span></td><td>${r.done.length} 笔</td><td>${money(r.publicFund)}</td><td>${r.equity ? r.equity + " 次" : "—"}</td><td>${money(r.selfPay)}</td><td>${money(r.fee)}</td><td><b class="money">${money(r.payable)}</b></td><td>${tag(st ? st.status : "待生成", st ? "green" : "gold")}</td><td>${st ? `<button class="panel-link" data-settlement-view="${st.id}">查看</button>` : `<button class="panel-link" data-settlement-create="${r.a.id}">生成结算单 →</button>`}</td></tr>`; }).join("")}</tbody></table></div></section>`;
   }
-  function render() {
-    $("#viewRoot").innerHTML = `<div class="page">${pageHead()}${sectionTabs()}${section === "活动配置" ? renderConfig() : section === "报名订单" ? renderOrders() : section === "核销台" ? renderVerify() : renderSettlement()}</div>`;
+  function render(sub) {
+    if (sub && keyToSection[sub]) section = keyToSection[sub];
+    $("#viewRoot").innerHTML = `<div class="page">${pageHead()}${section === "活动配置" ? renderConfig() : section === "报名订单" ? renderOrders() : section === "核销台" ? renderVerify() : renderSettlement()}</div>`;
     setTop();
-    $$("[data-activity-section]").forEach(b => b.addEventListener("click", () => { section = b.dataset.activitySection; query = ""; render(); }));
     if (section === "活动配置") {
       $$("[data-activity-mode]").forEach(b => b.addEventListener("click", () => { mode = b.dataset.activityMode; render(); }));
       $("#activitySearch")?.addEventListener("input", e => { query = e.target.value.trim(); render(); });
