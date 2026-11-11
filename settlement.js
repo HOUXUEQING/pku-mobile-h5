@@ -92,11 +92,19 @@
     const employee = employeeNames[i % employeeNames.length];
     const institution = institutions[i % institutions.length][0];
     const amount = [680, 1280, 328, 4600, 899, 268, 756, 1980, 560, 1240, 96, 3200][i];
+    const orderNos = ["BK20261106001", "BK20261106002", "BK20261105008", "BK20261105007", "BK20261104012", "BK20261104011", "BK20261103004", "BK20261102003", "BK20261102002", "BK20261101001", "BK20261031006", "BK20261030005"];
+    const orderItems = ["职工年度体检", "深度报告解读", "无痛胃肠镜检查", "五高一重管理服务", "职场急救培训服务", "专家线上二次诊疗咨询", "心理健康管理服务（EAP）", "深海鱼油 90 粒", "五好生活 · 年度会员", "乳清蛋白粉 750g", "连续打卡 28 天奖励", "五高一重 · 12 周共管"];
+    const hasOrder = i !== 2 && i !== 5 && i !== 8;
     return {
       id: `消费明细-2026-1109-${String(i + 1).padStart(3, "0")}`,
+      orderNo: hasOrder ? orderNos[i] : "",
+      orderItem: hasOrder ? orderItems[i] : "",
       employee, institution,
       service: ["年度体检", "报告解读", "购药", "专项筛查", "睡眠监测", "营养补剂", "胃肠镜", "康复评估", "线上问诊", "体成分复测", "健康食品", "五高一重管理"][i],
       amount, date: `2026-11-${pad(9 - (i % 7))} ${pad(9 + (i % 8))}:${pad(10 + i)}`,
+      source: i === 2 || i === 8 ? "无订单直付" : i === 5 ? "线下补录" : "订单核销",
+      match: i === 2 || i === 8 ? "无订单直付" : i === 5 ? "待关联" : "已关联",
+      settleStatus: i === 2 || i === 8 ? "异常" : i === 5 ? "待校验" : "已进入结算",
       verify: i === 2 || i === 8 ? "异常" : i === 5 ? "待校验" : "已校验",
       anomaly: i === 2 ? "额度不足" : i === 8 ? "非保障项目" : i === 5 ? "待复核" : "—",
       status: i === 2 || i === 8 ? "异常" : i === 5 ? "待审核" : "成功"
@@ -368,9 +376,17 @@
   }
 
   function openRowDrawer(base, row) {
+    if (base === "消费明细") { openConsumptionDrawer(row); return; }
     const def = listDefs[base];
     const entries = Object.entries(row).filter(([k]) => !["id"].includes(k)).slice(0, 10);
     openDrawer(row.id || def.title, def.title + " · 明细抽屉", `<div class="drawer-section"><div class="info-list">${entries.map(([k, v]) => `<div class="info-item"><small>${esc(k)}</small><b>${k === "amount" || k === "contract" ? money(v) : esc(v)}</b></div>`).join("")}</div></div><div class="drawer-section"><h3>操作</h3><div class="row-actions"><button class="btn small" data-submit-message="已打开处理流程">处理</button><button class="btn small" data-submit-message="已导出明细">导出明细</button></div></div>`, drawerActions("关闭", "已记录查看日志", `<button class="btn danger" data-submit-message="已发起退款/冲正示例">退款 / 冲正</button>`));
+  }
+
+  function openConsumptionDrawer(c) {
+    const orderBlock = c.orderNo
+      ? `<div class="drawer-section"><h3>关联订单</h3><div class="info-list"><div class="info-item"><small>订单号</small><b>${esc(c.orderNo)}</b></div><div class="info-item"><small>订单明细</small><b>${esc(c.orderItem)}</b></div><div class="info-item"><small>关联状态</small><b>${badge(c.match)}</b></div></div><button class="btn small" data-open-order="${esc(c.orderNo)}">查看订单 →</button></div>`
+      : `<div class="drawer-section"><h3>关联订单</h3><div class="notice"><b>无订单直付消费</b>：员工未经过线上订单，直接在机构使用健康额度。该消费仍进入额度校验与机构结算，不按订单结算。</div></div>`;
+    openDrawer(c.id, "消费明细 · 服务完成后核销", `<div class="drawer-section"><div class="info-list"><div class="info-item"><small>员工</small><b>${esc(c.employee)}</b></div><div class="info-item"><small>机构</small><b>${esc(c.institution)}</b></div><div class="info-item"><small>服务项目</small><b>${esc(c.service)}</b></div><div class="info-item"><small>消费金额</small><b>${money(c.amount)}</b></div><div class="info-item"><small>消费时间</small><b>${esc(c.date)}</b></div><div class="info-item"><small>消费来源</small><b>${esc(c.source)}</b></div><div class="info-item"><small>校验状态</small><b>${badge(c.verify)}</b></div><div class="info-item"><small>结算状态</small><b>${badge(c.settleStatus)}</b></div></div></div>${orderBlock}<div class="drawer-section"><h3>处理</h3><div class="row-actions"><button class="btn small" data-submit-message="已提交校验">重新校验</button><button class="btn small" data-submit-message="已发起退款">退款</button><button class="btn small danger" data-submit-message="已发起冲正">冲正</button></div></div>`, drawerActions("关闭", "已记录查看日志"));
   }
 
   function render() {
@@ -554,10 +570,17 @@
       rows: institutionContracts, detailRoute: row => "机构合约/" + row.id
     },
     "消费明细": {
-      title: "消费明细", desc: "机构上传 / 同步的员工消费，经过额度与企业合约校验", pageSize: 6,
-      filters: [{ key: "keyword", label: "员工 / 机构 / 单号", placeholder: "搜索消费明细", wide: true }, { key: "verify", label: "校验状态", type: "select", options: () => [...new Set(consumptions.map(c => c.verify))] }, { key: "status", label: "结算状态", type: "select", options: () => [...new Set(consumptions.map(c => c.status))] }],
+      title: "消费明细", desc: "订单核销消费与无订单直付消费，均以服务完成后的消费明细作为结算依据", pageSize: 6,
+      filters: [{ key: "keyword", label: "员工 / 机构 / 订单 / 消费单号", placeholder: "搜索消费或关联订单", wide: true }, { key: "source", label: "消费来源", type: "select", options: () => [...new Set(consumptions.map(c => c.source))] }, { key: "match", label: "关联状态", type: "select", options: () => [...new Set(consumptions.map(c => c.match))] }, { key: "settleStatus", label: "结算状态", type: "select", options: () => [...new Set(consumptions.map(c => c.settleStatus))] }],
       actions: [{ label: "导出消费明细", type: "export" }, { label: "重新校验", fields: [["校验批次", "batch", "2026-11-09"], ["校验范围", "scope", "", "select", ["当日全部", "仅待校验", "异常重试"]]] }],
-      columns: [{ key: "id", label: "消费单号", type: "main", sub: "date" }, { key: "employee", label: "员工" }, { key: "institution", label: "机构" }, { key: "service", label: "服务" }, { key: "amount", label: "消费金额", type: "money" }, { key: "verify", label: "校验状态", type: "status" }, { key: "anomaly", label: "异常标记" }, { key: "status", label: "结算状态", type: "status" }],
+      columns: [
+        { key: "id", label: "消费单号", type: "main", sub: "date" },
+        { key: "orderNo", label: "关联订单", render: r => r.orderNo ? `<span class="cell-main">${esc(r.orderNo)}</span><span class="cell-sub">${esc(r.orderItem)}</span>` : `<span class="status slate">无订单直付</span>` },
+        { key: "source", label: "消费来源" },
+        { key: "employee", label: "员工" }, { key: "institution", label: "机构" }, { key: "service", label: "服务" },
+        { key: "amount", label: "消费金额", type: "money" },
+        { key: "match", label: "关联状态", type: "status" }, { key: "verify", label: "校验状态", type: "status" }, { key: "settleStatus", label: "结算状态", type: "status" }
+      ],
       rows: consumptions, processFields: [["处理方式", "action", "", "select", ["通过校验", "标记异常", "退款", "冲正"]], ["处理说明", "note"]]
     },
     "异常消费池": {
@@ -628,6 +651,11 @@
 
   /* ---------------- 初始化 ---------------- */
   document.addEventListener("click", e => {
+    if (e.target.closest("[data-open-order]")) {
+      if (window.parent !== window) window.parent.location.hash = "#orders";
+      else location.href = "./admin.html#orders";
+      return;
+    }
     if (e.target.closest("[data-close-overlay]")) { closeOverlays(); return; }
     if (e.target.closest("[data-submit-message]")) { const m = e.target.closest("[data-submit-message]").dataset.submitMessage; closeOverlays(); toast(m); return; }
     if (e.target.closest("[data-toast]")) { toast(e.target.closest("[data-toast]").dataset.toast); return; }
