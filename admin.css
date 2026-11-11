@@ -2194,3 +2194,9 @@ body {
 .area-head small { font-size: 7px; }
 .area-title b { font-size: 11px; }
 .area-search input { font-size: 9px; }
+
+.contract-amount-field { padding: 11px; background: linear-gradient(135deg,#eef4ff,#fbfdff); border: 1px solid #dce8ff; border-radius: 8px; }
+.contract-amount-input { display: flex; align-items: center; gap: 6px; }
+.contract-amount-input em { color: #2f6bff; font-size: 14px; font-style: normal; font-weight: 600; }
+.contract-amount-input input { height: 38px; font-size: 14px; font-weight: 600; color: #172b4d; border-color: #bfd4f5; }
+.contract-amount-field small { display: block; margin-top: 5px; color: #8295ac; font-size: 7px; line-height: 1.6; }

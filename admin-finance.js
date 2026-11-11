@@ -158,7 +158,7 @@
   function renderBusiness() {
     const archive = businessTab === "业务方档案";
     const action = archive ? `<button class="btn primary" data-party-new="1">${icon("plus")}新增业务方</button>` : `<button class="btn primary" data-contract-new="business">${icon("plus")}新增企业合约</button>`;
-    const archiveTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>业务方</th><th>类型</th><th>联系人</th><th>合作项目</th><th>合同周期</th><th>结算方式</th><th>状态</th><th></th></tr></thead><tbody>${businessParties.map(p => `<tr><td><span class="cell-main">${esc(p.name)}</span><span class="cell-sub">${esc(p.id)}</span></td><td>${tag(p.type, "blue")}</td><td>${esc(p.contact)}<span class="cell-sub">${esc(p.phone)}</span></td><td>${p.projects.map(x => tag(x, "green")).join(" ")}</td><td>${esc(p.period)}</td><td>${esc(p.settle)}</td><td>${tag(p.status, p.status === "合作中" ? "green" : "gold")}</td><td><button class="panel-link" data-party-edit="${p.id}">编辑 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
+    const archiveTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>业务方</th><th>类型</th><th>联系人</th><th>合作项目</th><th>合同周期</th><th>结算方式</th><th>状态</th><th></th></tr></thead><tbody>${businessParties.map(p => `<tr><td><span class="cell-main">${esc(p.name)}</span><span class="cell-sub">${esc(p.id)}</span></td><td>${tag(p.type, "blue")}</td><td>${esc(p.contact)}<span class="cell-sub">${esc(p.phone)}</span></td><td>${p.projects.map(x => tag(x, "green")).join(" ")}</td><td>${esc(p.period)}</td><td>${esc(p.settle)}</td><td>${tag(p.status, p.status === "合作中" ? "green" : "gold")}</td><td><button class="panel-link" data-party-edit="${p.id}">编辑</button> <button class="panel-link" data-contract-sign="${esc(p.name)}">签约</button></td></tr>`).join("")}</tbody></table></div></section>`;
     const contractTable = `<section class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>合约编号</th><th>企业 / 法人主体</th><th>合约总额</th><th>保障项目</th><th>保障人群</th><th>有效期</th><th>费率</th><th>结余规则</th><th>状态</th><th></th></tr></thead><tbody>${businessContracts.map(c => `<tr><td><b class="cell-main">${esc(c.id)}</b></td><td><b class="cell-main">${esc(c.name)}</b><span class="cell-sub">${esc(c.legal)}</span></td><td>${money(c.amount)}</td><td>${esc(c.projects)}</td><td>${esc(c.people)}</td><td>${esc(c.period)}</td><td>${esc(c.fee)}</td><td>${esc(c.balance)}</td><td>${tag(c.status, c.status === "生效" ? "green" : c.status === "冻结" ? "slate" : "gold")}</td><td><button class="panel-link" data-contract-view="business" data-id="${c.id}">查看 →</button></td></tr>`).join("")}</tbody></table></div></section>`;
     const html = `${pageHead("业务方管理", "BUSINESS PARTNERS", action)}
       <div class="filter-bar"><span class="tag blue">业务方 ${businessParties.length}</span><span class="tag green">企业合约 ${businessContracts.length}</span><span class="tag gold">待审核 1</span></div>
@@ -171,6 +171,7 @@
     $$("[data-party-new]").forEach(b => b.addEventListener("click", () => openPartyEditor("")));
     $$("[data-contract-view]").forEach(b => b.addEventListener("click", () => openContractView(b.dataset.contractView, b.dataset.id)));
     $$("[data-contract-new]").forEach(b => b.addEventListener("click", () => openContractEditor(b.dataset.contractNew)));
+    $$("[data-contract-sign]").forEach(b => b.addEventListener("click", () => openContractEditor("business", "", b.dataset.contractSign)));
   }
 
   function openContractView(kind, id) {
@@ -179,14 +180,74 @@
     openDrawer(`<p class="page-eyebrow">${isBusiness ? "ENTERPRISE CONTRACT" : "INSTITUTION CONTRACT"}</p><h2>${esc(c.name)}</h2><p class="drawer-sub">${esc(c.id)} · ${esc(c.status)}</p>
       <div class="drawer-section"><div class="info-list">${isBusiness ? `<div class="info-item"><small>法人主体</small><b>${esc(c.legal)}</b></div><div class="info-item"><small>合约总额</small><b>${money(c.amount)}</b></div><div class="info-item"><small>保障项目</small><b>${esc(c.projects)}</b></div><div class="info-item"><small>保障人群</small><b>${esc(c.people)}</b></div><div class="info-item"><small>有效期</small><b>${esc(c.period)}</b></div><div class="info-item"><small>费率 / 结余</small><b>${esc(c.fee)} · ${esc(c.balance)}</b></div>` : `<div class="info-item"><small>机构类型</small><b>${esc(c.type)}</b></div><div class="info-item"><small>结算周期 / 账期</small><b>${esc(c.cycle)} · ${esc(c.term)}</b></div><div class="info-item"><small>费率</small><b>${esc(c.fee)}</b></div><div class="info-item"><small>收款账户</small><b>${esc(c.account)}</b></div><div class="info-item"><small>服务范围</small><b>${esc(c.scope)}</b></div>`}</div></div>
       <div class="drawer-section"><h3>合约审计</h3><div class="info-list"><div class="info-item"><small>创建人</small><b>李明</b></div><div class="info-item"><small>更新时间</small><b>2026-11-09 14:30</b></div></div></div>
-      <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><button class="btn primary" data-toast="合约已进入编辑状态">编辑合约</button></div>`);
+      <div class="drawer-actions"><button class="btn" data-close-drawer>关闭</button><button class="btn primary" data-contract-edit="${c.id}">编辑合约</button></div>`);
+    const edit = $("[data-contract-edit]");
+    if (edit) edit.addEventListener("click", () => openContractEditor(kind, c.id));
   }
 
-  function openContractEditor(kind) {
+  function openContractEditor(kind, id, partyName) {
     const isBusiness = kind === "business";
-    openDrawer(`<p class="page-eyebrow">${isBusiness ? "ENTERPRISE CONTRACT" : "INSTITUTION CONTRACT"}</p><h2>新增${isBusiness ? "企业合约" : "机构合约"}</h2><p class="drawer-sub">${isBusiness ? "保障范围、资金方案与结余规则" : "结算周期、账期与收款账户"}</p>
-      <div class="drawer-section"><div class="publish-form"><label class="field"><span>${isBusiness ? "企业名称" : "机构名称"}</span><input /></label><label class="field"><span>${isBusiness ? "法人主体" : "机构类型"}</span><input /></label><label class="field"><span>${isBusiness ? "合约总额" : "结算周期"}</span><input /></label><label class="field"><span>${isBusiness ? "费率" : "账期"}</span><input /></label><label class="field full"><span>${isBusiness ? "保障项目" : "服务范围"}</span><input /></label></div></div>
-      <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn primary" data-toast="合约已保存">保存</button></div>`);
+    const c = id ? (isBusiness ? businessContracts : providerContracts).find(x => x.id === id) : null;
+    const currentName = c ? c.name : (partyName || "");
+    const title = c ? "编辑" + (isBusiness ? "企业合约" : "机构合约") : "新增" + (isBusiness ? "企业合约" : "机构合约");
+    const businessFields = `
+      <div class="drawer-section"><h3>合约基本信息</h3><div class="publish-form">
+        <label class="field"><span>企业名称 *</span><input id="contractName" value="${esc(currentName)}" placeholder="选择或填写企业名称" /></label>
+        <label class="field"><span>法人主体</span><input id="contractLegal" value="${esc(c ? c.legal : "")}" /></label>
+        <label class="field"><span>有效期</span><input id="contractPeriod" value="${esc(c ? c.period : "2026-01-01 — 2026-12-31")}" /></label>
+        <label class="field"><span>状态</span><select id="contractStatus"><option${c && c.status === "生效" ? " selected" : ""}>生效</option><option${c && c.status === "待审核" ? " selected" : ""}>待审核</option><option${c && c.status === "冻结" ? " selected" : ""}>冻结</option><option${c && c.status === "已关闭" ? " selected" : ""}>已关闭</option></select></label>
+      </div></div>
+      <div class="drawer-section"><h3>委托资金方案</h3><div class="publish-form">
+        <label class="field full contract-amount-field"><span>企业合约总额（元）*</span><div class="contract-amount-input"><em>¥</em><input id="contractAmount" type="number" min="0" step="0.01" value="${c ? c.amount : ""}" placeholder="例如：1,250,000.00" /></div><small>录入后作为企业委托资金池总额，后续到账登记、消费和结余均以此额为上限。</small></label>
+        <label class="field"><span>管理费 / 服务费费率</span><input id="contractFee" value="${esc(c ? c.fee : "3.5%")}" placeholder="例如：3.5%" /></label>
+        <label class="field"><span>结余处理规则</span><select id="contractBalance"><option${c && c.balance === "退回企业" ? " selected" : ""}>退回企业</option><option${c && c.balance === "滚存至下期" ? " selected" : ""}>滚存至下期</option><option${c && c.balance === "按比例分配" ? " selected" : ""}>按比例分配</option></select></label>
+      </div></div>
+      <div class="drawer-section"><h3>保障范围</h3><div class="publish-form">
+        <label class="field full"><span>保障项目</span><input id="contractProjects" value="${esc(c ? c.projects : "体检、购药、直付医疗、健管服务")}" /></label>
+        <label class="field full"><span>保障人群</span><input id="contractPeople" value="${esc(c ? c.people : "员工本人")}" /></label>
+      </div></div>`;
+    const providerFields = `
+      <div class="drawer-section"><h3>机构合约信息</h3><div class="publish-form">
+        <label class="field"><span>机构名称 *</span><input id="contractName" value="${esc(currentName)}" /></label>
+        <label class="field"><span>机构类型</span><input id="contractLegal" value="${esc(c ? c.type : "")}" /></label>
+        <label class="field"><span>结算周期</span><input id="contractCycle" value="${esc(c ? c.cycle : "月结")}" /></label>
+        <label class="field"><span>账期</span><input id="contractTerm" value="${esc(c ? c.term : "T+3")}" /></label>
+        <label class="field"><span>平台费率</span><input id="contractFee" value="${esc(c ? c.fee : "3.0%")}" /></label>
+        <label class="field"><span>收款账户</span><input id="contractAccount" value="${esc(c ? c.account : "")}" /></label>
+        <label class="field full"><span>服务范围</span><input id="contractScope" value="${esc(c ? c.scope : "")}" /></label>
+      </div></div>`;
+    openDrawer(`<p class="page-eyebrow">${isBusiness ? "ENTERPRISE CONTRACT" : "INSTITUTION CONTRACT"}</p><h2>${title}</h2><p class="drawer-sub">${isBusiness ? "合约总额、资金方案与保障范围" : "结算周期、账期与收款账户"}</p>
+      ${isBusiness ? businessFields : providerFields}
+      <div class="drawer-actions"><button class="btn" data-close-drawer>取消</button><button class="btn primary" data-contract-save="${isBusiness ? "business" : "provider"}">保存合约</button></div>`);
+    const save = $("[data-contract-save]");
+    if (save) save.addEventListener("click", () => saveContract(isBusiness ? "business" : "provider", id, currentName));
+  }
+
+  function saveContract(kind, id, fallbackName) {
+    const isBusiness = kind === "business";
+    const name = $("#contractName")?.value.trim() || fallbackName;
+    if (!name) { toast("请填写名称"); return; }
+    if (isBusiness) {
+      const amount = Number($("#contractAmount")?.value || 0);
+      if (!amount) { toast("请填写企业合约总额"); return; }
+      const data = { name, legal: $("#contractLegal")?.value || "", amount, projects: $("#contractProjects")?.value || "", people: $("#contractPeople")?.value || "", period: $("#contractPeriod")?.value || "", fee: $("#contractFee")?.value || "", balance: $("#contractBalance")?.value || "退回企业", status: $("#contractStatus")?.value || "生效" };
+      const existing = businessContracts.find(x => x.id === id);
+      if (existing) Object.assign(existing, data);
+      else businessContracts.unshift({ id: "企康合约-2026-" + String(businessContracts.length + 1).padStart(4, "0"), ...data });
+      businessTab = "企业合约";
+      closeDrawer();
+      toast(existing ? "企业合约已更新" : "企业合约已创建，合约总额已记录");
+      renderBusiness();
+    } else {
+      const data = { name, type: $("#contractLegal")?.value || "", cycle: $("#contractCycle")?.value || "", term: $("#contractTerm")?.value || "", fee: $("#contractFee")?.value || "", account: $("#contractAccount")?.value || "", scope: $("#contractScope")?.value || "", status: "生效" };
+      const existing = providerContracts.find(x => x.id === id);
+      if (existing) Object.assign(existing, data);
+      else providerContracts.unshift({ id: "机构合约-2026-" + String(providerContracts.length + 1).padStart(4, "0"), ...data });
+      providerTab = "机构合约";
+      closeDrawer();
+      toast(existing ? "机构合约已更新" : "机构合约已创建");
+      renderProviders();
+    }
   }
 
   function openPartyEditor(id) {
